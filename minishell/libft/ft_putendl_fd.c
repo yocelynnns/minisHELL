@@ -1,15 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 17:32:04 by messs             #+#    #+#             */
-/*   Updated: 2024/11/30 05:11:24 by messs            ###   ########.fr       */
+/*   Created: 2024/05/23 11:08:47 by hthant            #+#    #+#             */
+/*   Updated: 2024/05/24 16:57:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include"libft.h"
 
+void	ft_putendl_fd(char *s, int fd);
 
+void	ft_putendl_fd(char *s, int fd)
+{
+	const char	nl = '\n';
+
+	write(fd, s, ft_strlen(s));
+	write(fd, &nl, 1);
+}
+
+// int	main(void)
+// {
+// 	ft_putendl_fd("hello",1);
+// }

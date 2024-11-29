@@ -1,15 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/29 17:32:04 by messs             #+#    #+#             */
-/*   Updated: 2024/11/30 05:11:24 by messs            ###   ########.fr       */
+/*   Created: 2024/05/14 11:56:14 by hthant            #+#    #+#             */
+/*   Updated: 2024/10/20 18:09:29 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <stdio.h>
+#include <unistd.h>
 
+int	ft_isdigit(int c);
 
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (1);
+	else
+		return (0);
+}
+/*
+int	main(void)
+{
+	int	i;
+	i = isdigit(5);
+	printf("%d",i);
+}*/
