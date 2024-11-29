@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/11/29 17:25:56 by messs            ###   ########.fr       */
+/*   Updated: 2024/11/30 06:05:52 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <limits.h>
+#include "libft/libft.h"
 
 typedef enum e_token_type
 {
