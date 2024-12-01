@@ -3,35 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/11/30 05:00:27 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/01 23:01:11 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void clear_screen()
-{
-    struct winsize w;
-    int i;
-    
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    i = 0;
-    while (i < w.ws_row)
-    {
-        write(STDOUT_FILENO, "\n", 1);
-        i++;
-    }
-    write(STDOUT_FILENO, "\033[H", 4);
-    write(STDOUT_FILENO, "\033[J", 3);
-}
-
-// Helper function to create a new token
+// create a new token
 t_token *create_token(t_token_type type, const char *value)
 {
-    t_token *new_token = malloc(sizeof(t_token));
+    t_token *new_token;
+    
+    new_token = malloc(sizeof(t_token));
     if (!new_token)
     {
         perror("malloc");
@@ -40,59 +26,57 @@ t_token *create_token(t_token_type type, const char *value)
     new_token->type = type;
     new_token->value = strdup(value);
     new_token->next = NULL;
-    return new_token;
+    return (new_token);
 }
 
-// Add a token to the end of the token list
+// add a token to the end of the token list
 void add_token(t_token **head, t_token *new_token)
 {
+    t_token *temp;
+    
     if (!*head)
         *head = new_token;
     else
     {
-        t_token *temp = *head;
+        temp = *head;
         while (temp->next)
             temp = temp->next;
         temp->next = new_token;
     }
 }
 
-// Function to tokenize input and assign token types
-t_token *lexer(const char *input) {
+// tokenize input and assign token types
+t_token *lexer(const char *input)
+{
     t_token *token_list = NULL;
-    int i = 0, start = 0;
-    char quote = 0; // To track quotes (' or ")
+    int i = 0;
+    int start = 0;
+    char quote = 0; // to track quotes
+    int last_token_was_pipe = 0; // to track double pipes
 
     while (input[i])
     {
         if (input[i] == '\'' || input[i] == '"')
         {
             if (quote == 0)
-                quote = input[i]; // Start quote
+                quote = input[i]; // first quote
             else if (quote == input[i])
-                quote = 0; // End quote
+                quote = 0; // close quote
         }
         else if (isspace(input[i]) && !quote)
         {
-            if (i > start) // Add the token
+            if (i > start)
                 add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            start = i + 1; // Move to the next token
-        }
-        else if (input[i] == '|' && !quote)
-        {
-            if (i > start) // Add the previous token
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            add_token(&token_list, create_token(PIPE, "|"));
-            start = i + 1;
+            start = i + 1; // move to the next token
         }
         else if (input[i] == '<' && !quote)
         {
-            if (i > start) // Add the previous token
+            if (i > start) // add the previous token
                 add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
             if (input[i + 1] == '<')
             {
                 add_token(&token_list, create_token(HEREDOC, "<<"));
-                i++; // Skip the second '<'
+                i++; // skip the second <
             }
             else
                 add_token(&token_list, create_token(REDIRECT_IN, "<"));
@@ -100,30 +84,54 @@ t_token *lexer(const char *input) {
         }
         else if (input[i] == '>' && !quote)
         {
-            if (i > start) // Add the previous token
+            if (i > start)
                 add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
             if (input[i + 1] == '>')
             {
                 add_token(&token_list, create_token(APPEND, ">>"));
-                i++; // Skip the second '>'
+                i++;
             }
             else
                 add_token(&token_list, create_token(REDIRECT_OUT, ">"));
             start = i + 1;
         }
-        
+        else if (input[i] == '|' && !quote)
+        {
+            if (last_token_was_pipe)
+            {
+                fprintf(stderr, "Error: Invalid sequence of consecutive '|' operators\n");
+                free_tokens(token_list);
+                return (NULL);
+            }
+            last_token_was_pipe = 1; // set flag for pipe
+            if (i > start)
+                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
+            add_token(&token_list, create_token(PIPE, "|"));
+            start = i + 1;
+        }
+        else
+            last_token_was_pipe = 0; // reset flag if not a pipe
         i++;
     }
-    if (i > start) // Add the last token
+
+    if (quote) // if quote != 0, means unclosed
+    {
+        fprintf(stderr, "Error: Unclosed quote '%c'\n", quote);
+        free_tokens(token_list);
+        return (NULL);
+    }
+
+    if (i > start)
         add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
 
-    return token_list;
+    return (token_list);
 }
 
-// Free the token list
+// free token list
 void free_tokens(t_token *tokens)
 {
     t_token *temp;
+    
     while (tokens)
     {
         temp = tokens;
@@ -133,7 +141,6 @@ void free_tokens(t_token *tokens)
     }
 }
 
-// Debug function to print tokens
 void print_tokens(t_token *tokens)
 {
     while (tokens)
@@ -147,39 +154,62 @@ int main()
 {
     char *input;
     t_token *tokens;
+    t_ast_node *ast;
 
     while (1)
     {
-        input = readline("minishell$ "); // Prompt user for input
+        input = readline("minishell$ ");
         if (!input)
         {
             printf("exit\n");
-            break ; // Exit if Ctrl+D is pressed
+            break;
         }
-        // Exit cmd
         if (strcmp(input, "exit") == 0)
         {
             free(input);
             printf("exit\n");
-            break ;
+            break;
         }
-        // Clear cmd
         else if (strcmp(input, "clear") == 0)
-            clear_screen();
-        // Add input to history for readline functionality
+            printf("\033[H\033[J");
+            
         if (*input)
             add_history(input);
-        // Tokenize the input
+
         tokens = lexer(input);
-        // Debug print tokens
-        // printf("Tokens:\n");
+        if (!tokens)
+        {
+            free(input);
+            continue;
+        }
+        ast = build_ast(tokens);
+
+        // test
         print_tokens(tokens);
-        // Free the tokens after use
+        print_ast(ast, 0);
+
         free_tokens(tokens);
-        
+        free_ast(ast);
+        free(input);
     }
     return (0);
 }
+
+// void clear_screen()
+// {
+//     struct winsize w;
+//     int i;
+    
+//     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+//     i = 0;
+//     while (i < w.ws_row)
+//     {
+//         write(STDOUT_FILENO, "\n", 1);
+//         i++;
+//     }
+//     write(STDOUT_FILENO, "\033[H", 4);
+//     write(STDOUT_FILENO, "\033[J", 3);
+// }
 
    // if (!input)
         // {

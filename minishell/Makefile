@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+         #
+#    By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/11/26 20:10:59 by ysetiawa         ###   ########.fr        #
+#    Updated: 2024/12/01 23:02:50 by yocelynnns       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS          = -Wall -Werror -Wextra
 LDFLAGS			= -lreadline
 RM              = rm -f
 
-SRCS            = main.c
+SRCS            = main.c ast.c
 
 OBJS            = $(SRCS:.c=.o)
 
