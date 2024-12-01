@@ -1,34 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 10:52:00 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/02 07:23:23 by messs            ###   ########.fr       */
+/*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
+/*   Updated: 2024/12/02 07:34:11 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	ft_putstr_fd(char *s, int fd);
-
-void	ft_putstr_fd(char *s, int fd)
+int ft_pwd(void)
 {
-	size_t	i;
-	size_t	size;
+    char cwd[PATH_MAX];
 
-	i = 0;
-	size = ft_strlen(s);
-	while (i < size)
-	{
-		ft_putchar_fd(s[i], fd);
-		i++;
-	}
+    if (getcwd(cwd, PATH_MAX))
+    {
+        ft_putendl_fd(cwd, 1);
+        return SUCCESS;
+    }
+    else
+    {
+        ft_putstr_fd("minishell: pwd: ", STDERR);
+        perror("");  // Will print the error message associated with errno
+        return ERROR;
+    }
 }
-
-// int	main(void)
-// {
-// 	ft_putstr_fd("hello",1);
-// }

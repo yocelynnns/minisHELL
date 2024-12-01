@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/02 06:03:08 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/02 07:31:34 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 #include <sys/ioctl.h>
 #include <limits.h>
 #include "libft/libft.h"
+
+#define SUCCESS 0
+#define ERROR 1
+#define STDERR 2
 
 // token types
 typedef enum
@@ -103,5 +107,16 @@ t_ast_node *build_ast(t_token *tokens);
 void free_ast(t_ast_node *node);
 void print_ast(t_ast_node *node, int depth);
 
+
+// builtins
+
+//  echo.c
+int ft_strcmp(const char *s1, const char *s2);
+int number_of_args(char **args);
+int ft_echo(char **args);
+// env.c
+int ft_env(t_env *env);
+// pwd.c
+int ft_pwd(void);
 
 #endif
