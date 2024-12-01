@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/01 23:02:38 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/02 06:03:08 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ typedef struct s_ast_redirect
 
 typedef struct s_env
 {
-    char *value;
-    struct s_env *next;
+    char *value;            // key value
+    struct s_env *next;     // linkedlist
 } t_env;
 
 // token
@@ -102,5 +102,6 @@ t_ast_node *parse_redirect(t_token **tokens);
 t_ast_node *build_ast(t_token *tokens);
 void free_ast(t_ast_node *node);
 void print_ast(t_ast_node *node, int depth);
+
 
 #endif
