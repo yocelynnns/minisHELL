@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/02 07:31:34 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/02 14:10:24 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,12 @@
 
 #define SUCCESS 0
 #define ERROR 1
+
+#define STDIN 0
+#define STDOUT 1
 #define STDERR 2
+
+#define BUFF_SIZE 4096
 
 // token types
 typedef enum

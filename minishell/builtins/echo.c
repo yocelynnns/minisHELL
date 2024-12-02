@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:55:13 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 07:32:30 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/02 12:24:11 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,23 @@ int ft_echo(char **args)
     i = 1;
     n_contains = 0;
 
-    // Check if more than one argument is passed
     if (number_of_args(args) > 1)
     {
-        // Check for the -n option (no newline)
         while (args[i] && ft_strcmp(args[i], "-n") == 0)
         {
             n_contains = 1;
             i++;
         }
 
-        // Print all arguments except the -n option
         while (args[i])
         {
             ft_putstr_fd(args[i], 1);
-            if (args[i + 1])  // Avoid printing a space after the last argument
+            if (args[i + 1])
                 write(1, " ", 1);
             i++;
         }
     }
 
-    // Print newline unless -n option is specified
     if (n_contains == 0)
         write(1, "\n", 1);
 

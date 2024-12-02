@@ -1,31 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 14:36:40 by messs            ###   ########.fr       */
+/*   Created: 2024/12/02 13:33:34 by messs             #+#    #+#             */
+/*   Updated: 2024/12/02 14:19:07 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int ft_env(t_env *env)
-{
-    if (!env)
-    {
-        ft_putendl_fd("No environment variables found.", 1);
-        return (SUCCESS);
-    }
-    while (env && env->next != NULL)
-    {
-        if (env->value)
-            ft_putendl_fd(env->value, 1);
-        env = env->next;
-    }
-    if (env && env->value)
-        ft_putendl_fd(env->value, 1);
-    return (SUCCESS);
-}

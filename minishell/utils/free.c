@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 14:36:40 by messs            ###   ########.fr       */
+/*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
+/*   Updated: 2024/12/02 14:46:56 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_env(t_env *env)
+void	*ft_memdel(void *ptr)
 {
-    if (!env)
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+	return (NULL);
+}
+
+void free_env(t_env *env)
+{
+    t_env *tmp;
+    
+    while (env && env->next)
     {
-        ft_putendl_fd("No environment variables found.", 1);
-        return (SUCCESS);
-    }
-    while (env && env->next != NULL)
-    {
-        if (env->value)
-            ft_putendl_fd(env->value, 1);
+        tmp = env;
         env = env->next;
+        ft_memdel(tmp->value);
+        ft_memdel(tmp);
     }
-    if (env && env->value)
-        ft_putendl_fd(env->value, 1);
-    return (SUCCESS);
+    ft_memdel(env->value);
+    ft_memdel(env);
+    
 }

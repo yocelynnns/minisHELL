@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/02 07:38:11 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/02 12:37:55 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ int main()
 
     printf("Testing pwd:\n");
     ft_pwd();
+    
     // CAN DELTE THIS IF YOU WANT YOCE
     
     while (1)

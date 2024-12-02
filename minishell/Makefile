@@ -6,7 +6,7 @@
 #    By: messs <messs@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/02 07:34:38 by messs            ###   ########.fr        #
+#    Updated: 2024/12/02 13:34:12 by messs            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS          = -Wall -Werror -Wextra
 LDFLAGS			= -lreadline
 RM              = rm -f
 
-SRCS            = main.c ast.c builtins/echo.c builtins/pwd.c builtins/env.c
+SRCS            = main.c ast.c builtins/echo.c builtins/pwd.c builtins/env.c builtins/export.c
 
 LIBFT_PATH      = ./libft
 LIBFT           = $(LIBFT_PATH)/libft.a
