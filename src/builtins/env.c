@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 14:36:40 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/03 16:02:45 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int ft_env(t_env *env)
 {

@@ -3,11 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:33:34 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 14:19:07 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/03 16:02:47 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"

@@ -3,24 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: messs <messs@student.42.fr>                +#+  +:+       +#+         #
+#    By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/02 13:34:12 by messs            ###   ########.fr        #
+#    Updated: 2024/12/03 16:04:56 by ysetiawa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME            = minishell
 
+INC				= inc/
+SRC_DIR         = src/
+
 CC              = cc
-CFLAGS          = -Wall -Werror -Wextra
+CFLAGS          = -Wall -Werror -Wextra -g -I$(INC)
 LDFLAGS			= -lreadline
 RM              = rm -f
 
-SRCS            = main.c ast.c builtins/echo.c builtins/pwd.c builtins/env.c builtins/export.c
-
-LIBFT_PATH      = ./libft
+LIBFT_PATH      = libft
 LIBFT           = $(LIBFT_PATH)/libft.a
+
+PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
+				  $(SRC_DIR)parsing/token.c 
+
+BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
+				  $(SRC_DIR)builtins/pwd.c \
+				  $(SRC_DIR)builtins/env.c \
+				  $(SRC_DIR)builtins/export.c 
+
+ENV_DIR			= $(SRC_DIR)env/get_env.c
+
+UTILS_DIR		= $(SRC_DIR)utils/free.c
+
+SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
+				  $(PARSING_DIR) $(BUILTINS_DIR) \
+				  $(ENV_DIR) $(UTILS_DIR)
 
 OBJS            = $(SRCS:.c=.o)
 

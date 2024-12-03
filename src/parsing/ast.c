@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/02 07:17:27 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:47:37 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 t_ast_node *create_ast_node(t_ast_node_type type)
 {
@@ -30,121 +30,6 @@ t_ast_node *create_ast_node(t_ast_node_type type)
     new_node->redirect = NULL;
 
     return (new_node);
-}
-
-void free_ast(t_ast_node *node)
-{
-    int i;
-    
-    if (!node)
-        return;
-
-    if (node->type == AST_COMMAND)
-    {
-        if (node->command)
-        {
-            if (node->command->args)
-            {
-                i = 0;
-                while (node->command->args[i])
-                {
-                    free(node->command->args[i]);
-                    i++;
-                }
-                free(node->command->args);
-            }
-            free(node->command->redirect);
-            free(node->command);
-        }
-    }
-
-    if (node->type == AST_PIPELINE)
-    {
-        if (node->pipeline)
-        {
-            free_ast(node->pipeline->left);
-            free_ast(node->pipeline->right);
-            free(node->pipeline);
-        }
-    }
-
-    if (node->type == AST_REDIRECT)
-    {
-        if (node->redirect)
-        {
-            free(node->redirect->file);
-            free(node->redirect);
-        }
-    }
-
-    if (node->type == AST_WORD)
-        free(node->word);
-
-    free(node);
-}
-
-void print_ast(t_ast_node *node, int depth)
-{
-    int i;
-    int j;
-    int k;
-    
-    if (!node) 
-        return;
-
-    i = 0; 
-    while (i < depth)
-    {
-        printf("  ");
-        i++;
-    }
-
-    if (node->type == AST_PIPELINE)
-    {
-        printf("PIPELINE\n");
-        print_ast(node->pipeline->left, depth + 1);
-        print_ast(node->pipeline->right, depth + 1);
-    }
-    else if (node->type == AST_COMMAND)
-    {
-        printf("COMMAND: [");
-        j = 0;
-        while (node->command->args[j])
-        {
-            printf("\"%s\"", node->command->args[j]);
-            if (node->command->args[j + 1])
-                printf(", ");
-            j++;
-        }
-        printf("]\n");
-
-        if (node->command->redirect)
-            print_ast(node->command->redirect, depth + 1);
-    }
-    else if (node->type == AST_REDIRECT)
-    {
-        printf("REDIRECT:\n");
-        k = 0;
-        while (k < depth + 1)
-        {
-            printf("  ");
-            k++;
-        }
-        if (node->redirect->type == REDIRECT_OUT)
-            printf("TYPE: >\n");
-        else
-            printf("TYPE: <\n");
-        printf("FILE: \"%s\"\n", node->redirect->file);
-    }
-    else if (node->type == AST_WORD)
-        printf("WORD: \"%s\"\n", node->word);
-    else
-        printf("UNKNOWN NODE TYPE\n");
-}
-
-t_ast_node *parse_command_line(t_token **tokens)
-{
-    return (parse_pipeline(tokens));
 }
 
 t_ast_node *parse_pipeline(t_token **tokens)
@@ -259,5 +144,5 @@ t_ast_node *parse_redirect(t_token **tokens)
 
 t_ast_node *build_ast(t_token *tokens)
 {
-    return (parse_command_line(&tokens));
+    return (parse_pipeline(&tokens));
 }

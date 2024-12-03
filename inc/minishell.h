@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/02 14:10:24 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/03 16:02:07 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <limits.h>
-#include "libft/libft.h"
+#include <linux/limits.h> 
+#include "../libft/libft.h"
 
 #define SUCCESS 0
 #define ERROR 1
