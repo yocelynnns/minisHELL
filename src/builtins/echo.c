@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:55:13 by messs             #+#    #+#             */
-/*   Updated: 2024/12/03 16:02:42 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/03 21:21:28 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,3 +62,6 @@ int ft_echo(char **args)
 
     return SUCCESS;
 }
+
+// need to check for test case such as "echo -nnnnnnnnn"
+// its not behaving as how the bash is

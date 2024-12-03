@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/03 16:02:07 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/03 21:09:07 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ typedef enum
     AST_PIPELINE,
     AST_COMMAND,
     AST_REDIRECT,
-    AST_WORD
+    AST_WORD,
+    AST_ECHO, 
+    AST_PWD, 
+    AST_EXTERNAL
 } t_ast_node_type;
 
 // ast node struct
@@ -113,6 +116,8 @@ t_ast_node *build_ast(t_token *tokens);
 void free_ast(t_ast_node *node);
 void print_ast(t_ast_node *node, int depth);
 
+// exec test
+int execute_command(t_ast_node *ast);
 
 // builtins
 

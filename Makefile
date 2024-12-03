@@ -6,7 +6,7 @@
 #    By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/03 16:04:56 by ysetiawa         ###   ########.fr        #
+#    Updated: 2024/12/03 21:08:16 by ysetiawa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,9 +35,11 @@ ENV_DIR			= $(SRC_DIR)env/get_env.c
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c
 
+EXEC_DIR		= $(SRC_DIR)execute/exec.c
+
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \
-				  $(ENV_DIR) $(UTILS_DIR)
+				  $(ENV_DIR) $(UTILS_DIR) $(EXEC_DIR)
 
 OBJS            = $(SRCS:.c=.o)
 
