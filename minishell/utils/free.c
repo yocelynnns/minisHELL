@@ -6,34 +6,21 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2024/12/02 14:46:56 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/03 15:04:05 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	*ft_memdel(void *ptr)
-{
-	if (ptr)
-	{
-		free(ptr);
-		ptr = NULL;
-	}
-	return (NULL);
-}
+#include <stdlib.h>
 
-void free_env(t_env *env)
-{
+void free_env(t_env *env) {
     t_env *tmp;
-    
-    while (env && env->next)
-    {
-        tmp = env;
-        env = env->next;
-        ft_memdel(tmp->value);
-        ft_memdel(tmp);
+
+    while (env) {
+        tmp = env->next;    // Save the next node
+        free(env->value);   // Free the key-value string
+        free(env);          // Free the current node
+        env = tmp;          // Move to the next node
     }
-    ft_memdel(env->value);
-    ft_memdel(env);
-    
 }
