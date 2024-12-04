@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/03 21:19:57 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:47:25 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int execute_command(t_ast_node *ast)
             printf("\033[H\033[J");
             return (0);
         }
+        else 
+            return (0);
     }
     return -1;
 }

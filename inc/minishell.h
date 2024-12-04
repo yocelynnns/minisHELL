@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/03 21:09:07 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:43:49 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_ast_pipeline
 
 typedef struct s_ast_redirect
 {
+    t_ast_node *next;
     char *file;                // file name
     int type;                  // redirect in or out
 } t_ast_redirect;

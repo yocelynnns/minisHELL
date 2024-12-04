@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:21:15 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/03 15:51:19 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:23:50 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,14 @@ void print_ast(t_ast_node *node, int depth)
         }
         if (node->redirect->type == REDIRECT_OUT)
             printf("TYPE: >\n");
-        else
+        else if (node->redirect->type == APPEND)
+            printf("TYPE: >>\n");
+        else if (node->redirect->type == REDIRECT_IN)
             printf("TYPE: <\n");
+        else if (node->redirect->type == HEREDOC)
+            printf("TYPE: <<\n");
+        for (i = 0; i <= depth; i++)
+            printf("  ");
         printf("FILE: \"%s\"\n", node->redirect->file);
     }
     else if (node->type == AST_WORD)
