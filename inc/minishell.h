@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/05 17:38:33 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/06 06:28:26 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <sys/wait.h>
 #include <limits.h>
 #include <fcntl.h>
-#include <linux/limits.h> 
+#include <limits.h> 
 #include "../libft/libft.h"
 
 #define SUCCESS 0
