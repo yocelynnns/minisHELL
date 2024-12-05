@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/04 14:43:49 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:58:09 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ typedef struct s_ast_node
     struct s_ast_pipeline *pipeline;    
     struct s_ast_command *command;      
     struct s_ast_redirect *redirect;    
-    char *word;                         
+    char *word;
+
 } t_ast_node;
 
 typedef struct s_ast_command
@@ -101,6 +102,13 @@ typedef struct s_env
     char *value;            // key value
     struct s_env *next;     // linkedlist
 } t_env;
+
+
+typedef struct s_minishell
+{
+    t_env *env;
+}t_minishell;
+
 
 // token
 t_token *create_token(t_token_type type, const char *value);
@@ -130,5 +138,8 @@ int ft_echo(char **args);
 int ft_env(t_env *env);
 // pwd.c
 int ft_pwd(void);
+
+// free.c
+void free_env(t_env *env);
 
 #endif

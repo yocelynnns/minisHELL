@@ -3,20 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/04 14:46:52 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:01:22 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int main()
+int main(int ac, char **av, char **env)
 {
     char *input;
     t_token *tokens;
     t_ast_node *ast;
+    t_minishell mini;
+
+    (void)ac;
+    (void)av;
+    if (env_init(&mini, envp) == 0)
+    {
+        fprintf(stderr, "Error: Failed to initialize environment variables\n");
+        return (1);
+    }
     
     while (1)
     {
