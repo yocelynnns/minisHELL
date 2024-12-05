@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:55:13 by messs             #+#    #+#             */
-/*   Updated: 2024/12/03 21:21:28 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:35:01 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,11 @@ int ft_echo(char **args)
     return SUCCESS;
 }
 
-// need to check for test case such as "echo -nnnnnnnnn"
-// its not behaving as how the bash is
+// need to check for test case such as ( echo "hello world" ) 
+// bash output is:
+// bash$ echo "hello world"
+// hello world
+// when i test:
+// minishell$ echo "hello world"
+// "hello world"
+// we cannot have the double quote

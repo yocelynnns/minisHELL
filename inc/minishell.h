@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/05 15:58:09 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/05 17:38:33 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <limits.h>
+#include <fcntl.h>
 #include <linux/limits.h> 
 #include "../libft/libft.h"
 
@@ -61,10 +64,7 @@ typedef enum
     AST_PIPELINE,
     AST_COMMAND,
     AST_REDIRECT,
-    AST_WORD,
-    AST_ECHO, 
-    AST_PWD, 
-    AST_EXTERNAL
+    AST_WORD
 } t_ast_node_type;
 
 // ast node struct
@@ -125,7 +125,7 @@ t_ast_node *build_ast(t_token *tokens);
 void free_ast(t_ast_node *node);
 void print_ast(t_ast_node *node, int depth);
 
-// exec test
+// exec
 int execute_command(t_ast_node *ast);
 
 // builtins
@@ -136,6 +136,8 @@ int number_of_args(char **args);
 int ft_echo(char **args);
 // env.c
 int ft_env(t_env *env);
+
+int env_init(t_minishell *mini, char **env);
 // pwd.c
 int ft_pwd(void);
 
