@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/05 16:01:22 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/05 16:04:24 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int main(int ac, char **av, char **env)
         free_tokens(tokens);
         free_ast(ast);
         free(input);
+        free_env(mini.env);
     }
     return (0);
 }
