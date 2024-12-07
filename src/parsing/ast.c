@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/04 15:21:29 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/08 00:36:15 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,10 @@ t_ast_node *parse_command(t_token **tokens)
                 last_redirect = last_redirect->redirect->next;
             last_redirect->redirect->next = redirect_node;
         }
+        // If it's a HEREDOC, read the content
+        if (redirect_node->redirect->type == HEREDOC) {
+            command_node->command->heredoc = read_heredoc(redirect_node->redirect->file); // Implement this function
+        }
     }
 
     // Parse command arguments
@@ -134,6 +138,10 @@ t_ast_node *parse_command(t_token **tokens)
             while (last_redirect->redirect->next)
                 last_redirect = last_redirect->redirect->next;
             last_redirect->redirect->next = redirect_node;
+        }
+        // If it's a HEREDOC, read the content
+        if (redirect_node->redirect->type == HEREDOC) {
+            command_node->command->heredoc = read_heredoc(redirect_node->redirect->file); // Implement this function
         }
     }
 

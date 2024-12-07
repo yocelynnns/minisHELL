@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/06 06:28:26 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/08 00:52:19 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 #define STDERR 2
 
 #define BUFF_SIZE 4096
+#define INITIAL_SIZE 4096
 
 // token types
 typedef enum
@@ -82,6 +83,7 @@ typedef struct s_ast_command
 {
     char **args;               // commands
     t_ast_node *redirect;      // redirect node (if there is)
+    char *heredoc;
 } t_ast_command;
 
 typedef struct s_ast_pipeline
@@ -103,11 +105,10 @@ typedef struct s_env
     struct s_env *next;     // linkedlist
 } t_env;
 
-
 typedef struct s_minishell
 {
     t_env *env;
-}t_minishell;
+} t_minishell;
 
 
 // token
@@ -126,7 +127,10 @@ void free_ast(t_ast_node *node);
 void print_ast(t_ast_node *node, int depth);
 
 // exec
-int execute_command(t_ast_node *ast);
+int execute_command(t_ast_node *ast, char **env);
+char *find_executable(const char *cmd);
+char *concat_path(const char *dir, const char *cmd);
+char *read_heredoc(const char *delim);
 
 // builtins
 
