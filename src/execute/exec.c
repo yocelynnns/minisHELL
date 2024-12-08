@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/08 00:55:37 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/08 14:30:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char *read_heredoc(const char *delimiter)
         perror("malloc");
         return NULL;
     }
-    
+
     size_t total_length = 0;
     size_t delimiter_length = ft_strlen(delimiter);
     size_t current_size = INITIAL_SIZE;
@@ -43,7 +43,7 @@ char *read_heredoc(const char *delimiter)
         content[total_length + bytes_read] = '\0';
 
         // Check if the line matches the delimiter
-        if (ft_strncmp(content + total_length, delimiter, delimiter_length) == 0 && 
+        if (ft_strncmp(content + total_length, delimiter, delimiter_length) == 0 &&
             (content[total_length + delimiter_length] == '\n' || content[total_length + delimiter_length] == '\0')) {
             break; // Exit if the delimiter is found
         }
@@ -126,7 +126,7 @@ char *find_executable(const char *cmd)
         if (!full_path)
         {
             // Free previously allocated directories
-            int j = 0;            
+            int j = 0;
             while (dirs[j] != NULL)
             {
                 free(dirs[j]);
@@ -135,7 +135,7 @@ char *find_executable(const char *cmd)
             free(dirs);
             return NULL;
         }
-        
+
         if (access(full_path, X_OK) == 0) // Check if the file is executable
         {
             // Free the directories array
@@ -148,7 +148,7 @@ char *find_executable(const char *cmd)
             free(dirs);
             return full_path; // Return the full path if found
         }
-        
+
         free(full_path);
         i++;
     }
@@ -171,7 +171,7 @@ int execute_command(t_ast_node *ast, char **env)
     int status;
     t_ast_node *redirect;
 
-    if (ast->type == AST_COMMAND) 
+    if (ast->type == AST_COMMAND)
     {
         // simple commands
         pid = fork();
