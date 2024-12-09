@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/10 02:14:01 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/10 07:43:37 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int update_previous_directory(t_env *env_list)
 
     if (!getcwd(current_directory, PATH_MAX))
         return ERROR;
-    previous_directory = malloc(strlen("OLDPWD=") + ft_strlen(current_directory) + 1);
+    previous_directory = malloc(ft_strlen("OLDPWD=") + ft_strlen(current_directory) + 1);
     if (!previous_directory)
         return ERROR;
     ft_memcpy(previous_directory, "OLDPWD=", 7);
