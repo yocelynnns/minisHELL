@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/10 02:13:15 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/10 02:14:01 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int navigate_to_special_directory(int option, t_env *env_list)
             ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
             return ERROR;
         }
-        ft_putendl_fd(directory_path, STDOUT_FILENO); // Print the directory for cd -
+        ft_putendl_fd(directory_path, STDOUT_FILENO);
     }
     if (update_previous_directory(env_list) != SUCCESS)
     {
