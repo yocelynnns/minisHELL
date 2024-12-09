@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/09 18:13:11 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:44:15 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ typedef struct s_minishell
 {
 	t_env					*env;
 	int						exit;
-	int						ret;
 }							t_minishell;
 
 // token
@@ -142,12 +141,13 @@ int							ft_echo(char **args);
 char *remove_quotes(const char *str);
 // env.c
 int							ft_env(t_env *env);
-
 int							env_init(t_minishell *mini, char **env);
 // pwd.c
 int							ft_pwd(void);
-
 // free.c
 void						free_env(t_env *env);
+// exit.c
+int	check_is_number(char *str);
+void	ft_exit(t_minishell *mini, char **av);
 
 #endif

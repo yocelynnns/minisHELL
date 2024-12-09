@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:05:42 by messs             #+#    #+#             */
-/*   Updated: 2024/12/09 18:23:36 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:29:16 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int ft_echo(char **args)
             ft_putstr_fd(arg_no_quotes, 1);
             free(arg_no_quotes);
         }
-        if (args[i + 1])
+        if (args[i + 1] && args[i][0] != '\0')
             write(1, " ", 1);
         i++;
     }
