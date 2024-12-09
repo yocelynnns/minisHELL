@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/09 18:44:15 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/10 02:07:49 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
+# include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -149,5 +150,12 @@ void						free_env(t_env *env);
 // exit.c
 int	check_is_number(char *str);
 void	ft_exit(t_minishell *mini, char **av);
+// cd.c
+void print_cd_error(const char *path);
+char *find_env_variable(t_env *env_list, const char *variable, size_t len);
+int update_previous_directory(t_env *env_list);
+int navigate_to_special_directory(int option, t_env *env_list);
+int ft_cd(char **arguments, t_env *env_list);
+
 
 #endif

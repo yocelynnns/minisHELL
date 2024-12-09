@@ -6,7 +6,7 @@
 #    By: messs <messs@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/05 16:02:25 by messs            ###   ########.fr        #
+#    Updated: 2024/12/10 02:08:38 by messs            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,9 @@ PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
 BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/pwd.c \
 				  $(SRC_DIR)builtins/env.c \
-				  $(SRC_DIR)builtins/export.c 
+				  $(SRC_DIR)builtins/export.c \
+				  $(SRC_DIR)builtins/exit.c\
+				  $(SRC_DIR)builtins/cd.c
 
 ENV_DIR			= $(SRC_DIR)env/get_env.c
 
