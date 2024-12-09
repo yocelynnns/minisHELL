@@ -6,7 +6,7 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/09 16:54:24 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:13:11 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ char						*read_heredoc(const char *delim);
 int							ft_strcmp(const char *s1, const char *s2);
 int							number_of_args(char **args);
 int							ft_echo(char **args);
+char *remove_quotes(const char *str);
 // env.c
 int							ft_env(t_env *env);
 

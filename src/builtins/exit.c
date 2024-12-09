@@ -6,7 +6,13 @@
 /*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2024/12/09 16:54:13 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/09 18:14:17 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../inc/minishell.h"
+
+void ft_exit(t_minishell mini, char **av)
+{
+    
+}
