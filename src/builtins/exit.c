@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2024/12/10 02:06:57 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/10 21:11:33 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_is_number(char *str)
 {
-	int i;
+	int	i;
 
 	if (str == NULL || *str == '\0')
 		return (0);
@@ -32,13 +32,13 @@ int	check_is_number(char *str)
 
 void	ft_exit(t_minishell *mini, char **av)
 {
-    mini->exit = 1;
+	mini->exit = 1;
 	ft_putstr_fd("exit\n", STDERR);
 
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		exit(1); 
+		exit(1);
 	}
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
@@ -47,10 +47,8 @@ void	ft_exit(t_minishell *mini, char **av)
 		ft_putendl_fd(": numeric argument required", STDERR);
 		exit(255); 
 	}
-
 	if (av[1])
 		exit(ft_atoi(av[1]) % 256);
-
 	exit(0); 
 }
 // ft_atoi(av[1]). Then, it takes the result modulo 256 (with % 256) 

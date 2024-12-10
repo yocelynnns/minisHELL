@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/07 18:58:21 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/10 20:21:31 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int main(int ac, char **av, char **env)
         // print_ast(ast, 0);
 
         // Execute the command(s) represented by the AST
-        exit_status = execute_command(ast, env);
-        if (exit_status == 1)
+        exit_status = execute_command(ast, env, mini);
+        if (exit_status == 0)
         {
             free_tokens(tokens);
             free_ast(ast);
@@ -87,26 +87,3 @@ int main(int ac, char **av, char **env)
 
     return exit_status;
 }
-
-    // CAN DELTE THIS IF YOU WANT YOCE
-
-    // printf("Test 1: Simple echo\n");
-    // char *args1[] = {"echo", "Hello", "world", NULL};
-    // ft_echo(args1);  // Should print "Hello world"
-
-    // printf("\nTest 2: Echo with -n option\n");
-    // char *args2[] = {"echo", "-n", "Hello", "world", NULL};
-    // ft_echo(args2);  // Should print "Hello world" without a newline
-
-    // printf("\nTest 3: Echo with only -n\n");
-    // char *args3[] = {"echo", "-n", NULL};
-    // ft_echo(args3);
-
-    // printf("Testing pwd:\n");
-    // ft_pwd();
-    
-    // CAN DELTE THIS IF YOU WANT YOCE
-
-     // test
-        // print_tokens(tokens);
-        // print_ast(ast, 0);

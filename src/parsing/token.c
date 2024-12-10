@@ -6,123 +6,152 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/03 15:47:50 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:58:15 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 // create a new token
-t_token *create_token(t_token_type type, const char *value)
+t_token	*create_token(t_token_type type, const char *value)
 {
-    t_token *new_token;
-    
-    new_token = malloc(sizeof(t_token));
-    if (!new_token)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-    new_token->type = type;
-    new_token->value = strdup(value);
-    new_token->next = NULL;
-    return (new_token);
+	t_token	*new_token;
+
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	new_token->type = type;
+	new_token->value = strdup(value);
+	new_token->next = NULL;
+	return (new_token);
 }
 
 // add a token to the end of the token list
-void add_token(t_token **head, t_token *new_token)
+void	add_token(t_token **head, t_token *new_token)
 {
-    t_token *temp;
-    
-    if (!*head)
-        *head = new_token;
-    else
-    {
-        temp = *head;
-        while (temp->next)
-            temp = temp->next;
-        temp->next = new_token;
-    }
+	t_token	*temp;
+
+	if (!*head)
+		*head = new_token;
+	else
+	{
+		temp = *head;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new_token;
+	}
 }
 
-// tokenize input and assign token types
-t_token *lexer(const char *input)
+static int	handle_quotes(char c, char *quote)
 {
-    t_token *token_list = NULL;
-    int i = 0;
-    int start = 0;
-    char quote = 0; // to track quotes
-    int last_token_was_pipe = 0; // to track double pipes
+	if (c == '\'' || c == '"')
+	{
+		if (*quote == 0)
+			*quote = c;
+		else if (*quote == c)
+			*quote = 0;
+		return (1);
+	}
+	return (0);
+}
 
-    while (input[i])
-    {
-        if (input[i] == '\'' || input[i] == '"')
-        {
-            if (quote == 0)
-                quote = input[i]; // first quote
-            else if (quote == input[i])
-                quote = 0; // close quote
-        }
-        else if (isspace(input[i]) && !quote)
-        {
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            start = i + 1; // move to the next token
-        }
-        else if (input[i] == '<' && !quote)
-        {
-            if (i > start) // add the previous token
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            if (input[i + 1] == '<')
-            {
-                add_token(&token_list, create_token(HEREDOC, "<<"));
-                i++; // skip the second <
-            }
-            else
-                add_token(&token_list, create_token(REDIRECT_IN, "<"));
-            start = i + 1;
-        }
-        else if (input[i] == '>' && !quote)
-        {
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            if (input[i + 1] == '>')
-            {
-                add_token(&token_list, create_token(APPEND, ">>"));
-                i++;
-            }
-            else
-                add_token(&token_list, create_token(REDIRECT_OUT, ">"));
-            start = i + 1;
-        }
-        else if (input[i] == '|' && !quote)
-        {
-            if (last_token_was_pipe)
-            {
-                fprintf(stderr, "Error: Invalid sequence of consecutive '|' operators\n");
-                free_tokens(token_list);
-                return (NULL);
-            }
-            last_token_was_pipe = 1; // set flag for pipe
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            add_token(&token_list, create_token(PIPE, "|"));
-            start = i + 1;
-        }
-        else
-            last_token_was_pipe = 0; // reset flag if not a pipe
-        i++;
-    }
+static void	handle_word(const char *input, int *start, \
+int i, t_token **token_list)
+{
+	if (i > *start)
+	{
+		add_token(token_list, create_token(WORD, \
+		strndup(input + *start, i - *start)));
+		*start = i + 1;
+	}
+}
 
-    if (quote) // if quote != 0, means unclosed
-    {
-        fprintf(stderr, "Error: Unclosed quote '%c'\n", quote);
-        free_tokens(token_list);
-        return (NULL);
-    }
+static int	handle_redirect(const char *input, int *i, \
+int *start, t_token **token_list)
+{
+	int	redirect_type;
 
-    if (i > start)
-        add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
+	if (input[*i] == '<' || input[*i] == '>')
+	{
+		handle_word(input, start, *i, token_list);
+		if (input[*i] == '<' && input[*i + 1] == '<')
+		{
+			add_token(token_list, create_token(HEREDOC, "<<"));
+			(*i)++;
+		}
+		else if (input[*i] == '>' && input[*i + 1] == '>')
+		{
+			add_token(token_list, create_token(APPEND, ">>"));
+			(*i)++;
+		}
+		else
+		{
+			if (input[*i] == '<')
+				redirect_type = REDIRECT_IN;
+			else
+				redirect_type = REDIRECT_OUT;
+			add_token(token_list, create_token(redirect_type, \
+			strndup(input + *i, 1)));
+		}
+		*start = *i + 1;
+		return (1);
+	}
+	return (0);
+}
 
-    return (token_list);
+static int	handle_pipe(const char *input, int *i, int \
+*start, t_token **token_list, int *last_pipe)
+{
+	if (input[*i] == '|')
+	{
+		if (*last_pipe)
+		{
+			fprintf(stderr, "Error: Invalid \
+			sequence of consecutive '|' operators\n");
+			free_tokens(*token_list);
+			return (0);
+		}
+		*last_pipe = 1;
+		handle_word(input, start, *i, token_list);
+		add_token(token_list, create_token(PIPE, "|"));
+		*start = *i + 1;
+		return (1);
+	}
+	*last_pipe = 0;
+	return (0);
+}
+
+t_token	*lexer(const char *input)
+{
+	t_token	*token_list;
+	int		i;
+	int		start;
+	int		last_pipe;
+	char	quote;
+
+	i = 0;
+	start = 0;
+	last_pipe = 0;
+	token_list = NULL;
+	quote = 0;
+	while (input[i])
+	{
+		handle_quotes(input[i], &quote);
+		if (isspace(input[i]) && !quote)
+			handle_word(input, &start, i, &token_list);
+		handle_redirect(input, &i, &start, &token_list);
+		handle_pipe(input, &i, &start, &token_list, &last_pipe);
+		i++;
+	}
+	if (quote)
+	{
+		fprintf(stderr, "Error: Unclosed quote '%c'\n", quote);
+		free_tokens(token_list);
+		return (NULL);
+	}
+	handle_word(input, &start, i, &token_list);
+	return (token_list);
 }

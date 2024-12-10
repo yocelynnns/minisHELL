@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/10 02:07:49 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/10 20:09:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "../libft/libft.h"
 # include <ctype.h>
 # include <fcntl.h>
-# include <limits.h>
+# include <linux/limits.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -82,9 +82,9 @@ typedef struct s_ast_node
 
 typedef struct s_ast_command
 {
-	char **args;          // commands
-	t_ast_node *redirect; // redirect node (if there is)
-	char					*heredoc;
+	char		**args;          // commands
+	t_ast_node	*redirect; // redirect node (if there is)
+	char		*heredoc;
 }							t_ast_command;
 
 typedef struct s_ast_pipeline
@@ -128,7 +128,7 @@ void						free_ast(t_ast_node *node);
 void						print_ast(t_ast_node *node, int depth);
 
 // exec
-int							execute_command(t_ast_node *ast, char **env);
+int							execute_command(t_ast_node *ast, char **env, t_minishell mini);
 char						*find_executable(const char *cmd);
 char						*concat_path(const char *dir, const char *cmd);
 char						*read_heredoc(const char *delim);
