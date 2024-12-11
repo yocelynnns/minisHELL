@@ -5,41 +5,62 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/05 15:47:21 by messs             #+#    #+#             */
-/*   Updated: 2024/12/08 14:25:41 by hthant           ###   ########.fr       */
+/*   Created: 2024/12/11 16:53:38 by hthant            #+#    #+#             */
+/*   Updated: 2024/12/11 16:54:07 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	env_init(t_minishell *mini, char **env)
+int	env_init(t_minishell *mini, char **env_array)
 {
-	t_env	*current;
+	t_env	*env;
 	t_env	*new;
 	int		i;
 
-	if (!env || !env[0])
-		return (0);
-	current = malloc(sizeof(t_env));
+	if (!env_array || !env_array[0])
+	{
+		ft_putendl_fd("env_array is empty or NULL.", 2);
+		return (1);
+	}
+	env = malloc(sizeof(t_env));
 	if (!env)
-		return (0);
-	current->value = ft_strdup(env[0]);
-	current->next = NULL;
-	mini->env = current;
+	{
+		ft_putendl_fd("Malloc failed for env head.", 2);
+		return (1);
+	}
+	env->value = ft_strdup(env_array[0]);
+	if (!env->value)
+	{
+		ft_putendl_fd("ft_strdup failed for first env value.", 2);
+		free(env);
+		return (1);
+	}
+	env->next = NULL;
+	mini->env = env;
 	i = 1;
-	while (env[i])
+	while (env_array[i])
 	{
 		new = malloc(sizeof(t_env));
 		if (!new)
 		{
+			ft_putendl_fd("Malloc failed for new env node.", 2);
 			free_env(mini->env);
 			return (0);
 		}
-		new->value = ft_strdup(env[i]);
+		new->value = ft_strdup(env_array[i]);
+		if (!new->value)
+		{
+			ft_putendl_fd("ft_strdup failed for env value.", 2);
+			free(new);
+			free_env(mini->env);
+			return (0);
+		}
 		new->next = NULL;
-		current->next = new;
-		current = new;
+		env->next = new;
+		env = new;
 		i++;
 	}
-	return (1);
+	ft_putendl_fd("Environment variables successfully initialized.", 2);
+	return (0);
 }
