@@ -3,16 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:32:41 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 20:02:13 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*concat_path(const char *dir, const char *cmd)
+static void	free_directories(char **dirs)
+{
+	int	i;
+
+	i = 0;
+	while (dirs[i] != NULL)
+	{
+		free(dirs[i]);
+		i++;
+	}
+	free(dirs);
+}
+
+static char	*concat_path(const char *dir, const char *cmd)
 {
 	size_t	dir_len;
 	size_t	cmd_len;
@@ -31,7 +44,7 @@ char	*concat_path(const char *dir, const char *cmd)
 	return (full_path);
 }
 
-char	*check_executable_in_dir(const char *dir, const char *cmd)
+static char	*check_executable_in_dir(const char *dir, const char *cmd)
 {
 	char	*full_path;
 
@@ -70,24 +83,4 @@ char	*find_executable(const char *cmd)
 	}
 	free_directories(dirs);
 	return (NULL);
-}
-
-void	exec_command_or_path(t_ast_node *ast, char **env)
-{
-	char	*command;
-	char	*executable_path;
-
-	command = ast->command->args[0];
-	if (command[0] == '/' && access(command, X_OK) == 0)
-		execve(command, ast->command->args, env);
-	executable_path = find_executable(command);
-	if (!executable_path)
-	{
-		fprintf(stderr, "Command not found: %s\n", command);
-		exit(EXIT_FAILURE);
-	}
-	execve(executable_path, ast->command->args, env);
-	perror("execve");
-	free(executable_path);
-	exit(EXIT_FAILURE);
 }

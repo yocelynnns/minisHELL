@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:03:34 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:27:53 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:45:36 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ast_redirect(t_token **tokens, t_ast_node *command_node)
+static int	ast_redirect(t_token **tokens, t_ast_node *command_node)
 {
 	t_ast_node	*redirect_node;
 	t_ast_node	*last_redirect;
@@ -35,28 +35,47 @@ int	ast_redirect(t_token **tokens, t_ast_node *command_node)
 	return (1);
 }
 
-int	validate_redirect_type(t_token **tokens, t_ast_node *redirect_node)
+static void	parse_arguments(t_token **tokens, t_ast_node *command_node)
 {
-	if ((*tokens)->type == REDIRECT_IN || (*tokens)->type == \
-	REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC)
+	int	arg_count;
+
+	arg_count = 0;
+	while (*tokens && (*tokens)->type == WORD)
 	{
-		redirect_node->redirect->type = (*tokens)->type;
+		command_node->command->args[arg_count++] = ft_strdup((*tokens)->value);
 		*tokens = (*tokens)->next;
-		return (1);
 	}
-	fprintf(stderr, "Error: Unexpected token in \
-	redirection: %s\n", (*tokens)->value);
-	return (0);
+	command_node->command->args[arg_count] = NULL;
 }
 
-int	capture_redirect_file(t_token **tokens, t_ast_node *redirect_node)
+static int	parse_all_redirects(t_token **tokens, t_ast_node *command_node)
 {
-	if (*tokens && (*tokens)->type == WORD)
+	while (*tokens && ((*tokens)->type == REDIRECT_IN || (*tokens)->type \
+	== REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC))
 	{
-		redirect_node->redirect->file = ft_strdup((*tokens)->value);
-		*tokens = (*tokens)->next;
-		return (1);
+		if (!ast_redirect(tokens, command_node))
+		{
+			free_ast(command_node);
+			return (0);
+		}
 	}
-	fprintf(stderr, "Error: Expected a filename after redirection.\n");
-	return (0);
+	return (1);
+}
+
+t_ast_node	*parse_command(t_token **tokens)
+{
+	t_ast_node	*command_node;
+
+	if (!tokens || !*tokens)
+		return (NULL);
+	command_node = create_ast_node(AST_COMMAND);
+	command_node->command = malloc(sizeof(t_ast_command));
+	command_node->command->args = malloc(sizeof(char *) * 10);
+	command_node->command->redirect = NULL;
+	if (!parse_all_redirects(tokens, command_node))
+		return (NULL);
+	parse_arguments(tokens, command_node);
+	if (!parse_all_redirects(tokens, command_node))
+		return (NULL);
+	return (command_node);
 }

@@ -6,82 +6,36 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:01:21 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:27:41 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:47:21 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_ast_node	*parse_pipeline(t_token **tokens)
+static int	validate_redirect_type(t_token **tokens, t_ast_node *redirect_node)
 {
-	t_ast_node	*left_command;
-	t_ast_node	*right_command;
-	t_ast_node	*pipeline_node;
-
-	left_command = parse_command(tokens);
-	if (!left_command)
-		return (NULL);
-	while (*tokens && (*tokens)->type == PIPE)
+	if ((*tokens)->type == REDIRECT_IN || (*tokens)->type == \
+	REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC)
 	{
+		redirect_node->redirect->type = (*tokens)->type;
 		*tokens = (*tokens)->next;
-		right_command = parse_command(tokens);
-		if (!right_command)
-		{
-			free_ast(left_command);
-			return (NULL);
-		}
-		pipeline_node = create_ast_node(AST_PIPELINE);
-		pipeline_node->pipeline = malloc(sizeof(t_ast_pipeline));
-		pipeline_node->pipeline->left = left_command;
-		pipeline_node->pipeline->right = right_command;
-		left_command = pipeline_node;
+		return (1);
 	}
-	return (left_command);
+	fprintf(stderr, "Error: Unexpected token in \
+	redirection: %s\n", (*tokens)->value);
+	return (0);
 }
 
-void	parse_arguments(t_token **tokens, t_ast_node *command_node)
+static int	capture_redirect_file(t_token **tokens, t_ast_node *redirect_node)
 {
-	int	arg_count;
-
-	arg_count = 0;
-	while (*tokens && (*tokens)->type == WORD)
+	if (*tokens && (*tokens)->type == WORD)
 	{
-		command_node->command->args[arg_count++] = ft_strdup((*tokens)->value);
+		redirect_node->redirect->file = ft_strdup((*tokens)->value);
 		*tokens = (*tokens)->next;
+		return (1);
 	}
-	command_node->command->args[arg_count] = NULL;
-}
-
-int	parse_all_redirects(t_token **tokens, t_ast_node *command_node)
-{
-	while (*tokens && ((*tokens)->type == REDIRECT_IN || (*tokens)->type \
-	== REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC))
-	{
-		if (!ast_redirect(tokens, command_node))
-		{
-			free_ast(command_node);
-			return (0);
-		}
-	}
-	return (1);
-}
-
-t_ast_node	*parse_command(t_token **tokens)
-{
-	t_ast_node	*command_node;
-
-	if (!tokens || !*tokens)
-		return (NULL);
-	command_node = create_ast_node(AST_COMMAND);
-	command_node->command = malloc(sizeof(t_ast_command));
-	command_node->command->args = malloc(sizeof(char *) * 10);
-	command_node->command->redirect = NULL;
-	if (!parse_all_redirects(tokens, command_node))
-		return (NULL);
-	parse_arguments(tokens, command_node);
-	if (!parse_all_redirects(tokens, command_node))
-		return (NULL);
-	return (command_node);
+	fprintf(stderr, "Error: Expected a filename after redirection.\n");
+	return (0);
 }
 
 t_ast_node	*parse_redirect(t_token **tokens)

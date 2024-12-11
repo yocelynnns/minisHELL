@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:57:08 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 18:01:58 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 19:56:29 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	handle_redirections(t_ast_node *ast)
+static void	handle_redirections(t_ast_node *ast)
 {
 	t_ast_node	*redirect;
 	int			fd;
@@ -42,7 +42,7 @@ void	handle_redirections(t_ast_node *ast)
 	}
 }
 
-void	handle_heredoc(t_ast_node *ast)
+static void	handle_heredoc(t_ast_node *ast)
 {
 	int	pipefd[2];
 
@@ -55,7 +55,27 @@ void	handle_heredoc(t_ast_node *ast)
 	close(pipefd[0]);
 }
 
-void	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
+static void	exec_command_or_path(t_ast_node *ast, char **env)
+{
+	char	*command;
+	char	*executable_path;
+
+	command = ast->command->args[0];
+	if (command[0] == '/' && access(command, X_OK) == 0)
+		execve(command, ast->command->args, env);
+	executable_path = find_executable(command);
+	if (!executable_path)
+	{
+		fprintf(stderr, "Command not found: %s\n", command);
+		exit(EXIT_FAILURE);
+	}
+	execve(executable_path, ast->command->args, env);
+	perror("execve");
+	free(executable_path);
+	exit(EXIT_FAILURE);
+}
+
+static void	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 {
 	int		pipefd[2];
 	pid_t	pid1;
@@ -106,7 +126,7 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		else if (ft_strcmp(ast->command->args[0], "env") == 0)
 			return (ft_env(mini.env));
 		// else if (ft_strcmp(ast->command->args[0], "export") == 0)
-			// return ft_export(ast->command->args);
+		// 	return ft_export(ast->command->args);
 		pid = fork();
 		if (pid == 0)
 		{

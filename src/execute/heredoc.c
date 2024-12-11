@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:55:28 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:32:43 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 19:58:26 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*resize_buffer(char *buffer, size_t *current_size, \
+static char	*resize_buffer(char *buffer, size_t *current_size, \
 size_t total_length)
 {
 	char	*new_buffer;
@@ -30,7 +30,7 @@ size_t total_length)
 	return (new_buffer);
 }
 
-int	is_delimiter(const char *line, const char *delimiter, \
+static int	is_delimiter(const char *line, const char *delimiter, \
 size_t delimiter_length)
 {
 	return (ft_strncmp(line, delimiter, delimiter_length) == 0 \
