@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:05:42 by messs             #+#    #+#             */
-/*   Updated: 2024/12/11 17:57:46 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:30:10 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,21 @@ char	*remove_quotes(const char *str)
 		result = ft_strdup(str);
 	return (result);
 }
+int	is_valid_n_flag(const char *arg)
+{
+	int	i;
+
+	if (!arg || arg[0] != '-')
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **args)
 {
@@ -70,7 +85,7 @@ int	ft_echo(char **args)
 
 	i = 1;
 	n_contains = 0;
-	while (args[i] && ft_strcmp(args[i], "-n") == 0)
+	while (args[i] && is_valid_n_flag(args[i]))
 	{
 		n_contains = 1;
 		i++;
