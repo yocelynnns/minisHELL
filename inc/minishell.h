@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:29:04 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:21:09 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,12 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <ctype.h>
 # include <errno.h>
 # include <fcntl.h>
-# include <limits.h>
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <signal.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/ioctl.h>
-# include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 # define SUCCESS 0
 # define ERROR 1

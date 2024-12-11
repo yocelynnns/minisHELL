@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:05:42 by messs             #+#    #+#             */
-/*   Updated: 2024/12/11 16:59:45 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 17:57:46 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 		s1++;
 		s2++;
 	}
-	return (unsigned char)(*s1) - (unsigned char)(*s2);
+	return ((unsigned char)(*s1) - (unsigned char)(*s2));
 }
 
 int	number_of_args(char **args)
@@ -35,8 +35,10 @@ int	number_of_args(char **args)
 char	*remove_quotes(const char *str)
 {
 	char	*result;
+	size_t	len;
+	size_t	i;
+	size_t	j;
 
-	size_t len, i, j;
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);

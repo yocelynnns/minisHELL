@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:57:08 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:43:29 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 18:01:58 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,18 +95,18 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-        if (ft_strcmp(ast->command->args[0], "echo") == 0)
-            return ft_echo(ast->command->args);
+		if (ft_strcmp(ast->command->args[0], "echo") == 0)
+			return (ft_echo(ast->command->args));
 		else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
-            return ft_pwd();
+			return (ft_pwd());
 		else if (ft_strcmp(ast->command->args[0], "exit") == 0)
-            return (ft_exit(&mini, ast->command->args), 1);
+			return (ft_exit(&mini, ast->command->args), 1);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
-            return ft_cd(ast->command->args, mini.env);
+			return (ft_cd(ast->command->args, mini.env));
 		else if (ft_strcmp(ast->command->args[0], "env") == 0)
-            return ft_env(mini.env);
+			return (ft_env(mini.env));
 		// else if (ft_strcmp(ast->command->args[0], "export") == 0)
-        //     return ft_export(ast->command->args);
+			// return ft_export(ast->command->args);
 		pid = fork();
 		if (pid == 0)
 		{

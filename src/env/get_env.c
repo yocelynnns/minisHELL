@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:53:38 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/11 17:41:32 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 17:59:40 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,3 @@ int	env_init(t_minishell *mini, char **env_array)
 	ft_putendl_fd("Environment variables successfully initialized.", 2);
 	return (0);
 }
-
-
