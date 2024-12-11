@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 18:34:54 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 19:28:01 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,10 @@ int							is_valid_n_flag(const char *arg);
 // env.c
 int							ft_env(t_env *env);
 int							env_init(t_minishell *mini, char **env);
+int							count_env_vars(t_env *env);
+char						**env_to_array(t_env *env, int count);
+void						sort_env_array(char **env_array, int count);
+void						print_sorted_env(t_env *env);
 // pwd.c
 int							ft_pwd(void);
 // free.c

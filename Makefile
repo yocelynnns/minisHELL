@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/11 17:22:57 by ysetiawa         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME            = minishell
 
 INC				= inc/
@@ -27,7 +15,7 @@ PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
 				  $(SRC_DIR)parsing/ast_parse.c \
 				  $(SRC_DIR)parsing/ast_redir.c \
 				  $(SRC_DIR)parsing/token.c \
-				  $(SRC_DIR)parsing/token_handle.c 
+				  $(SRC_DIR)parsing/token_handle.c
 
 BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/pwd.c \
@@ -36,7 +24,8 @@ BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/exit.c\
 				  $(SRC_DIR)builtins/cd.c
 
-ENV_DIR			= $(SRC_DIR)env/get_env.c
+ENV_DIR			= $(SRC_DIR)env/env_init.c \
+				  $(SRC_DIR)env/env_sort.c\
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c
 
