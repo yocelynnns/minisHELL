@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:55:28 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:00:42 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:27:29 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static char	*resize_buffer(char *buffer, size_t *current_size, \
+char	*resize_buffer(char *buffer, size_t *current_size, \
 size_t total_length)
 {
 	char	*new_buffer;
@@ -30,7 +30,7 @@ size_t total_length)
 	return (new_buffer);
 }
 
-static int	is_delimiter(const char *line, const char *delimiter, \
+int	is_delimiter(const char *line, const char *delimiter, \
 size_t delimiter_length)
 {
 	return (ft_strncmp(line, delimiter, delimiter_length) == 0 \

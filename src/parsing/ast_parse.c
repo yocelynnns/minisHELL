@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:01:21 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:15:38 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:27:41 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_ast_node	*parse_pipeline(t_token **tokens)
 	return (left_command);
 }
 
-static void	parse_arguments(t_token **tokens, t_ast_node *command_node)
+void	parse_arguments(t_token **tokens, t_ast_node *command_node)
 {
 	int	arg_count;
 
@@ -52,7 +52,7 @@ static void	parse_arguments(t_token **tokens, t_ast_node *command_node)
 	command_node->command->args[arg_count] = NULL;
 }
 
-static int	parse_all_redirects(t_token **tokens, t_ast_node *command_node)
+int	parse_all_redirects(t_token **tokens, t_ast_node *command_node)
 {
 	while (*tokens && ((*tokens)->type == REDIRECT_IN || (*tokens)->type \
 	== REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC))

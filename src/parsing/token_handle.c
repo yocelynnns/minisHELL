@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:05:53 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:06:30 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:28:11 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int	handle_quotes(char c, char *quote)
+int	handle_quotes(char c, char *quote)
 {
 	if (c == '\'' || c == '"')
 	{
@@ -25,7 +25,7 @@ static int	handle_quotes(char c, char *quote)
 	return (0);
 }
 
-static void	handle_word(const char *input, int *start, \
+void	handle_word(const char *input, int *start, \
 int i, t_token **token_list)
 {
 	if (i > *start)
@@ -36,7 +36,7 @@ int i, t_token **token_list)
 	}
 }
 
-static int	handle_redirect(const char *input, int *i, \
+int	handle_redirect(const char *input, int *i, \
 int *start, t_token **token_list)
 {
 	int	redirect_type;
@@ -69,7 +69,7 @@ int *start, t_token **token_list)
 	return (0);
 }
 
-static int	handle_pipe(const char *input, int *i, int \
+int	handle_pipe(const char *input, int *i, int \
 *start, t_token **token_list, int *last_pipe)
 {
 	if (input[*i] == '|')

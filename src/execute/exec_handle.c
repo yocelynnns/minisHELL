@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:57:08 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:19:33 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:27:08 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static void	handle_redirections(t_ast_node *ast)
+void	handle_redirections(t_ast_node *ast)
 {
 	t_ast_node	*redirect;
 	int			fd;
@@ -42,7 +42,7 @@ static void	handle_redirections(t_ast_node *ast)
 	}
 }
 
-static void	handle_heredoc(t_ast_node *ast)
+void	handle_heredoc(t_ast_node *ast)
 {
 	int	pipefd[2];
 
@@ -55,7 +55,7 @@ static void	handle_heredoc(t_ast_node *ast)
 	close(pipefd[0]);
 }
 
-static void	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
+void	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 {
 	int		pipefd[2];
 	pid_t	pid1;

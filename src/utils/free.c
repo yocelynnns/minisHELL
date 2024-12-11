@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2024/12/05 15:34:59 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/11 17:29:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,17 @@ void free_ast(t_ast_node *node)
         free(node->word);
 
     free(node);
+}
+
+void	free_directories(char **dirs)
+{
+	int	i;
+
+	i = 0;
+	while (dirs[i] != NULL)
+	{
+		free(dirs[i]);
+		i++;
+	}
+	free(dirs);
 }

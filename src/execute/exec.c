@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:00:28 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:27:22 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*concat_path(const char *dir, const char *cmd)
 	return (full_path);
 }
 
-static char	*check_executable_in_dir(const char *dir, const char *cmd)
+char	*check_executable_in_dir(const char *dir, const char *cmd)
 {
 	char	*full_path;
 
@@ -72,7 +72,7 @@ char	*find_executable(const char *cmd)
 	return (NULL);
 }
 
-static void	exec_command_or_path(t_ast_node *ast, char **env)
+void	exec_command_or_path(t_ast_node *ast, char **env)
 {
 	char	*command;
 	char	*executable_path;
