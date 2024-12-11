@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 20:05:15 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 20:34:38 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,22 +107,21 @@ t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
 t_token						*lexer(const char *input);
 void						free_tokens(t_token *tokens);
-void print_tokens(t_token *tokens);
+void						print_tokens(t_token *tokens);
 
 // ast
-t_ast_node					*parse_pipeline(t_token **tokens);
 t_ast_node					*parse_command(t_token **tokens);
+t_ast_node					*parse_pipeline(t_token **tokens);
 t_ast_node					*parse_redirect(t_token **tokens);
-t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*build_ast(t_token *tokens);
 void						free_ast(t_ast_node *node);
-void print_ast(t_ast_node *node, int depth);
+void						print_ast(t_ast_node *node, int depth);
 
 // exec
-int							execute_command(t_ast_node *ast, char **env,
-								t_minishell mini);
+int							execute_command(t_ast_node *ast, char **env, t_minishell mini);
 char						*find_executable(const char *cmd);
-char						*read_heredoc(const char *delimiter);
+char						*concat_path(const char *dir, const char *cmd);
+char						*read_heredoc(const char *delim);
 
 // builtins
 

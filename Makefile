@@ -12,10 +12,7 @@ LIBFT_PATH      = libft
 LIBFT           = $(LIBFT_PATH)/libft.a
 
 PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
-				  $(SRC_DIR)parsing/ast_parse.c \
-				  $(SRC_DIR)parsing/ast_redir.c \
-				  $(SRC_DIR)parsing/token.c \
-				  $(SRC_DIR)parsing/token_handle.c
+				  $(SRC_DIR)parsing/token.c 
 
 BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/pwd.c \
@@ -29,9 +26,7 @@ ENV_DIR			= $(SRC_DIR)env/env_init.c \
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c
 
-EXEC_DIR		= $(SRC_DIR)execute/exec.c \
-				  $(SRC_DIR)execute/exec_handle.c \
-				  $(SRC_DIR)execute/heredoc.c
+EXEC_DIR		= $(SRC_DIR)execute/exec.c
 
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \
