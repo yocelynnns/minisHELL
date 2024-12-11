@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/11 17:18:11 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 18:34:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,22 +100,59 @@ int	navigate_to_special_directory(int option, t_env *env_list)
 	return (ret);
 }
 
+int	handle_tilde(char **path, t_env *env_list)
+{
+	char	*home;
+	char	*expanded_path;
+
+	if (!path || !(*path) || (*path)[0] != '~')
+		return (SUCCESS);
+	home = find_env_variable(env_list, "HOME=", 5);
+	if (!home)
+	{
+		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
+		return (ERROR);
+	}
+	expanded_path = ft_strjoin(home, (*path) + 1);
+	free(home);
+	if (!expanded_path)
+		return (ERROR);
+	free(*path);
+	*path = expanded_path;
+	return (SUCCESS);
+}
+
 int	ft_cd(char **arguments, t_env *env_list)
 {
-	int	cd_result;
+	char	*path;
+	int		cd_result;
 
-	if (!arguments[1])
+	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0)
 		return (navigate_to_special_directory(0, env_list));
-	if (ft_strcmp(arguments[1], "-") == 0)
+	path = ft_strdup(arguments[1]);
+	if (!path)
+		return (ERROR);
+	if (handle_tilde(&path, env_list) != SUCCESS)
+	{
+		free(path);
+		return (ERROR);
+	}
+	if (ft_strcmp(path, "-") == 0)
+	{
 		cd_result = navigate_to_special_directory(1, env_list);
+	}
 	else
 	{
 		if (update_previous_directory(env_list) != SUCCESS)
+		{
+			free(path);
 			return (ERROR);
-		cd_result = chdir(arguments[1]);
+		}
+		cd_result = chdir(path);
 		if (cd_result != 0)
-			print_cd_error(arguments[1]);
+			print_cd_error(path);
 	}
+	free(path);
 	if (cd_result == 0)
 		return (SUCCESS);
 	return (ERROR);

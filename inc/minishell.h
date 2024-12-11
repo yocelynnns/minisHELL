@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 18:30:27 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 18:34:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,6 @@ int							update_previous_directory(t_env *env_list);
 int							navigate_to_special_directory(int option,
 								t_env *env_list);
 int							ft_cd(char **arguments, t_env *env_list);
+int							handle_tilde(char **path, t_env *env_list);
 
 #endif
