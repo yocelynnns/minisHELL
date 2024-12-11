@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 14:21:30 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 17:20:24 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,26 +113,43 @@ typedef struct s_minishell
 }							t_minishell;
 
 // token
-t_token						*create_token(t_token_type type, const char *value);
-void						add_token(t_token **head, t_token *new_token);
-t_token						*lexer(const char *input);
-void						free_tokens(t_token *tokens);
-void						print_tokens(t_token *tokens);
+static int	handle_quotes(char c, char *quote);
+static void	handle_word(const char *input, int *start, \
+int i, t_token **token_list);
+static int	handle_redirect(const char *input, int *i, \
+int *start, t_token **token_list);
+static int	handle_pipe(const char *input, int *i, int \
+*start, t_token **token_list, int *last_pipe);
+t_token	*create_token(t_token_type type, const char *value);
+void	add_token(t_token **head, t_token *new_token);
+t_token	*lexer(const char *input);
 
 // ast
-t_ast_node					*parse_command(t_token **tokens);
-t_ast_node					*parse_pipeline(t_token **tokens);
-t_ast_node					*parse_redirect(t_token **tokens);
-t_ast_node					*build_ast(t_token *tokens);
-void						free_ast(t_ast_node *node);
-void						print_ast(t_ast_node *node, int depth);
+t_ast_node	*parse_pipeline(t_token **tokens);
+static void	parse_arguments(t_token **tokens, t_ast_node *command_node);
+static int	parse_all_redirects(t_token **tokens, t_ast_node *command_node);
+t_ast_node	*parse_command(t_token **tokens);
+t_ast_node	*parse_redirect(t_token **tokens);
+static int	ast_redirect(t_token **tokens, t_ast_node *command_node);
+static int	validate_redirect_type(t_token **tokens, t_ast_node *redirect_node);
+static int	capture_redirect_file(t_token **tokens, t_ast_node *redirect_node);
+t_ast_node	*create_ast_node(t_ast_node_type type);
+t_ast_node	*build_ast(t_token *tokens);
 
 // exec
-int							execute_command(t_ast_node *ast, char **env,
-								t_minishell mini);
-char						*find_executable(const char *cmd);
-char						*concat_path(const char *dir, const char *cmd);
-char						*read_heredoc(const char *delim);
+static void	handle_redirections(t_ast_node *ast);
+static void	handle_heredoc(t_ast_node *ast);
+static void	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini);
+int	execute_command(t_ast_node *ast, char **env, t_minishell mini);
+char	*concat_path(const char *dir, const char *cmd);
+static char	*check_executable_in_dir(const char *dir, const char *cmd);
+char	*find_executable(const char *cmd);
+static void	exec_command_or_path(t_ast_node *ast, char **env);
+static char	*resize_buffer(char *buffer, size_t *current_size, \
+size_t total_length);
+static int	is_delimiter(const char *line, const char *delimiter, \
+size_t delimiter_length);
+char	*read_heredoc(const char *delimiter);
 
 // builtins
 

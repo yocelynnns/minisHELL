@@ -6,7 +6,7 @@
 #    By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/26 17:50:54 by ysetiawa          #+#    #+#              #
-#    Updated: 2024/12/10 19:52:58 by ysetiawa         ###   ########.fr        #
+#    Updated: 2024/12/11 17:22:57 by ysetiawa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,10 @@ LIBFT_PATH      = libft
 LIBFT           = $(LIBFT_PATH)/libft.a
 
 PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
-				  $(SRC_DIR)parsing/token.c 
+				  $(SRC_DIR)parsing/ast_parse.c \
+				  $(SRC_DIR)parsing/ast_redir.c \
+				  $(SRC_DIR)parsing/token.c \
+				  $(SRC_DIR)parsing/token_handle.c 
 
 BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/pwd.c \
@@ -37,7 +40,9 @@ ENV_DIR			= $(SRC_DIR)env/get_env.c
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c
 
-EXEC_DIR		= $(SRC_DIR)execute/exec.c
+EXEC_DIR		= $(SRC_DIR)execute/exec.c \
+				  $(SRC_DIR)execute/exec_handle.c \
+				  $(SRC_DIR)execute/heredoc.c
 
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \

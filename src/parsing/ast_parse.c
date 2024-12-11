@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:01:21 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:04:23 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:15:38 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	parse_all_redirects(t_token **tokens, t_ast_node *command_node)
 	while (*tokens && ((*tokens)->type == REDIRECT_IN || (*tokens)->type \
 	== REDIRECT_OUT || (*tokens)->type == APPEND || (*tokens)->type == HEREDOC))
 	{
-		if (!handle_redirect(tokens, command_node))
+		if (!ast_redirect(tokens, command_node))
 		{
 			free_ast(command_node);
 			return (0);

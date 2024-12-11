@@ -6,13 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:03:34 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:04:04 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:15:54 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static int	handle_redirect(t_token **tokens, t_ast_node *command_node)
+static int	ast_redirect(t_token **tokens, t_ast_node *command_node)
 {
 	t_ast_node	*redirect_node;
 	t_ast_node	*last_redirect;
@@ -53,7 +53,7 @@ static int	capture_redirect_file(t_token **tokens, t_ast_node *redirect_node)
 {
 	if (*tokens && (*tokens)->type == WORD)
 	{
-		redirect_node->redirect->file = strdup((*tokens)->value);
+		redirect_node->redirect->file = ft_strdup((*tokens)->value);
 		*tokens = (*tokens)->next;
 		return (1);
 	}
