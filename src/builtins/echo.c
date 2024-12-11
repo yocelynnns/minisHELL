@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:05:42 by messs             #+#    #+#             */
-/*   Updated: 2024/12/10 21:10:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:21:10 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	number_of_args(char **args)
 char	*remove_quotes(const char *str)
 {
 	char	*result;
-	size_t	len, i, j;
 
+	size_t len, i, j;
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
@@ -45,7 +45,7 @@ char	*remove_quotes(const char *str)
 		result = (char *)malloc(len - 2);
 		if (!result)
 			return (NULL);
-		i = 1; 
+		i = 1;
 		j = 0;
 		while (i < len - 1)
 		{
@@ -53,7 +53,7 @@ char	*remove_quotes(const char *str)
 			i++;
 			j++;
 		}
-		result[j] = '\0'; 
+		result[j] = '\0';
 	}
 	else
 		result = ft_strdup(str);

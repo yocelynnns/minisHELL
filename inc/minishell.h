@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/10 20:09:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:21:30 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 
 # include "../libft/libft.h"
 # include <ctype.h>
+# include <errno.h>
 # include <fcntl.h>
-# include <linux/limits.h>
 # include <limits.h>
+# include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -82,9 +82,9 @@ typedef struct s_ast_node
 
 typedef struct s_ast_command
 {
-	char		**args;          // commands
-	t_ast_node	*redirect; // redirect node (if there is)
-	char		*heredoc;
+	char **args;          // commands
+	t_ast_node *redirect; // redirect node (if there is)
+	char					*heredoc;
 }							t_ast_command;
 
 typedef struct s_ast_pipeline
@@ -128,7 +128,8 @@ void						free_ast(t_ast_node *node);
 void						print_ast(t_ast_node *node, int depth);
 
 // exec
-int							execute_command(t_ast_node *ast, char **env, t_minishell mini);
+int							execute_command(t_ast_node *ast, char **env,
+								t_minishell mini);
 char						*find_executable(const char *cmd);
 char						*concat_path(const char *dir, const char *cmd);
 char						*read_heredoc(const char *delim);
@@ -139,7 +140,7 @@ char						*read_heredoc(const char *delim);
 int							ft_strcmp(const char *s1, const char *s2);
 int							number_of_args(char **args);
 int							ft_echo(char **args);
-char *remove_quotes(const char *str);
+char						*remove_quotes(const char *str);
 // env.c
 int							ft_env(t_env *env);
 int							env_init(t_minishell *mini, char **env);
@@ -148,14 +149,15 @@ int							ft_pwd(void);
 // free.c
 void						free_env(t_env *env);
 // exit.c
-int	check_is_number(char *str);
-void	ft_exit(t_minishell *mini, char **av);
+int							check_is_number(char *str);
+void						ft_exit(t_minishell *mini, char **av);
 // cd.c
-void print_cd_error(const char *path);
-char *find_env_variable(t_env *env_list, const char *variable, size_t len);
-int update_previous_directory(t_env *env_list);
-int navigate_to_special_directory(int option, t_env *env_list);
-int ft_cd(char **arguments, t_env *env_list);
-
+void						print_cd_error(const char *path);
+char						*find_env_variable(t_env *env_list,
+								const char *variable, size_t len);
+int							update_previous_directory(t_env *env_list);
+int							navigate_to_special_directory(int option,
+								t_env *env_list);
+int							ft_cd(char **arguments, t_env *env_list);
 
 #endif
