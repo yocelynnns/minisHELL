@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:57:08 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 17:27:08 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:43:29 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 {
 	pid_t	pid;
 	int		status;
-	t_env	*env_list = NULL;
 
 	if (ast->type == AST_COMMAND)
 	{
@@ -103,9 +102,9 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		else if (ft_strcmp(ast->command->args[0], "exit") == 0)
             return (ft_exit(&mini, ast->command->args), 1);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
-            return ft_cd(ast->command->args, env_list);
+            return ft_cd(ast->command->args, mini.env);
 		else if (ft_strcmp(ast->command->args[0], "env") == 0)
-            return ft_env(env_list);
+            return ft_env(mini.env);
 		// else if (ft_strcmp(ast->command->args[0], "export") == 0)
         //     return ft_export(ast->command->args);
 		pid = fork();

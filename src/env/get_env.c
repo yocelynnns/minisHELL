@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:53:38 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/11 16:54:07 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/11 17:41:32 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	env_init(t_minishell *mini, char **env_array)
 		{
 			ft_putendl_fd("Malloc failed for new env node.", 2);
 			free_env(mini->env);
-			return (0);
+			return (1);
 		}
 		new->value = ft_strdup(env_array[i]);
 		if (!new->value)
@@ -54,7 +54,7 @@ int	env_init(t_minishell *mini, char **env_array)
 			ft_putendl_fd("ft_strdup failed for env value.", 2);
 			free(new);
 			free_env(mini->env);
-			return (0);
+			return (1);
 		}
 		new->next = NULL;
 		env->next = new;
@@ -64,3 +64,5 @@ int	env_init(t_minishell *mini, char **env_array)
 	ft_putendl_fd("Environment variables successfully initialized.", 2);
 	return (0);
 }
+
+
