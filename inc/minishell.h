@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 20:34:38 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/12 11:56:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,8 @@ void						free_ast(t_ast_node *node);
 void						print_ast(t_ast_node *node, int depth);
 
 // exec
-int							execute_command(t_ast_node *ast, char **env, t_minishell mini);
+int							execute_command(t_ast_node *ast, char **env,
+								t_minishell mini);
 char						*find_executable(const char *cmd);
 char						*concat_path(const char *dir, const char *cmd);
 char						*read_heredoc(const char *delim);
@@ -134,6 +135,10 @@ int							is_valid_n_flag(const char *arg);
 // env.c
 int							ft_env(t_env *env);
 int							env_init(t_minishell *mini, char **env);
+void						print_sorted_env(t_env *env);
+void						sort_env_array(char **env_array, int count);
+char						**env_to_array(t_env *env, int count);
+int							count_env_vars(t_env *env);
 // pwd.c
 int							ft_pwd(void);
 // free.c
@@ -150,5 +155,11 @@ int							navigate_to_special_directory(int option,
 								t_env *env_list);
 int							ft_cd(char **arguments, t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
+
+// export.c
+int							print_error(int error, const char *arg);
+int							ft_export(char **args, t_env *env);
+int							add_or_update_env(char *arg, t_env *env);
+int							is_valid_env(char *arg);
 
 #endif
