@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/11 20:27:07 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:45:23 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,84 +45,26 @@ void	add_token(t_token **head, t_token *new_token)
 	}
 }
 
-// tokenize input and assign token types
+// main lexer function
 t_token *lexer(const char *input)
 {
-    t_token *token_list = NULL;
+    t_lexer_state state = {NULL, 0, 0, 0};
     int i = 0;
-    int start = 0;
-    char quote = 0; // to track quotes
-    int last_token_was_pipe = 0; // to track double pipes
 
     while (input[i])
     {
-        if (input[i] == '\'' || input[i] == '"')
-        {
-            if (quote == 0)
-                quote = input[i]; // first quote
-            else if (quote == input[i])
-                quote = 0; // close quote
-        }
-        else if (isspace(input[i]) && !quote)
-        {
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            start = i + 1; // move to the next token
-        }
-        else if (input[i] == '<' && !quote)
-        {
-            if (i > start) // add the previous token
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            if (input[i + 1] == '<')
-            {
-                add_token(&token_list, create_token(HEREDOC, "<<"));
-                i++; // skip the second <
-            }
-            else
-                add_token(&token_list, create_token(REDIRECT_IN, "<"));
-            start = i + 1;
-        }
-        else if (input[i] == '>' && !quote)
-        {
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            if (input[i + 1] == '>')
-            {
-                add_token(&token_list, create_token(APPEND, ">>"));
-                i++;
-            }
-            else
-                add_token(&token_list, create_token(REDIRECT_OUT, ">"));
-            start = i + 1;
-        }
-        else if (input[i] == '|' && !quote)
-        {
-            if (last_token_was_pipe)
-            {
-                fprintf(stderr, "Error: Invalid sequence of consecutive '|' operators\n");
-                free_tokens(token_list);
-                return (NULL);
-            }
-            last_token_was_pipe = 1; // set flag for pipe
-            if (i > start)
-                add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-            add_token(&token_list, create_token(PIPE, "|"));
-            start = i + 1;
-        }
-        else
-            last_token_was_pipe = 0; // reset flag if not a pipe
+        if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+            handle_quotes_spaces(&state, input, &i);
+        else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
+            handle_special_char(&state, input, &i);
         i++;
     }
-
-    if (quote) // if quote != 0, means unclosed
+    if (state.quote)
     {
-        fprintf(stderr, "Error: Unclosed quote '%c'\n", quote);
-        free_tokens(token_list);
-        return (NULL);
+        fprintf(stderr, "Error: Unclosed quote '%c'\n", state.quote);
+        exit(EXIT_FAILURE);
     }
-
-    if (i > start)
-        add_token(&token_list, create_token(WORD, strndup(input + start, i - start)));
-
-    return (token_list);
+    if (i > state.start)
+        add_token(&state.token_list, create_token(WORD, strndup(input + state.start, i - state.start)));
+    return state.token_list;
 }

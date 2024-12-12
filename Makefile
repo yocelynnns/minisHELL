@@ -12,7 +12,9 @@ LIBFT_PATH      = libft
 LIBFT           = $(LIBFT_PATH)/libft.a
 
 PARSING_DIR		= $(SRC_DIR)parsing/ast.c \
-				  $(SRC_DIR)parsing/token.c
+				  $(SRC_DIR)parsing/ast_redir.c \
+				  $(SRC_DIR)parsing/token.c \
+				  $(SRC_DIR)parsing/token_handle.c
 
 BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/pwd.c \

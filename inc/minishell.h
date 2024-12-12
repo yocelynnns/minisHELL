@@ -38,6 +38,15 @@ typedef struct s_token
 	struct s_token *next; // next token
 }							t_token;
 
+// lexer state struct for shared data
+typedef struct s_lexer_state
+{
+    t_token *token_list;
+    int start;
+    char quote;
+    int last_token_was_pipe;
+} t_lexer_state;
+
 // ast node types
 typedef enum
 {
@@ -96,14 +105,25 @@ void						add_token(t_token **head, t_token *new_token);
 t_token						*lexer(const char *input);
 void						free_tokens(t_token *tokens);
 void						print_tokens(t_token *tokens);
+//
+void handle_redirect_in(t_lexer_state *state, const char *input, int *i);
+void handle_redirect_out(t_lexer_state *state, const char *input, int *i);
+void handle_pipe(t_lexer_state *state);
+void handle_special_char(t_lexer_state *state, const char *input, int *i);
+void handle_quotes_spaces(t_lexer_state *state, const char *input, int *i);
 
 // ast
+t_ast_node *create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
 t_ast_node					*parse_pipeline(t_token **tokens);
 t_ast_node					*parse_redirect(t_token **tokens);
 t_ast_node					*build_ast(t_token *tokens);
 void						free_ast(t_ast_node *node);
 void						print_ast(t_ast_node *node, int depth);
+//
+int is_redirect(int type);
+void attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node);
+int handle_redirect(t_ast_node *cmd, t_token **tokens);
 
 // exec
 int							execute_command(t_ast_node *ast, char **env,
