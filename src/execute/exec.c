@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/12 11:56:55 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/12 12:33:39 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ char	*read_heredoc(const char *delimiter)
 				return (NULL);
 			}
 			// Copy the existing content to the new buffer
-			ft_memcpy(new_content, content, total_length + 1); //+1 for the null terminator
+			ft_memcpy(new_content, content, total_length + 1);
+				//+1 for the null terminator
 			free(content);
-				content = new_content;
+			content = new_content;
 		}
 	}
 	// Resize the content to fit the actual data
@@ -82,10 +83,11 @@ char	*read_heredoc(const char *delimiter)
 		free(content);
 		return (NULL);
 	}
-	ft_memcpy(final_content, content, total_length + 1); //+1 for the null terminator
+	ft_memcpy(final_content, content, total_length + 1);
+		//+1 for the null terminator
 	free(content);
-		// Free the original buffer
-		return (final_content); // Return the complete heredoc content
+	// Free the original buffer
+	return (final_content); // Return the complete heredoc content
 }
 
 char	*concat_path(const char *dir, const char *cmd)
@@ -192,7 +194,9 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		else if (ft_strcmp(ast->command->args[0], "env") == 0)
 			return (ft_env(mini.env));
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)
-            return (ft_export(ast->command->args, mini.env));
+			return (ft_export(ast->command->args, mini.env));
+		else if (ft_strcmp(ast->command->args[0], "unset") == 0)
+			return (ft_unset(ast->command->args, &mini));
 		// simple commands
 		pid = fork();
 		if (pid == 0) // child process

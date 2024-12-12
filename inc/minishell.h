@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 17:50:57 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/12 11:56:53 by hthant           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -143,6 +131,7 @@ int							count_env_vars(t_env *env);
 int							ft_pwd(void);
 // free.c
 void						free_env(t_env *env);
+void						free_node(t_minishell *mini, t_env *env);
 // exit.c
 int							check_is_number(char *str);
 void						ft_exit(t_minishell *mini, char **av);
@@ -161,5 +150,9 @@ int							print_error(int error, const char *arg);
 int							ft_export(char **args, t_env *env);
 int							add_or_update_env(char *arg, t_env *env);
 int							is_valid_env(char *arg);
+// unset.c
+size_t						env_size(char *env);
+int							unset_env_var(t_minishell *mini, char *arg);
+int							ft_unset(char **args, t_minishell *mini);
 
 #endif

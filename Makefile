@@ -19,7 +19,8 @@ BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/env.c \
 				  $(SRC_DIR)builtins/export.c \
 				  $(SRC_DIR)builtins/exit.c\
-				  $(SRC_DIR)builtins/cd.c
+				  $(SRC_DIR)builtins/cd.c \
+				  $(SRC_DIR)builtins/unset.c
 
 ENV_DIR			= $(SRC_DIR)env/env_init.c \
 				  $(SRC_DIR)env/env_sort.c\
