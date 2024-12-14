@@ -27,9 +27,13 @@ BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 ENV_DIR			= $(SRC_DIR)env/env_init.c \
 				  $(SRC_DIR)env/env_sort.c\
 
-UTILS_DIR		= $(SRC_DIR)utils/free.c
+UTILS_DIR		= $(SRC_DIR)utils/free.c \
+				  $(SRC_DIR)utils/utils.c 
 
-EXEC_DIR		= $(SRC_DIR)execute/exec.c
+EXEC_DIR		= $(SRC_DIR)execute/exec.c \
+				  $(SRC_DIR)execute/exec_handle.c \
+				  $(SRC_DIR)execute/exec_path.c \
+				  $(SRC_DIR)execute/heredoc.c \
 
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/12 17:45:23 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/14 19:32:19 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_token	*create_token(t_token_type type, const char *value)
 		exit(EXIT_FAILURE);
 	}
 	new_token->type = type;
-	new_token->value = strdup(value);
+	new_token->value = ft_strdup(value);
 	new_token->next = NULL;
 	return (new_token);
 }
@@ -46,25 +46,31 @@ void	add_token(t_token **head, t_token *new_token)
 }
 
 // main lexer function
-t_token *lexer(const char *input)
+t_token	*lexer(const char *input)
 {
-    t_lexer_state state = {NULL, 0, 0, 0};
-    int i = 0;
+	t_lexer_state	state;
+	int				i;
 
-    while (input[i])
-    {
-        if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
-            handle_quotes_spaces(&state, input, &i);
-        else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
-            handle_special_char(&state, input, &i);
-        i++;
-    }
-    if (state.quote)
-    {
-        fprintf(stderr, "Error: Unclosed quote '%c'\n", state.quote);
-        exit(EXIT_FAILURE);
-    }
-    if (i > state.start)
-        add_token(&state.token_list, create_token(WORD, strndup(input + state.start, i - state.start)));
-    return state.token_list;
+	state.token_list = NULL;
+	state.start = 0;
+	state.quote = 0;
+	state.last_token_was_pipe = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+			handle_quotes_spaces(&state, input, &i);
+		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
+			handle_special_char(&state, input, &i);
+		i++;
+	}
+	if (state.quote)
+	{
+		printf("Error: Unclosed quote '%c'\n", state.quote);
+		exit(EXIT_FAILURE);
+	}
+	if (i > state.start)
+		add_token(&state.token_list, create_token(WORD, \
+		ft_strndup(input + state.start, i - state.start)));
+	return (state.token_list);
 }

@@ -99,6 +99,14 @@ typedef struct s_minishell
 	int						exit;
 }							t_minishell;
 
+typedef struct s_heredoc {
+    char *content;
+    size_t total_length;
+    size_t current_size;
+    const char *delimiter;
+    size_t delimiter_length;
+} t_heredoc;
+
 // token
 t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
@@ -128,9 +136,27 @@ int handle_redirect(t_ast_node *cmd, t_token **tokens);
 // exec
 int							execute_command(t_ast_node *ast, char **env,
 								t_minishell mini);
-char						*find_executable(const char *cmd);
-char						*concat_path(const char *dir, const char *cmd);
+char						*find_executable(char *cmd);
+char						*concat_path(char *dir, char *cmd);
 char						*read_heredoc(const char *delim);
+//
+int handle_builtin_commands(t_ast_node *ast, t_minishell mini);
+void handle_redirection(t_ast_node *ast);
+void handle_heredoc(t_ast_node *ast);
+t_heredoc *init_heredoc(const char *delimiter);
+char *check_directory(char *dir, char *cmd);
+char *get_executable_path(t_ast_node *ast);
+int fork_and_execute(t_ast_node *ast, char **env);
+void execute_in_child(t_ast_node *ast, char **env);
+void execute_left_command(t_ast_node *ast, int pipefd[2], char **env, t_minishell mini);
+void execute_right_command(t_ast_node *ast, int pipefd[2], char **env, t_minishell mini);
+int execute_pipeline(t_ast_node *ast, char **env, t_minishell mini);
+char *resize_buffer(char *content, size_t total_length, size_t *current_size);
+ssize_t read_line(char *content, size_t total_length, size_t current_size);
+int is_delimiter(const char *content, const char *delimiter, size_t total_length, size_t delimiter_length);
+int read_until_delimiter(t_heredoc *hd);
+void free_dirs(char **dirs);
+void handle_all_redirections(t_ast_node *ast);
 
 // builtins
 
@@ -174,5 +200,10 @@ int							is_valid_env(char *arg);
 size_t						env_size(char *env);
 int							unset_env_var(t_minishell *mini, char *arg);
 int							ft_unset(char **args, t_minishell *mini);
+
+//utils
+char	*ft_strcpy(char *s1, char *s2);
+char	*ft_strcat(char *dest, char *src);
+char	*ft_strndup(const char *s, size_t n);
 
 #endif

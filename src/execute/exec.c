@@ -6,329 +6,96 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/13 00:29:58 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/14 19:13:25 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// Function to read heredoc content
-char	*read_heredoc(const char *delimiter)
+void	execute_in_child(t_ast_node *ast, char **env)
 {
-	char	*content;
-	size_t	total_length;
-	size_t	delimiter_length;
-	size_t	current_size;
-	ssize_t	bytes_read;
-	char	*new_content;
-	char	*final_content;
+	char	*executable_path;
 
-	content = malloc(INITIAL_SIZE);
-	if (!content)
+	if (ast->command->redirect)
+		handle_all_redirections(ast);
+	if (ast->command->heredoc)
+		handle_heredoc(ast);
+	executable_path = get_executable_path(ast);
+	if (executable_path)
 	{
-		perror("malloc");
-		return (NULL);
+		execve(executable_path, ast->command->args, env);
+		perror("execve");
 	}
-	total_length = 0;
-	delimiter_length = ft_strlen(delimiter);
-	current_size = INITIAL_SIZE;
-	while (1)
-	{
-		// Print prompt for heredoc input
-		write(STDOUT_FILENO, "> ", 2);
-		// Read a line from standard input
-		bytes_read = read(STDIN_FILENO, content + total_length, current_size
-				- total_length - 1);
-		if (bytes_read < 0)
-		{
-			perror("read");
-			free(content);
-			return (NULL);
-		}
-		// Null-terminate the buffer
-		content[total_length + bytes_read] = '\0';
-		// Check if the line matches the delimiter
-		if (ft_strncmp(content + total_length, delimiter, delimiter_length) == 0
-			&& (content[total_length + delimiter_length] == '\n'
-				|| content[total_length + delimiter_length] == '\0'))
-		{
-			break ; // Exit if the delimiter is found
-		}
-		// Update total length
-		total_length += bytes_read;
-		// Check if we need to expand the buffer
-		if (total_length + 1 >= current_size)
-		{
-			// Double the size of the buffer
-			current_size *= 2;
-			new_content = malloc(current_size);
-			if (!new_content)
-			{
-				perror("malloc");
-				free(content);
-				return (NULL);
-			}
-			// Copy the existing content to the new buffer
-			ft_memcpy(new_content, content, total_length + 1);
-				//+1 for the null terminator
-			free(content);
-			content = new_content;
-		}
-	}
-	// Resize the content to fit the actual data
-	final_content = malloc(total_length + 1);
-	if (!final_content)
-	{
-		perror("malloc");
-		free(content);
-		return (NULL);
-	}
-	ft_memcpy(final_content, content, total_length + 1);
-		//+1 for the null terminator
-	free(content);
-	// Free the original buffer
-	return (final_content); // Return the complete heredoc content
+	else
+		printf("Command not found: %s\n", ast->command->args[0]);
 }
 
-char	*concat_path(const char *dir, const char *cmd)
+void	execute_left_command(t_ast_node *ast, int pipefd[2], char **env, \
+t_minishell mini)
 {
-	size_t	dir_len;
-	size_t	cmd_len;
-	size_t	total_len;
-	char	*full_path;
+	pid_t	pid1;
 
-	// Calculate the length of the new string
-	dir_len = strlen(dir);
-	cmd_len = strlen(cmd);
-	total_len = dir_len + cmd_len + 2; // +1 for '/' and +1 for '\0'
-	// Allocate memory for the new string
-	full_path = malloc(total_len);
-	if (!full_path)
-		return (NULL);
-	// Construct the full path
-	strcpy(full_path, dir); // Copy the directory
-	strcat(full_path, "/"); // Append the '/'
-	strcat(full_path, cmd); // Append the command
-	return (full_path);     // Return the constructed path
+	pid1 = fork();
+	if (pid1 == 0)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_command(ast->pipeline->left, env, mini);
+		exit(0);
+	}
 }
 
-char	*find_executable(const char *cmd)
+void	execute_right_command(t_ast_node *ast, int pipefd[2], char **env, \
+t_minishell mini)
 {
-	char	*path_env;
-	char	**dirs;
-	char	*full_path;
-	int		i;
-	int		j;
+	pid_t	pid2;
 
-	path_env = getenv("PATH");
-	if (!path_env)
-		return (NULL);
-	dirs = ft_split(path_env, ':'); // to split the PATH
-	if (!dirs)
-		return (NULL);
-	full_path = NULL;
-	i = 0;
-	while (dirs[i] != NULL)
+	pid2 = fork();
+	if (pid2 == 0)
 	{
-		full_path = concat_path(dirs[i], cmd);
-		if (!full_path)
-		{
-			// Free previously allocated directories
-			j = 0;
-			while (dirs[j] != NULL)
-			{
-				free(dirs[j]);
-				j++;
-			}
-			free(dirs);
-			return (NULL);
-		}
-		if (access(full_path, X_OK) == 0) // Check if the file is executable
-		{
-			// Free the directories array
-			j = 0;
-			while (dirs[j] != NULL)
-			{
-				free(dirs[j]);
-				j++;
-			}
-			free(dirs);
-			return (full_path); // Return the full path if found
-		}
-		free(full_path);
-		i++;
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_command(ast->pipeline->right, env, mini);
+		exit(0);
 	}
-	// Free the directories array
-	j = 0;
-	while (dirs[j] != NULL)
+}
+
+int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
+{
+	int	pipefd[2];
+
+	if (pipe(pipefd) == -1)
 	{
-		free(dirs[j]);
-		j++;
+		perror("pipe");
+		return (-1);
 	}
-	free(dirs);
-	return (NULL); // Not found
+	execute_left_command(ast, pipefd, env, mini);
+	execute_right_command(ast, pipefd, env, mini);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(-1, NULL, 0);
+	return (0);
 }
 
 int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 {
-	pid_t		pid;
-	int			fd;
-	int			status;
-	t_ast_node	*redirect;
-	int			pipefd[2];
-	char		*command;
-	char		*executable_path;
-	pid_t		pid1;
-	pid_t		pid2;
+	int		status;
+	pid_t	pid;
 
 	if (ast->type == AST_COMMAND)
 	{
-		if (ft_strcmp(ast->command->args[0], "echo") == 0)
-			return (ft_echo(ast->command->args));
-		else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
-			return (ft_pwd());
-		else if (ft_strcmp(ast->command->args[0], "exit") == 0)
-			return (ft_exit(&mini, ast->command->args), 1);
-		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
-			return (ft_cd(ast->command->args, mini.env));
-		else if (ft_strcmp(ast->command->args[0], "env") == 0)
-			return (ft_env(mini.env));
-		else if (ft_strcmp(ast->command->args[0], "export") == 0)
-			return (ft_export(ast->command->args, mini.env));
-		else if (ft_strcmp(ast->command->args[0], "unset") == 0)
-			return (ft_unset(ast->command->args, &mini));
-		// simple commands
-		pid = fork();
-		if (pid == 0) // child process
-		{
-			// Handle redirections
-			if (ast->command->redirect)
-			{
-				redirect = ast->command->redirect;
-				while (redirect)
-				{
-					if (redirect->redirect->type == REDIRECT_IN)
-					{
-						fd = open(redirect->redirect->file, O_RDONLY);
-						if (fd < 0)
-						{
-							perror("open");
-							exit(EXIT_FAILURE);
-						}
-						dup2(fd, STDIN_FILENO);
-						close(fd);
-					}
-					else if (redirect->redirect->type == REDIRECT_OUT)
-					{
-						fd = open(redirect->redirect->file,
-								O_WRONLY | O_CREAT | O_TRUNC, 0644);
-						if (fd < 0)
-						{
-							perror("open");
-							exit(EXIT_FAILURE);
-						}
-						dup2(fd, STDOUT_FILENO);
-						close(fd);
-					}
-					else if (redirect->redirect->type == APPEND)
-					{
-						fd = open(redirect->redirect->file,
-								O_WRONLY | O_CREAT | O_APPEND, 0644);
-						if (fd < 0)
-						{
-							perror("open");
-							exit(EXIT_FAILURE);
-						}
-						dup2(fd, STDOUT_FILENO);
-						close(fd);
-					}
-					redirect = redirect->redirect->next;
-				}
-			}
-			// Handle heredoc content
-			if (ast->command->heredoc)
-			{
-				pipe(pipefd);
-				write(pipefd[1], ast->command->heredoc,
-					strlen(ast->command->heredoc));
-				close(pipefd[1]);
-				dup2(pipefd[0], STDIN_FILENO); // Redirect stdin to heredoc
-				close(pipefd[0]);
-			}
-			// Check if the command is an absolute path
-			command = ast->command->args[0];
-			if (command[0] == '/') // Absolute path
-			{
-				if (access(command, X_OK) == 0)
-				// Check if the file is executable
-				{
-					execve(command, ast->command->args, env);
-				}
-				else
-				{
-					fprintf(stderr, "Command not found: %s\n", command);
-					exit(EXIT_FAILURE);
-				}
-			}
-			else // Relative path or command in PATH
-			{
-				executable_path = find_executable(command);
-				if (!executable_path)
-				{
-					fprintf(stderr, "Command not found: %s\n", command);
-					exit(EXIT_FAILURE);
-				}
-				execve(executable_path, ast->command->args, env);
-				perror("execve");
-				free(executable_path);
-				exit(EXIT_FAILURE);
-			}
-		}
-		else if (pid < 0)
-		{
-			perror("fork");
-			return (-1);
-		}
-		else // parent process
+		if (handle_builtin_commands(ast, mini) != -1)
+			return (0);
+		pid = fork_and_execute(ast, env);
+		if (pid > 0)
 		{
 			waitpid(pid, &status, 0);
 			return (WEXITSTATUS(status));
 		}
 	}
 	else if (ast->type == AST_PIPELINE)
-	{
-		// pipelines
-		if (pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return (-1);
-		}
-		// exec left command
-		pid1 = fork();
-		if (pid1 == 0) // child process for left
-		{
-			dup2(pipefd[1], STDOUT_FILENO); // redirect stdout to pipe
-			close(pipefd[0]);               // close unused read end
-			close(pipefd[1]);               // close write end after dup
-			execute_command(ast->pipeline->left, env, mini);
-			exit(0);
-		}
-		// exec right command
-		pid2 = fork();
-		if (pid2 == 0) // child process for right
-		{
-			dup2(pipefd[0], STDIN_FILENO);
-			close(pipefd[1]);
-			close(pipefd[0]);
-			execute_command(ast->pipeline->right, env, mini);
-			exit(0);
-		}
-		// parent process
-		close(pipefd[0]);       // close read end
-		close(pipefd[1]);       // close write end
-		waitpid(pid1, NULL, 0); // wait for left command
-		waitpid(pid2, NULL, 0); // wait for right command
-		return (0);
-	}
+		return (execute_pipeline(ast, env, mini));
 	return (-1);
 }

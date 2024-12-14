@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2024/12/12 12:26:27 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/14 17:21:33 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ void	free_env(t_env *env)
 		free(env);
 		env = tmp;
 	}
+}
+
+void free_dirs(char **dirs)
+{
+    int j = 0;
+    while (dirs[j] != NULL) {
+        free(dirs[j]);
+        j++;
+    }
+    free(dirs);
 }
 
 void	free_tokens(t_token *tokens)
