@@ -4,7 +4,9 @@
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <linux/limits.h>
+// # include <linux/limits.h>
+# include <limits.h>
+# include <signal.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <sys/wait.h>
@@ -106,6 +108,16 @@ typedef struct s_heredoc {
     const char *delimiter;
     size_t delimiter_length;
 } t_heredoc;
+
+typedef struct s_signal
+{
+	int sigint;
+	int sigquit;
+	int exit_status;
+	pid_t pid;
+}t_signal;
+
+t_signal g_sig;
 
 // token
 t_token						*create_token(t_token_type type, const char *value);
