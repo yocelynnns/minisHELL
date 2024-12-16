@@ -4,11 +4,11 @@
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-// # include <linux/limits.h>
-# include <limits.h>
-# include <signal.h>
+# include <linux/limits.h>
+// # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <sys/wait.h>
 
 # define SUCCESS 0
@@ -43,11 +43,11 @@ typedef struct s_token
 // lexer state struct for shared data
 typedef struct s_lexer_state
 {
-    t_token *token_list;
-    int start;
-    char quote;
-    int last_token_was_pipe;
-} t_lexer_state;
+	t_token					*token_list;
+	int						start;
+	char					quote;
+	int						last_token_was_pipe;
+}							t_lexer_state;
 
 // ast node types
 typedef enum
@@ -101,23 +101,24 @@ typedef struct s_minishell
 	int						exit;
 }							t_minishell;
 
-typedef struct s_heredoc {
-    char *content;
-    size_t total_length;
-    size_t current_size;
-    const char *delimiter;
-    size_t delimiter_length;
-} t_heredoc;
+typedef struct s_heredoc
+{
+	char					*content;
+	size_t					total_length;
+	size_t					current_size;
+	const char				*delimiter;
+	size_t					delimiter_length;
+}							t_heredoc;
 
 typedef struct s_signal
 {
-	int sigint;
-	int sigquit;
-	int exit_status;
-	pid_t pid;
-}t_signal;
+	int						sigint;
+	int						sigquit;
+	int						exit_status;
+	pid_t					pid;
+}							t_signal;
 
-t_signal g_sig;
+t_signal					g_sig;
 
 // token
 t_token						*create_token(t_token_type type, const char *value);
@@ -126,14 +127,18 @@ t_token						*lexer(const char *input);
 void						free_tokens(t_token *tokens);
 void						print_tokens(t_token *tokens);
 //
-void handle_redirect_in(t_lexer_state *state, const char *input, int *i);
-void handle_redirect_out(t_lexer_state *state, const char *input, int *i);
-void handle_pipe(t_lexer_state *state);
-void handle_special_char(t_lexer_state *state, const char *input, int *i);
-void handle_quotes_spaces(t_lexer_state *state, const char *input, int *i);
+void						handle_redirect_in(t_lexer_state *state,
+								const char *input, int *i);
+void						handle_redirect_out(t_lexer_state *state,
+								const char *input, int *i);
+void						handle_pipe(t_lexer_state *state);
+void						handle_special_char(t_lexer_state *state,
+								const char *input, int *i);
+void						handle_quotes_spaces(t_lexer_state *state,
+								const char *input, int *i);
 
 // ast
-t_ast_node *create_ast_node(t_ast_node_type type);
+t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
 t_ast_node					*parse_pipeline(t_token **tokens);
 t_ast_node					*parse_redirect(t_token **tokens);
@@ -141,9 +146,10 @@ t_ast_node					*build_ast(t_token *tokens);
 void						free_ast(t_ast_node *node);
 void						print_ast(t_ast_node *node, int depth);
 //
-int is_redirect(int type);
-void attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node);
-int handle_redirect(t_ast_node *cmd, t_token **tokens);
+int							is_redirect(int type);
+void						attach_redirect(t_ast_node *cmd,
+								t_ast_node *redirect_node);
+int							handle_redirect(t_ast_node *cmd, t_token **tokens);
 
 // exec
 int							execute_command(t_ast_node *ast, char **env,
@@ -152,23 +158,31 @@ char						*find_executable(char *cmd);
 char						*concat_path(char *dir, char *cmd);
 char						*read_heredoc(const char *delim);
 //
-int handle_builtin_commands(t_ast_node *ast, t_minishell mini);
-void handle_redirection(t_ast_node *ast);
-void handle_heredoc(t_ast_node *ast);
-t_heredoc *init_heredoc(const char *delimiter);
-char *check_directory(char *dir, char *cmd);
-char *get_executable_path(t_ast_node *ast);
-int fork_and_execute(t_ast_node *ast, char **env);
-void execute_in_child(t_ast_node *ast, char **env);
-void execute_left_command(t_ast_node *ast, int pipefd[2], char **env, t_minishell mini);
-void execute_right_command(t_ast_node *ast, int pipefd[2], char **env, t_minishell mini);
-int execute_pipeline(t_ast_node *ast, char **env, t_minishell mini);
-char *resize_buffer(char *content, size_t total_length, size_t *current_size);
-ssize_t read_line(char *content, size_t total_length, size_t current_size);
-int is_delimiter(const char *content, const char *delimiter, size_t total_length, size_t delimiter_length);
-int read_until_delimiter(t_heredoc *hd);
-void free_dirs(char **dirs);
-void handle_all_redirections(t_ast_node *ast);
+int							handle_builtin_commands(t_ast_node *ast,
+								t_minishell mini);
+void						handle_redirection(t_ast_node *ast);
+void						handle_heredoc(t_ast_node *ast);
+t_heredoc					*init_heredoc(const char *delimiter);
+char						*check_directory(char *dir, char *cmd);
+char						*get_executable_path(t_ast_node *ast);
+int							fork_and_execute(t_ast_node *ast, char **env);
+void						execute_in_child(t_ast_node *ast, char **env);
+void						execute_left_command(t_ast_node *ast, int pipefd[2],
+								char **env, t_minishell mini);
+void						execute_right_command(t_ast_node *ast,
+								int pipefd[2], char **env, t_minishell mini);
+int							execute_pipeline(t_ast_node *ast, char **env,
+								t_minishell mini);
+char						*resize_buffer(char *content, size_t total_length,
+								size_t *current_size);
+ssize_t						read_line(char *content, size_t total_length,
+								size_t current_size);
+int							is_delimiter(const char *content,
+								const char *delimiter, size_t total_length,
+								size_t delimiter_length);
+int							read_until_delimiter(t_heredoc *hd);
+void						free_dirs(char **dirs);
+void						handle_all_redirections(t_ast_node *ast);
 
 // builtins
 
@@ -213,9 +227,9 @@ size_t						env_size(char *env);
 int							unset_env_var(t_minishell *mini, char *arg);
 int							ft_unset(char **args, t_minishell *mini);
 
-//utils
-char	*ft_strcpy(char *s1, char *s2);
-char	*ft_strcat(char *dest, char *src);
-char	*ft_strndup(const char *s, size_t n);
+// utils
+char						*ft_strcpy(char *s1, char *s2);
+char						*ft_strcat(char *dest, char *src);
+char						*ft_strndup(const char *s, size_t n);
 
 #endif
