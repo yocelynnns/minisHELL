@@ -110,15 +110,15 @@ typedef struct s_heredoc
 	size_t					delimiter_length;
 }							t_heredoc;
 
-typedef struct s_signal
-{
-	int						sigint;
-	int						sigquit;
-	int						exit_status;
-	pid_t					pid;
-}							t_signal;
+// typedef struct s_signal
+// {
+// 	int						sigint;
+// 	int						sigquit;
+// 	int						exit_status;
+// 	pid_t					pid;
+// }							t_signal;
 
-t_signal					g_sig;
+// t_signal					g_sig;
 
 // token
 t_token						*create_token(t_token_type type, const char *value);
