@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/16 18:16:44 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/17 01:24:30 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	execute_in_child(t_ast_node *ast, char **env)
+void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 {
 	char	*executable_path;
 
@@ -20,11 +20,14 @@ void	execute_in_child(t_ast_node *ast, char **env)
 		handle_all_redirections(ast);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
+	if (handle_builtin_commands(ast, mini) == 1)
+		exit(EXIT_SUCCESS);
 	executable_path = get_executable_path(ast);
 	if (executable_path)
 	{
 		execve(executable_path, ast->command->args, env);
 		perror("execve");
+		exit(EXIT_FAILURE);
 	}
 	else
 		printf("Command not found: %s\n", ast->command->args[0]);
@@ -86,9 +89,11 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-		if (handle_builtin_commands(ast, mini) != -1)
-			return (0);
-		pid = fork_and_execute(ast, env);
+		if (ft_strcmp(ast->command->args[0], "exit") == 0)
+			return (ft_exit(&mini, ast->command->args), 1);
+		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
+			return (ft_cd(ast->command->args, mini.env), 0);
+		pid = fork_and_execute(ast, env, mini);
 		if (pid > 0)
 		{
 			waitpid(pid, &status, 0);

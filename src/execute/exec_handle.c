@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/16 18:16:35 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/17 01:25:58 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,15 @@
 int	handle_builtin_commands(t_ast_node *ast, t_minishell mini)
 {
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
-			return (ft_echo(ast->command->args));
+		return(ft_echo(ast->command->args), 1);
 	else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
-		return (ft_pwd());
-	else if (ft_strcmp(ast->command->args[0], "exit") == 0)
-		return (ft_exit(&mini, ast->command->args), 1);
-	else if (ft_strcmp(ast->command->args[0], "cd") == 0)
-		return (ft_cd(ast->command->args, mini.env));
+		return (ft_pwd(), 1);
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
-		return (ft_env(mini.env));
+		return (ft_env(mini.env), 1);
 	else if (ft_strcmp(ast->command->args[0], "export") == 0)
-		return (ft_export(ast->command->args, mini.env));
+		return (ft_export(ast->command->args, mini.env), 1);
 	else if (ft_strcmp(ast->command->args[0], "unset") == 0)
-		return (ft_unset(ast->command->args, &mini));
+		return (ft_unset(ast->command->args, &mini), 1);
 	return (-1);
 }
 

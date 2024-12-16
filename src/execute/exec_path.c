@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/14 19:14:04 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/17 01:14:50 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,13 @@ char	*get_executable_path(t_ast_node *ast)
 	return (NULL);
 }
 
-int	fork_and_execute(t_ast_node *ast, char **env)
+int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
-		execute_in_child(ast, env);
+		execute_in_child(ast, env, mini);
 	else if (pid < 0)
 	{
 		perror("fork");
