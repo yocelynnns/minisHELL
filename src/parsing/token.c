@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/14 19:32:19 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/17 20:40:03 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void handle_variable_expansion(t_lexer_state *state, const char *input, int *i);
 
 // create a new token
 t_token	*create_token(t_token_type type, const char *value)
@@ -45,6 +47,13 @@ void	add_token(t_token **head, t_token *new_token)
 	}
 }
 
+char *read_input() {
+    char *buffer = NULL;
+    size_t size = 0;
+    getline(&buffer, &size, stdin);
+    return buffer;
+}
+
 // main lexer function
 t_token	*lexer(const char *input)
 {
@@ -54,22 +63,43 @@ t_token	*lexer(const char *input)
 	state.token_list = NULL;
 	state.start = 0;
 	state.quote = 0;
-	state.last_token_was_pipe = 0;
 	i = 0;
+	
+	if (input[i] == '|')
+    {
+        printf("Error: Syntax error near unexpected token `|'\n");
+        return (free_tokens(state.token_list), NULL);
+    }
 	while (input[i])
 	{
-		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+		if (input[i] == '$') {
+            handle_variable_expansion(&state, input, &i);
+            state.start = i; // Update start to current position
+        } else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
 			handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
 			handle_special_char(&state, input, &i);
 		i++;
 	}
+	// Handle the case where the input ends with an unclosed quote
 	if (state.quote)
 	{
 		printf("Error: Unclosed quote '%c'\n", state.quote);
-		exit(EXIT_FAILURE);
+        // Here you can decide to keep the prompt open for more input
+        while (state.quote)
+		{
+            printf("> "); // Change the prompt to indicate waiting for more input
+            char *new_input = read_input(); // Read more input
+            if (!new_input) {
+                // Handle EOF or error
+                break;
+            }
+            // Process the new input
+            lexer(new_input); // Call lexer again with the new input
+            free(new_input);
+		}
 	}
-	if (i > state.start)
+	else if (i > state.start)
 		add_token(&state.token_list, create_token(WORD, \
 		ft_strndup(input + state.start, i - state.start)));
 	return (state.token_list);

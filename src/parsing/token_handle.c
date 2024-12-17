@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/14 19:25:50 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/17 20:22:59 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	handle_redirect_in(t_lexer_state *state, const char *input, int *i)
 	}
 	else
 		add_token(&state->token_list, create_token(REDIRECT_IN, "<"));
+	state->start = *i + 1;
 }
 
 void	handle_redirect_out(t_lexer_state *state, const char *input, int *i)
@@ -33,44 +34,44 @@ void	handle_redirect_out(t_lexer_state *state, const char *input, int *i)
 	}
 	else
 		add_token(&state->token_list, create_token(REDIRECT_OUT, ">"));
+	state->start = *i + 1;
 }
 
-void	handle_pipe(t_lexer_state *state)
+void	handle_pipe(const char *input, int *i)
 {
-	if (state->last_token_was_pipe)
+	if (input[*i + 1] == '|')
 	{
-		printf("Error: Syntax error near unexpected token `|'\n");
-		exit(EXIT_FAILURE);
+		printf("Error: Syntax error near unexpected token '|a|'\n");
+		return ;
 	}
-	state->last_token_was_pipe = 1;
-	add_token(&state->token_list, create_token(PIPE, "|"));
 }
 
 // general function to handle special characters
 void	handle_special_char(t_lexer_state *state, const char *input, int *i)
 {
-	if (input[*i] == '<')
+	if (input[*i] == '<' && !state->quote)
 	{
 		if (*i > state->start)
 			add_token(&state->token_list, create_token(WORD, \
 			ft_strndup(input + state->start, *i - state->start)));
 		handle_redirect_in(state, input, i);
 	}
-	else if (input[*i] == '>')
+	else if (input[*i] == '>' && !state->quote)
 	{
 		if (*i > state->start)
 			add_token(&state->token_list, create_token(WORD, \
 			ft_strndup(input + state->start, *i - state->start)));
 		handle_redirect_out(state, input, i);
 	}
-	else if (input[*i] == '|')
+	else if (input[*i] == '|' && !state->quote)
 	{
+		// handle_pipe(input, i);
 		if (*i > state->start)
 			add_token(&state->token_list, create_token(WORD, \
 			ft_strndup(input + state->start, *i - state->start)));
-		handle_pipe(state);
+		add_token(&state->token_list, create_token(PIPE, "|"));
+		state->start = *i + 1;
 	}
-	state->start = *i + 1;
 }
 
 // handle quotes and spaces
@@ -90,6 +91,4 @@ void	handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 			ft_strndup(input + state->start, *i - state->start)));
 		state->start = *i + 1;
 	}
-	else
-		state->last_token_was_pipe = 0;
 }

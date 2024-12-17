@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/17 01:24:30 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/17 20:11:54 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 {
 	char	*executable_path;
-
+	
 	if (ast->command->redirect)
 		handle_all_redirections(ast);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
 		exit(EXIT_SUCCESS);
+		
 	executable_path = get_executable_path(ast);
 	if (executable_path)
 	{
@@ -47,6 +48,9 @@ t_minishell mini)
 		execute_command(ast->pipeline->left, env, mini);
 		exit(0);
 	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(pid1, NULL, 0);
 }
 
 void	execute_right_command(t_ast_node *ast, int pipefd[2], char **env, \
@@ -58,11 +62,14 @@ t_minishell mini)
 	if (pid2 == 0)
 	{
 		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
 		close(pipefd[1]);
+		close(pipefd[0]);
 		execute_command(ast->pipeline->right, env, mini);
 		exit(0);
 	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(pid2, NULL, 0);
 }
 
 int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
@@ -76,9 +83,9 @@ int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 	}
 	execute_left_command(ast, pipefd, env, mini);
 	execute_right_command(ast, pipefd, env, mini);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	waitpid(-1, NULL, 0);
+	// close(pipefd[0]);
+	// close(pipefd[1]);
+	// waitpid(-1, NULL, 0);
 	return (0);
 }
 
@@ -90,7 +97,7 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 	if (ast->type == AST_COMMAND)
 	{
 		if (ft_strcmp(ast->command->args[0], "exit") == 0)
-			return (ft_exit(&mini, ast->command->args), 1);
+			return (ft_exit(&mini, ast->command->args), 5);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			return (ft_cd(ast->command->args, mini.env), 0);
 		pid = fork_and_execute(ast, env, mini);

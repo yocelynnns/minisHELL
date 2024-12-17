@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 18:05:42 by messs             #+#    #+#             */
-/*   Updated: 2024/12/11 18:30:10 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/17 20:13:52 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
+	if (!s1 || !s2)
+		return (-1);
 	while (*s1 && (*s1 == *s2))
 	{
 		s1++;

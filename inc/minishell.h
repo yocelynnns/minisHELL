@@ -46,7 +46,6 @@ typedef struct s_lexer_state
 	t_token					*token_list;
 	int						start;
 	char					quote;
-	int						last_token_was_pipe;
 }							t_lexer_state;
 
 // ast node types
@@ -131,7 +130,7 @@ void						handle_redirect_in(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
-void						handle_pipe(t_lexer_state *state);
+void						handle_pipe(const char *input, int *i);
 void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_quotes_spaces(t_lexer_state *state,
@@ -165,8 +164,8 @@ void						handle_heredoc(t_ast_node *ast);
 t_heredoc					*init_heredoc(const char *delimiter);
 char						*check_directory(char *dir, char *cmd);
 char						*get_executable_path(t_ast_node *ast);
-int							fork_and_execute(t_ast_node *ast, char **env);
-void						execute_in_child(t_ast_node *ast, char **env);
+int							fork_and_execute(t_ast_node *ast, char **env, t_minishell mini);
+void						execute_in_child(t_ast_node *ast, char **env, t_minishell mini);
 void						execute_left_command(t_ast_node *ast, int pipefd[2],
 								char **env, t_minishell mini);
 void						execute_right_command(t_ast_node *ast,
