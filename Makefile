@@ -24,11 +24,13 @@ BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/cd.c \
 				  $(SRC_DIR)builtins/unset.c
 
+SIGNALS_DIR		= $(SRC_DIR)signals/signals.c
+
 ENV_DIR			= $(SRC_DIR)env/env_init.c \
 				  $(SRC_DIR)env/env_sort.c\
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c \
-				  $(SRC_DIR)utils/utils.c 
+				  $(SRC_DIR)utils/utils.c
 
 EXEC_DIR		= $(SRC_DIR)execute/exec.c \
 				  $(SRC_DIR)execute/exec_handle.c \
@@ -37,7 +39,8 @@ EXEC_DIR		= $(SRC_DIR)execute/exec.c \
 
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \
-				  $(ENV_DIR) $(UTILS_DIR) $(EXEC_DIR)
+				  $(ENV_DIR) $(UTILS_DIR) $(EXEC_DIR) \
+				  $(SIGNALS_DIR)
 
 OBJS            = $(SRCS:.c=.o)
 

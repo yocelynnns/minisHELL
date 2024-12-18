@@ -109,15 +109,13 @@ typedef struct s_heredoc
 	size_t					delimiter_length;
 }							t_heredoc;
 
-// typedef struct s_signal
-// {
-// 	int						sigint;
-// 	int						sigquit;
-// 	int						exit_status;
-// 	pid_t					pid;
-// }							t_signal;
-
-// t_signal					g_sig;
+typedef struct s_signal
+{
+	int						sigint;
+	int						sigquit;
+	int						exit_status;
+	pid_t					pid;
+}							t_signal;
 
 // token
 t_token						*create_token(t_token_type type, const char *value);
@@ -230,5 +228,11 @@ int							ft_unset(char **args, t_minishell *mini);
 char						*ft_strcpy(char *s1, char *s2);
 char						*ft_strcat(char *dest, char *src);
 char						*ft_strndup(const char *s, size_t n);
+
+// signals.c
+void sig_int_handler(int code);
+void sig_quit_handler(int code);
+void init_signals(void);
+void handle_eof(char *line);
 
 #endif
