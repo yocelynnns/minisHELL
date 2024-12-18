@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/17 20:11:54 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:45:28 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		exit(EXIT_FAILURE);
 	}
 	else
+	// {
 		printf("Command not found: %s\n", ast->command->args[0]);
+		// return (127);
+	// }
 }
 
 void	execute_left_command(t_ast_node *ast, int pipefd[2], char **env, \
@@ -48,8 +51,8 @@ t_minishell mini)
 		execute_command(ast->pipeline->left, env, mini);
 		exit(0);
 	}
-	close(pipefd[0]);
-	close(pipefd[1]);
+	// close(pipefd[0]);
+	// close(pipefd[1]);
 	waitpid(pid1, NULL, 0);
 }
 
@@ -67,8 +70,8 @@ t_minishell mini)
 		execute_command(ast->pipeline->right, env, mini);
 		exit(0);
 	}
-	close(pipefd[0]);
-	close(pipefd[1]);
+	// close(pipefd[0]);
+	// close(pipefd[1]);
 	waitpid(pid2, NULL, 0);
 }
 

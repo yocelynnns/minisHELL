@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/17 15:38:57 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/18 11:12:21 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,14 @@ t_ast_node	*parse_pipeline(t_token **tokens)
 	return (left);
 }
 
+void init_cmd(t_ast_node *cmd)
+{
+	cmd->command = malloc(sizeof(t_ast_command));
+	cmd->command->args = malloc(sizeof(char *) * 10);
+	cmd->command->redirect = NULL;
+	cmd->command->heredoc = NULL;
+}
+
 // Parse a command node
 t_ast_node	*parse_command(t_token **tokens)
 {
@@ -65,9 +73,7 @@ t_ast_node	*parse_command(t_token **tokens)
 	int			arg_count;
 
 	cmd = create_ast_node(AST_COMMAND);
-	cmd->command = malloc(sizeof(t_ast_command));
-	cmd->command->args = malloc(sizeof(char *) * 10);
-	cmd->command->redirect = NULL;
+	init_cmd(cmd);
 	arg_count = 0;
 	while (*tokens && is_redirect((*tokens)->type))
 	{
