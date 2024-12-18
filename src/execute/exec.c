@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 11:45:28 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/18 14:50:39 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 	// }
 }
 
-void	execute_left_command(t_ast_node *ast, int pipefd[2], char **env, \
+int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env, \
 t_minishell mini)
 {
 	pid_t	pid1;
@@ -51,12 +51,15 @@ t_minishell mini)
 		execute_command(ast->pipeline->left, env, mini);
 		exit(0);
 	}
-	// close(pipefd[0]);
-	// close(pipefd[1]);
-	waitpid(pid1, NULL, 0);
+	else if (pid1 < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	return (pid1);
 }
 
-void	execute_right_command(t_ast_node *ast, int pipefd[2], char **env, \
+int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env, \
 t_minishell mini)
 {
 	pid_t	pid2;
@@ -70,25 +73,39 @@ t_minishell mini)
 		execute_command(ast->pipeline->right, env, mini);
 		exit(0);
 	}
-	// close(pipefd[0]);
-	// close(pipefd[1]);
-	waitpid(pid2, NULL, 0);
+	else if (pid2 < 0)
+	{
+		perror("fork");
+		return (-1);
+	}
+	return (pid2);
 }
 
 int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 {
 	int	pipefd[2];
+	pid_t pid1;
+	pid_t pid2;
+	int status;
 
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
 		return (-1);
 	}
-	execute_left_command(ast, pipefd, env, mini);
-	execute_right_command(ast, pipefd, env, mini);
-	// close(pipefd[0]);
-	// close(pipefd[1]);
-	// waitpid(-1, NULL, 0);
+	pid1 = execute_left_command(ast, pipefd, env, mini);
+	if (pid1 > 0)
+	{
+		waitpid(pid1, &status, 0);
+        close(pipefd[1]);
+	}
+	pid2 = execute_right_command(ast, pipefd, env, mini);
+	if (pid2 > 0)
+	{
+		waitpid(pid2, &status, 0);
+		close(pipefd[0]);
+        close(pipefd[1]);
+	}
 	return (0);
 }
 

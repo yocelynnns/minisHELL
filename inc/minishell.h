@@ -166,9 +166,9 @@ char						*check_directory(char *dir, char *cmd);
 char						*get_executable_path(t_ast_node *ast);
 int							fork_and_execute(t_ast_node *ast, char **env, t_minishell mini);
 void						execute_in_child(t_ast_node *ast, char **env, t_minishell mini);
-void						execute_left_command(t_ast_node *ast, int pipefd[2],
+int						execute_left_command(t_ast_node *ast, int pipefd[2],
 								char **env, t_minishell mini);
-void						execute_right_command(t_ast_node *ast,
+int						execute_right_command(t_ast_node *ast,
 								int pipefd[2], char **env, t_minishell mini);
 int							execute_pipeline(t_ast_node *ast, char **env,
 								t_minishell mini);
