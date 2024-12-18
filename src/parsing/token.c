@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 15:32:53 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/18 15:42:21 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	handle_variable_expansion(t_lexer_state *state, const char *input,
-			int *i);
+int exit_status = 0;
 
 t_token	*create_token(t_token_type type, const char *value)
 {
@@ -74,11 +73,8 @@ t_token	*lexer(const char *input)
 	}
 	while (input[i])
 	{
-		if (input[i] == '$')
-		{
-			handle_variable_expansion(&state, input, &i);
-			state.start = i;
-		}
+		if (input[i] == '$' && !state.quote)
+            handle_variable_expansion(&state, input, &i);
 		else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
 			handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
