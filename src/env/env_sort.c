@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 19:24:23 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/12 11:12:17 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/18 15:27:41 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	count_env_vars(t_env *env)
 {
-	int	count;
+	int		count;
 	t_env	*tmp;
 
 	count = 0;
@@ -82,15 +82,12 @@ void	print_sorted_env(t_env *env)
 	env_array = env_to_array(env, count);
 	if (!env_array)
 		return ;
-
 	sort_env_array(env_array, count);
-
 	i = 0;
 	while (i < count)
 	{
 		ft_putendl_fd(env_array[i], STDOUT);
 		i++;
 	}
-
 	free(env_array);
 }

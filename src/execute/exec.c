@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 14:50:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:36:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 {
 	char	*executable_path;
-	
+
 	if (ast->command->redirect)
 		handle_all_redirections(ast);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
 		exit(EXIT_SUCCESS);
-		
 	executable_path = get_executable_path(ast);
 	if (executable_path)
 	{
@@ -31,14 +30,11 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		exit(EXIT_FAILURE);
 	}
 	else
-	// {
 		printf("Command not found: %s\n", ast->command->args[0]);
-		// return (127);
-	// }
 }
 
-int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env, \
-t_minishell mini)
+int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env,
+		t_minishell mini)
 {
 	pid_t	pid1;
 
@@ -59,8 +55,8 @@ t_minishell mini)
 	return (pid1);
 }
 
-int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env, \
-t_minishell mini)
+int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env,
+		t_minishell mini)
 {
 	pid_t	pid2;
 
@@ -83,10 +79,10 @@ t_minishell mini)
 
 int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 {
-	int	pipefd[2];
-	pid_t pid1;
-	pid_t pid2;
-	int status;
+	int		pipefd[2];
+	pid_t	pid1;
+	pid_t	pid2;
+	int		status;
 
 	if (pipe(pipefd) == -1)
 	{
@@ -97,14 +93,14 @@ int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 	if (pid1 > 0)
 	{
 		waitpid(pid1, &status, 0);
-        close(pipefd[1]);
+		close(pipefd[1]);
 	}
 	pid2 = execute_right_command(ast, pipefd, env, mini);
 	if (pid2 > 0)
 	{
 		waitpid(pid2, &status, 0);
 		close(pipefd[0]);
-        close(pipefd[1]);
+		close(pipefd[1]);
 	}
 	return (0);
 }

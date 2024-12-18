@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/14 19:22:19 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/18 15:27:25 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ char	*resize_buffer(char *content, size_t total_length, size_t *current_size)
 ssize_t	read_line(char *content, size_t total_length, size_t current_size)
 {
 	write(STDOUT_FILENO, "> ", 2);
-	return (read(STDIN_FILENO, content + total_length, current_size - \
-	total_length - 1));
+	return (read(STDIN_FILENO, content + total_length, current_size
+			- total_length - 1));
 }
 
-int	is_delimiter(const char *content, const char *delimiter, size_t \
-total_length, size_t delimiter_length)
+int	is_delimiter(const char *content, const char *delimiter,
+		size_t total_length, size_t delimiter_length)
 {
-	return (ft_strncmp(content + total_length, delimiter, \
-	delimiter_length) == 0 && (content[total_length + delimiter_length] \
-	== '\n' || content[total_length + delimiter_length] == '\0'));
+	return (ft_strncmp(content + total_length, delimiter, delimiter_length) == 0
+		&& (content[total_length + delimiter_length] == '\n'
+			|| content[total_length + delimiter_length] == '\0'));
 }
 
 int	read_until_delimiter(t_heredoc *hd)
@@ -57,14 +57,14 @@ int	read_until_delimiter(t_heredoc *hd)
 			return (-1);
 		}
 		hd->content[hd->total_length + bytes_read] = '\0';
-		if (is_delimiter(hd->content, hd->delimiter, \
-		hd->total_length, hd->delimiter_length))
+		if (is_delimiter(hd->content, hd->delimiter, hd->total_length,
+				hd->delimiter_length))
 			break ;
 		hd->total_length += bytes_read;
 		if (hd->total_length + 1 >= hd->current_size)
 		{
-			hd->content = resize_buffer(hd->content, \
-			hd->total_length, &hd->current_size);
+			hd->content = resize_buffer(hd->content, hd->total_length,
+					&hd->current_size);
 			if (!hd->content)
 				return (-1);
 		}

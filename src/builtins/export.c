@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:33:34 by messs             #+#    #+#             */
-/*   Updated: 2024/12/12 11:58:15 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/18 15:28:00 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_export_error(int error, const char *arg)
 {
-	int		i;
+	int	i;
 
 	if (error == -1)
 		ft_putstr_fd("export: not valid in this context: ", STDERR);
@@ -57,7 +57,6 @@ int	add_or_update_env(char *arg, t_env *env)
 	key = ft_substr(arg, 0, key_len);
 	if (!key)
 		return (print_export_error(-1, arg));
-
 	tmp = env;
 	while (tmp)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:32:08 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/14 19:06:42 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/18 15:31:33 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 char	*ft_strcpy(char *s1, char *s2)
 {
-	int i = 0;
-	
+	int	i;
+
+	i = 0;
 	while (s2[i] != '\0')
 	{
 		s1[i] = s2[i];

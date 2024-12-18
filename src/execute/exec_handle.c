@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/18 14:19:08 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:27:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	handle_builtin_commands(t_ast_node *ast, t_minishell mini)
 {
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
-		return(ft_echo(ast->command->args), 1);
+		return (ft_echo(ast->command->args), 1);
 	else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
 		return (ft_pwd(), 1);
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
@@ -36,8 +36,8 @@ void	handle_redirection(t_ast_node *redirect)
 	else if (redirect->redirect->type == REDIRECT_OUT)
 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (redirect->redirect->type == APPEND)
-		fd = open(redirect->redirect->file, O_WRONLY \
-		| O_CREAT | O_APPEND, 0644);
+		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_APPEND,
+				0644);
 	else
 		return ;
 	if (fd < 0)

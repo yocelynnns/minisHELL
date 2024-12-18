@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/17 20:22:59 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:33:14 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-// handle special characters (redirects, pipes)
 void	handle_redirect_in(t_lexer_state *state, const char *input, int *i)
 {
 	if (input[*i + 1] == '<')
@@ -46,35 +45,32 @@ void	handle_pipe(const char *input, int *i)
 	}
 }
 
-// general function to handle special characters
 void	handle_special_char(t_lexer_state *state, const char *input, int *i)
 {
 	if (input[*i] == '<' && !state->quote)
 	{
 		if (*i > state->start)
-			add_token(&state->token_list, create_token(WORD, \
-			ft_strndup(input + state->start, *i - state->start)));
+			add_token(&state->token_list, create_token(WORD, ft_strndup(input
+						+ state->start, *i - state->start)));
 		handle_redirect_in(state, input, i);
 	}
 	else if (input[*i] == '>' && !state->quote)
 	{
 		if (*i > state->start)
-			add_token(&state->token_list, create_token(WORD, \
-			ft_strndup(input + state->start, *i - state->start)));
+			add_token(&state->token_list, create_token(WORD, ft_strndup(input
+						+ state->start, *i - state->start)));
 		handle_redirect_out(state, input, i);
 	}
 	else if (input[*i] == '|' && !state->quote)
 	{
-		// handle_pipe(input, i);
 		if (*i > state->start)
-			add_token(&state->token_list, create_token(WORD, \
-			ft_strndup(input + state->start, *i - state->start)));
+			add_token(&state->token_list, create_token(WORD, ft_strndup(input
+						+ state->start, *i - state->start)));
 		add_token(&state->token_list, create_token(PIPE, "|"));
 		state->start = *i + 1;
 	}
 }
 
-// handle quotes and spaces
 void	handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 {
 	if (input[*i] == '\'' || input[*i] == '"')
@@ -87,8 +83,8 @@ void	handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 	else if (isspace(input[*i]) && !state->quote)
 	{
 		if (*i > state->start)
-			add_token(&state->token_list, create_token(WORD, \
-			ft_strndup(input + state->start, *i - state->start)));
+			add_token(&state->token_list, create_token(WORD, ft_strndup(input
+						+ state->start, *i - state->start)));
 		state->start = *i + 1;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2024/12/14 17:21:33 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/18 15:31:38 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,17 @@ void	free_env(t_env *env)
 	}
 }
 
-void free_dirs(char **dirs)
+void	free_dirs(char **dirs)
 {
-    int j = 0;
-    while (dirs[j] != NULL) {
-        free(dirs[j]);
-        j++;
-    }
-    free(dirs);
+	int	j;
+
+	j = 0;
+	while (dirs[j] != NULL)
+	{
+		free(dirs[j]);
+		j++;
+	}
+	free(dirs);
 }
 
 void	free_tokens(t_token *tokens)
@@ -106,4 +109,3 @@ void	free_node(t_minishell *mini, t_env *env)
 	free(env->value);
 	free(env);
 }
-
