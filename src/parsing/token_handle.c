@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 15:41:58 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/19 16:20:47 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
         	(*i)++;
 		var_name = ft_strndup(input + var_start, *i - var_start + 1);
 		var_value = getenv(var_name);
-		if (var_value) // If variable exists, add it as a token
+		if (var_value)
 			add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
 		free(var_name);
 	}

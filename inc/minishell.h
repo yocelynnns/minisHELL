@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:31:07 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/18 15:31:09 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/19 16:22:01 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
+void						handle_variable_expansion(t_lexer_state *state,
+								const char *input, int *i);
 
 t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
@@ -216,7 +218,6 @@ int							navigate_to_special_directory(int option,
 int							ft_cd(char **arguments, t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
 
-int							print_error(int error, const char *arg);
 int							ft_export(char **args, t_env *env);
 int							add_or_update_env(char *arg, t_env *env);
 int							is_valid_env(char *arg);

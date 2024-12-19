@@ -3,55 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 15:27:18 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/19 16:20:20 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int exit_status = 0;
-
-// Function to get the value of a variable
-char *get_variable_value(const char *var_name) {
-    if (strcmp(var_name, "?") == 0) {
-        // Return the exit status as a string
-        char *status_str = malloc(12); // Enough for an int
-        snprintf(status_str, 12, "%d", exit_status);
-        return status_str;
-    }
-    // Handle other variables as needed
-    return NULL; // Or return the value of the variable from the environment
-}
-
-void handle_variable_expansion(t_lexer_state *state, const char *input, int *i) {
-    int start = *i + 1; // Start after the '$'
-    if (input[*i + 1] == '?') {
-        // Handle the special case for $?
-        (*i)++; // Move to the '?'
-        char *var_value = get_variable_value("?");
-        if (var_value) {
-            add_token(&state->token_list, create_token(WORD, var_value));
-        }
-        return; // Exit the function after handling $?
-    }
-
-    // Handle other variable names
-    while (isalnum(input[*i]) || input[*i] == '_') {
-        (*i)++;
-    }
-    int length = *i - start;
-    if (length > 0) {
-        char *var_name = strndup(input + start, length);
-        char *var_value = get_variable_value(var_name);
-        if (var_value) {
-            add_token(&state->token_list, create_token(WORD, var_value));
-        }
-        free(var_name);
-    }
-}
 
 int	main(int ac, char **av, char **env)
 {
