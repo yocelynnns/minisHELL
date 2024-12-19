@@ -6,13 +6,11 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/18 15:42:21 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:49:48 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int exit_status = 0;
 
 t_token	*create_token(t_token_type type, const char *value)
 {
@@ -45,22 +43,10 @@ void	add_token(t_token **head, t_token *new_token)
 	}
 }
 
-char	*read_input(void)
-{
-	char	*buffer;
-	size_t	size;
-
-	buffer = NULL;
-	size = 0;
-	getline(&buffer, &size, stdin);
-	return (buffer);
-}
-
 t_token	*lexer(const char *input)
 {
 	t_lexer_state	state;
 	int				i;
-	char			*new_input;
 
 	state.token_list = NULL;
 	state.start = 0;
@@ -84,14 +70,7 @@ t_token	*lexer(const char *input)
 	if (state.quote)
 	{
 		printf("Error: Unclosed quote '%c'\n", state.quote);
-		while (state.quote)
-		{
-			printf("> ");
-			new_input = read_input();
-			break ;
-			lexer(new_input);
-			free(new_input);
-		}
+		return (free_tokens(state.token_list), NULL);
 	}
 	else if (i > state.start)
 		add_token(&state.token_list, create_token(WORD, ft_strndup(input

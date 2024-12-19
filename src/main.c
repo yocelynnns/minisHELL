@@ -6,12 +6,13 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/19 16:20:20 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:55:27 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+int g_exit_status = 0;
 
 int	main(int ac, char **av, char **env)
 {
@@ -73,6 +74,8 @@ int	main(int ac, char **av, char **env)
 
 		// Execute the command(s) represented by the AST
 		exit_status = execute_command(ast, env, mini);
+		
+		g_exit_status = exit_status;
 
 		if (exit_status == 5)
 		{
@@ -90,5 +93,5 @@ int	main(int ac, char **av, char **env)
 	}
 	// Free the environment
 	free_env(mini.env);
-	return (exit_status);
+	return (g_exit_status);
 }
