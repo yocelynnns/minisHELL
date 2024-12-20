@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/20 20:15:48 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/21 01:09:37 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
-int	print_export_error(int error, const char *arg)
+int print_export_error(int error, const char *arg)
 {
-	int	i;
-
+	int i;
 	if (error == -1)
 		ft_putstr_fd("export: not valid in this context: ", STDERR);
 	else if (error == 0 || error == -3)
@@ -29,12 +28,11 @@ int	print_export_error(int error, const char *arg)
 	write(STDERR, "\n", 1);
 	return (ERROR);
 }
-
-int	is_valid_env(const char *arg)
+int is_valid_env(char *arg)
 {
-	int	i;
+	int i;
 
-	if (!arg || (!ft_isalpha(arg[0]) && arg[0] != '_'))
+	if (!arg || !ft_isalpha(arg[0]))
 		return (0);
 	i = 1;
 	while (arg[i] && arg[i] != '=')
@@ -45,109 +43,90 @@ int	is_valid_env(const char *arg)
 	}
 	return (1);
 }
-
-int	env_add(const char *value, t_env **env)
+int add_or_update_env(char *arg, t_env **env)
 {
-	t_env	*new;
-	t_env	*tmp;
+	t_env *tmp;
+	char *key;
+	char *new_value;
+	size_t key_len;
+	t_env *new_node;
+	t_env *last = NULL;
 
-	if (!env || !*env)
+	if (ft_strchr(arg, '='))
+		key_len = ft_strchr(arg, '=') - arg;
+	else
+		key_len = ft_strlen(arg);
+	key = ft_substr(arg, 0, key_len);
+	if (!key)
+		return (print_export_error(-1, arg));
+	if (ft_strchr(arg, '='))
+		new_value = ft_strdup(arg);
+	else
+		new_value = ft_strjoin(key, "=");
+	if (!new_value)
 	{
-		*env = malloc(sizeof(t_env));
-		if (!*env)
-			return (ERROR);
-		(*env)->value = ft_strdup(value);
-		(*env)->next = NULL;
-		return (SUCCESS);
+		free(key);
+		return (print_export_error(-1, arg));
 	}
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return (ERROR);
-	new->value = ft_strdup(value);
 	tmp = *env;
-	while (tmp->next)
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->value, key, key_len) == 0 && tmp->value[key_len] == '=')
+		{
+			free(tmp->value);
+			tmp->value = new_value;
+			free(key);
+			if (!tmp->value)
+				return (print_export_error(-1, arg));
+			return (SUCCESS);
+		}
 		tmp = tmp->next;
-	tmp->next = new;
-	new->next = NULL;
+	}
+	free(key);
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+	{
+		free(new_value);
+		return (print_export_error(-1, arg));
+	}
+	new_node->value = new_value;
+	new_node->next = NULL;
+	if (!*env)
+		*env = new_node;
+	else
+	{
+		last = *env;
+		while (last && last->next)
+			last = last->next;
+		last->next = new_node;
+	}
+	print_sorted_env(*env);
 	return (SUCCESS);
 }
 
-char	*get_env_name(char *dest, const char *src)
+int ft_export(char **args, t_env **env)
 {
-	int	i;
-
-	i = 0;
-	while (src[i] && src[i] != '=')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-int	is_in_env(t_env *env, const char *arg)
-{
-	char	var_name[BUFF_SIZE];
-	char	env_name[BUFF_SIZE];
-
-	get_env_name(var_name, arg);
-	while (env)
-	{
-		get_env_name(env_name, env->value);
-		if (ft_strcmp(var_name, env_name) == 0)
-		{
-			free(env->value);
-			env->value = ft_strdup(arg);
-			return (1);
-		}
-		env = env->next;
-	}
-	return (0);
-}
-
-int	ft_export(char **args, t_env *env, t_env *copy_env)
-{
-	int		error_ret;
-	char	*temp;
+	int i;
+	int error;
 
 	if (!args[1])
 	{
-		print_sorted_env(copy_env);
+		print_sorted_env(*env);
 		return (SUCCESS);
 	}
-	error_ret = is_valid_env(args[1]);
-	if (args[1][0] == '=')
-		error_ret = -3;
-	if (error_ret <= 0)
-		return (print_export_error(error_ret, args[1]));
-	if (!ft_strchr(args[1], '='))
+	i = 1;
+	error = SUCCESS;
+	while (args[i])
 	{
-		temp = ft_strjoin(args[1], "=");
-		if (!is_in_env(env, temp))
+		if (!is_valid_env(args[i]))
+			error = print_export_error(0, args[i]);
+		else if (add_or_update_env(args[i], env) == ERROR)
 		{
-			if (env_add(temp, &env) == ERROR)
-				return (print_export_error(-1, args[1]));
+			ft_putstr_fd("export: failed to allocate memory for: ", STDERR);
+			ft_putendl_fd(args[i], STDERR);
+			error = ERROR;
 		}
-		if (!is_in_env(copy_env, temp))
-		{
-			if (env_add(temp, &copy_env) == ERROR)
-				return (print_export_error(-1, args[1]));
-		}
-		free(temp);
+		i++;
 	}
-	else
-	{
-		if (!is_in_env(env, args[1]))
-		{
-			if (env_add(args[1], &env) == ERROR)
-				return (print_export_error(-1, args[1]));
-		}
-		if (!is_in_env(copy_env, args[1]))
-		{
-			if (env_add(args[1], &copy_env) == ERROR)
-				return (print_export_error(-1, args[1]));
-		}
-	}
-	return (SUCCESS);
+	return (error);
 }

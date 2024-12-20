@@ -3,22 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   env_sort.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 19:24:23 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/18 15:27:41 by hthant           ###   ########.fr       */
+/*   Created: 2024/12/21 01:07:06 by messs             #+#    #+#             */
+/*   Updated: 2024/12/21 01:09:07 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	count_env_vars(t_env *env)
+int count_env_vars(t_env *env)
 {
-	int		count;
-	t_env	*tmp;
+	int count = 0;
+	t_env *tmp = env;
 
-	count = 0;
-	tmp = env;
 	while (tmp)
 	{
 		count++;
@@ -27,12 +25,14 @@ int	count_env_vars(t_env *env)
 	return (count);
 }
 
-char	**env_to_array(t_env *env, int count)
+char **env_to_array(t_env *env, int count)
 {
-	t_env	*tmp;
-	char	**env_array;
-	int		i;
+	char **env_array;
+	t_env *tmp;
+	int i;
 
+	if (!env || count <= 0)
+		return (NULL);
 	env_array = malloc(sizeof(char *) * (count + 1));
 	if (!env_array)
 		return (NULL);
@@ -40,7 +40,14 @@ char	**env_to_array(t_env *env, int count)
 	i = 0;
 	while (tmp)
 	{
-		env_array[i] = tmp->value;
+		env_array[i] = ft_strdup(tmp->value);
+		if (!env_array[i])
+		{
+			while (i > 0)
+				free(env_array[--i]);
+			free(env_array);
+			return (NULL);
+		}
 		i++;
 		tmp = tmp->next;
 	}
@@ -48,17 +55,14 @@ char	**env_to_array(t_env *env, int count)
 	return (env_array);
 }
 
-void	sort_env_array(char **env_array, int count)
+void sort_env_array(char **env_array, int count)
 {
-	char	*temp;
-	int		i;
-	int		j;
+	char *temp;
+	int i, j;
 
-	i = 0;
-	while (i < count - 1)
+	for (i = 0; i < count - 1; i++)
 	{
-		j = i + 1;
-		while (j < count)
+		for (j = i + 1; j < count; j++)
 		{
 			if (ft_strcmp(env_array[i], env_array[j]) > 0)
 			{
@@ -66,27 +70,31 @@ void	sort_env_array(char **env_array, int count)
 				env_array[i] = env_array[j];
 				env_array[j] = temp;
 			}
-			j++;
 		}
-		i++;
 	}
 }
 
-void	print_sorted_env(t_env *env)
+void print_sorted_env(t_env *env)
 {
-	char	**env_array;
-	int		count;
-	int		i;
+	char **env_array;
+	int count;
+	int i;
 
 	count = count_env_vars(env);
+	if (count == 0)
+		return;
 	env_array = env_to_array(env, count);
 	if (!env_array)
-		return ;
+	{
+		ft_putstr_fd("Error: Memory allocation failed in print_sorted_env\n", STDERR);
+		return;
+	}
 	sort_env_array(env_array, count);
 	i = 0;
 	while (i < count)
 	{
 		ft_putendl_fd(env_array[i], STDOUT);
+		free(env_array[i]);
 		i++;
 	}
 	free(env_array);
