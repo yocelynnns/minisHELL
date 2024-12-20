@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 13:33:34 by messs             #+#    #+#             */
-/*   Updated: 2024/12/18 15:28:00 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/20 17:08:41 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_valid_env(char *arg)
 {
 	int	i;
 
-	if (!arg || !ft_isalpha(arg[0]))
+	if (!arg || (!ft_isalpha(arg[0]) && arg[0] != '_'))
 		return (0);
 	i = 1;
 	while (arg[i] && arg[i] != '=')
@@ -45,15 +45,15 @@ int	is_valid_env(char *arg)
 	}
 	return (1);
 }
-
 int	add_or_update_env(char *arg, t_env *env)
 {
 	t_env	*tmp;
 	char	*key;
 	size_t	key_len;
 	t_env	*new_node;
+	char	*new_value;
 
-	key_len = ft_strchr(arg, '=') - arg;
+	key_len = ft_strchr(arg, '=') ? (ft_strchr(arg, '=') - arg) : ft_strlen(arg);
 	key = ft_substr(arg, 0, key_len);
 	if (!key)
 		return (print_export_error(-1, arg));
@@ -61,13 +61,17 @@ int	add_or_update_env(char *arg, t_env *env)
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->value, key, key_len) == 0
-			&& tmp->value[key_len] == '=')
+			&& (tmp->value[key_len] == '=' || tmp->value[key_len] == '\0'))
 		{
 			free(tmp->value);
-			tmp->value = ft_strdup(arg);
-			free(key);
-			if (!tmp->value)
+			new_value = ft_strdup(arg);
+			if (!new_value)
+			{
+				free(key);
 				return (print_export_error(-1, arg));
+			}
+			tmp->value = new_value;
+			free(key);
 			return (SUCCESS);
 		}
 		tmp = tmp->next;
@@ -76,13 +80,14 @@ int	add_or_update_env(char *arg, t_env *env)
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
 		return (print_export_error(-1, arg));
-	new_node->value = ft_strdup(arg);
-	new_node->next = NULL;
-	if (!new_node->value)
+	new_value = ft_strdup(arg);
+	if (!new_value)
 	{
 		free(new_node);
 		return (print_export_error(-1, arg));
 	}
+	new_node->value = new_value;
+	new_node->next = NULL;
 	if (!env)
 		env = new_node;
 	else

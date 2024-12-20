@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 15:31:07 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/19 21:32:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:55:17 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define BUFF_SIZE 4096
 # define INITIAL_SIZE 4096
 
-extern int g_exit_status;
+extern int					g_exit_status;
 
 typedef enum
 {
@@ -56,6 +56,7 @@ typedef struct s_lexer_state
 	t_token					*token_list;
 	int						start;
 	char					quote;
+	int						exit_status;
 }							t_lexer_state;
 
 typedef enum
@@ -236,6 +237,6 @@ void						sig_int_handler(int code);
 void						sig_quit_handler(int code);
 void						init_signals(void);
 void						handle_eof(char *line);
-char *expand_variable(const char *arg);
+char						*expand_variable(const char *arg);
 
 #endif
