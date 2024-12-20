@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/19 19:55:27 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/20 19:32:27 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 
 	// Initialize environment variables
+	copy_env_init(&mini,env);
 	if (env_init(&mini, env))
 	{
 		fprintf(stderr, "Error: Failed to initialize environment variables\n");
@@ -74,7 +75,7 @@ int	main(int ac, char **av, char **env)
 
 		// Execute the command(s) represented by the AST
 		exit_status = execute_command(ast, env, mini);
-		
+
 		g_exit_status = exit_status;
 
 		if (exit_status == 5)

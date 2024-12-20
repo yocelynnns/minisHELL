@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/19 18:39:46 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/20 19:39:35 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell mini)
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
 		return (ft_env(mini.env), 1);
 	else if (ft_strcmp(ast->command->args[0], "export") == 0)
-		return (ft_export(ast->command->args, mini.env), 1);
+		return (ft_export(ast->command->args, mini.env,mini.env), 1);
 	else if (ft_strcmp(ast->command->args[0], "unset") == 0)
 		return (ft_unset(ast->command->args, &mini), 1);
 	return (-1);

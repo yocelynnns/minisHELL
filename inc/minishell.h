@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 15:31:07 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/20 16:55:17 by hthant           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -199,6 +187,7 @@ int							is_valid_n_flag(const char *arg);
 
 int							ft_env(t_env *env);
 int							env_init(t_minishell *mini, char **env);
+int							copy_env_init(t_minishell *mini, char **env_array);
 void						print_sorted_env(t_env *env);
 void						sort_env_array(char **env_array, int count);
 char						**env_to_array(t_env *env, int count);
@@ -221,9 +210,13 @@ int							navigate_to_special_directory(int option,
 int							ft_cd(char **arguments, t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
 
-int							ft_export(char **args, t_env *env);
-int							add_or_update_env(char *arg, t_env *env);
-int							is_valid_env(char *arg);
+int							ft_export(char **args, t_env *env, t_env *copy_env);
+int							add_new_env(t_env **env, const char *arg);
+int							update_env_value(t_env *env, char *key,
+								const char *arg);
+int							is_valid_env(const char *arg);
+int							print_export_error(int error, const char *arg);
+char						*get_env_name(char *dest, const char *src);
 
 size_t						env_size(char *env);
 int							unset_env_var(t_minishell *mini, char *arg);
