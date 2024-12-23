@@ -230,5 +230,6 @@ void sig_quit_handler(int code);
 void init_signals(void);
 void handle_eof(char *line);
 char *expand_variable(const char *arg);
+void expand_variables_in_args(char **args);
 
 #endif

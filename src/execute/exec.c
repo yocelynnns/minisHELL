@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/19 21:30:21 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:42:47 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,11 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 			return (ft_exit(&mini, ast->command->args), 5);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			return (ft_cd(ast->command->args, mini.env), 0);
+		else if (ft_strcmp(ast->command->args[0], "export") == 0)
+        {
+            if (!ast->command->redirect)
+                return (ft_export(ast->command->args, mini.env), 0);
+        }
 		pid = fork_and_execute(ast, env, mini);
 		if (pid > 0)
 		{
