@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/23 14:42:47 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:02:04 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		exit(EXIT_SUCCESS);
 	if (ast->command->args[0] == NULL || ast->command->args[0][0] == '\0')
         exit(EXIT_SUCCESS);
-	
+
     for (int i = 0; ast->command->args[i] != NULL; i++) {
         ast->command->args[i] = expand_variable(ast->command->args[i]);
     }
@@ -43,7 +43,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
         printf("cd: %s: Not a command\n", ast->command->args[0]);
         exit(EXIT_FAILURE);
     }
-	
+
 	executable_path = get_executable_path(ast);
 	if (executable_path)
 	{
@@ -179,7 +179,7 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)
         {
             if (!ast->command->redirect)
-                return (ft_export(ast->command->args, mini.env), 0);
+                return (ft_export(ast->command->args, &mini.env), 0);
         }
 		pid = fork_and_execute(ast, env, mini);
 		if (pid > 0)

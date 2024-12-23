@@ -6,12 +6,11 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/20 19:32:27 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/23 18:51:00 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
 int g_exit_status = 0;
 
 int	main(int ac, char **av, char **env)
@@ -26,8 +25,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 
 	// Initialize environment variables
-	copy_env_init(&mini,env);
-	if (env_init(&mini, env))
+	if (env_init(&mini, env) == ERROR)
 	{
 		fprintf(stderr, "Error: Failed to initialize environment variables\n");
 		return (EXIT_FAILURE);
@@ -36,11 +34,14 @@ int	main(int ac, char **av, char **env)
 		printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
 	}
 	// print_sorted_env(mini.env);
-	init_signals();
 	while (1)
 	{
+		init_signals();
+		signal(SIGINT, &sig_int_handler);
+		signal(SIGQUIT, &sig_quit_handler);
+
+		input = readline("minishell (from main function) $");
 		// Read input from the user
-		input = readline("minishell$ ");
 		handle_eof(input);
 		if (!input)
 		{

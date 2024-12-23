@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2024/12/18 15:27:02 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/23 18:48:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	sig_int_handler(int code)
 	if (g_sig.pid == 0)
 	{
 		ft_putstr_fd("\n", STDERR);
-		ft_putstr_fd("minishell$ ", STDERR);
+		ft_putstr_fd("minishell (form the signals)$ ", STDERR);
 		g_sig.exit_status = 1;
 	}
 	else
@@ -40,8 +40,6 @@ void	sig_quit_handler(int code)
 		g_sig.exit_status = 131;
 		g_sig.sigquit = 1;
 	}
-	else
-		ft_putstr_fd("\b\b  \b\b", STDERR);
 }
 
 void	init_signals(void)
@@ -50,8 +48,6 @@ void	init_signals(void)
 	g_sig.sigquit = 0;
 	g_sig.pid = 0;
 	g_sig.exit_status = 0;
-	signal(SIGINT, sig_int_handler);
-	signal(SIGQUIT, sig_quit_handler);
 }
 
 void	handle_eof(char *line)
