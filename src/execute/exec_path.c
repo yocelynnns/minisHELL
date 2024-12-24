@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/23 18:16:53 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/25 00:07:58 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,27 @@ char	*get_executable_path(t_ast_node *ast)
 	return (NULL);
 }
 
-int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini)
+int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini, int *status)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
+	{
 		execute_in_child(ast, env, mini);
+		exit(EXIT_FAILURE);
+	}
 	else if (pid < 0)
 	{
 		perror("fork");
 		return (-1);
 	}
-	return (pid);
+	g_sig.pid = pid;
+	waitpid(pid, status, 0);
+	g_sig.pid = 0;
+	if (WIFEXITED(*status))
+		return (WEXITSTATUS(*status));
+	else if (WIFSIGNALED(*status))
+		return (128 + WTERMSIG(*status));
+	return (0);
 }

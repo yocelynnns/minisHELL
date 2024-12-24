@@ -6,22 +6,24 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2024/12/23 18:48:53 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/24 23:54:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_signal	g_sig;
+t_signal g_sig = {0};
 
 void	sig_int_handler(int code)
 {
 	(void)code;
+
 	if (g_sig.pid == 0)
 	{
 		ft_putstr_fd("\n", STDERR);
-		ft_putstr_fd("minishell (form the signals)$ ", STDERR);
-		g_sig.exit_status = 1;
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 	else
 	{
@@ -34,6 +36,7 @@ void	sig_int_handler(int code)
 void	sig_quit_handler(int code)
 {
 	(void)code;
+
 	if (g_sig.pid != 0)
 	{
 		ft_putstr_fd("Quit: 3\n", STDERR);
@@ -41,6 +44,7 @@ void	sig_quit_handler(int code)
 		g_sig.sigquit = 1;
 	}
 }
+
 
 void	init_signals(void)
 {

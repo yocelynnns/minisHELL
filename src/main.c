@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/23 18:51:00 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/24 23:25:49 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,55 +40,52 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, &sig_int_handler);
 		signal(SIGQUIT, &sig_quit_handler);
 
-		input = readline("minishell (from main function) $");
-		// Read input from the user
+		input = readline("minishell$ ");
 		handle_eof(input);
+
+		if (g_sig.sigint)
+		{
+			g_sig.sigint = 0; // Reset the signal flag
+			free(input);      // Discard interrupted input
+			continue;         // Restart the loop with a fresh prompt
+		}
+
 		if (!input)
 		{
 			printf("exit\n");
-			break ;
+			break;
 		}
 
-		// Add input to history if it's not empty
 		if (*input)
 			add_history(input);
 
-		// Tokenize the input
 		tokens = lexer(input);
 		if (!tokens)
 		{
 			free(input);
-			continue ;
+			continue;
 		}
 
-		// Build the abstract syntax tree (AST)
 		ast = build_ast(tokens);
 		if (!ast)
 		{
 			free_tokens(tokens);
 			free(input);
-			continue ;
+			continue;
 		}
 
-		// test
-		// print_tokens(tokens);
-		// print_ast(ast, 0);
-
-		// Execute the command(s) represented by the AST
 		exit_status = execute_command(ast, env, mini);
-
 		g_exit_status = exit_status;
 
-		if (exit_status == 5)
+		if (exit_status == 5) // Exit command
 		{
 			free_tokens(tokens);
 			free_ast(ast);
 			free(input);
 			printf("exit\n");
-			break ;
+			break;
 		}
 
-		// Free allocated resources
 		free_tokens(tokens);
 		free_ast(ast);
 		free(input);
