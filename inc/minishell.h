@@ -46,7 +46,6 @@ typedef struct s_lexer_state
 	t_token					*token_list;
 	int						start;
 	char					quote;
-	int						exit_status;
 }							t_lexer_state;
 
 typedef enum
@@ -116,11 +115,21 @@ typedef struct s_signal
 	pid_t					pid;
 }							t_signal;
 
+typedef struct s_var_process
+{
+	char *var_name;
+	char *new_expanded_arg;
+	char *prefix;
+	char *var_value;
+	int var_start;
+	int var_length;
+} t_var_process;
+
 extern t_signal				g_sig;
 
 t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
-t_token						*lexer(const char *input, t_minishell *mini);
+t_token						*lexer(const char *input);
 void						free_tokens(t_token *tokens);
 void						print_tokens(t_token *tokens);
 //
@@ -128,13 +137,12 @@ void						handle_redirect_in(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
-void						handle_pipe(const char *input, int *i);
 void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_variable_expansion(t_lexer_state *state,
-								const char *input, int *i, t_minishell *mini);
+								const char *input, int *i);
 
 t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
@@ -191,7 +199,6 @@ int							is_valid_n_flag(const char *arg);
 
 int							ft_env(t_env *env);
 int							env_init(t_minishell *mini, char **env);
-int							copy_env_init(t_minishell *mini, char **env_array);
 void						print_sorted_env(t_env *env);
 void						sort_env_array(char **env_array, int count);
 char						**env_to_array(t_env *env, int count);
@@ -231,8 +238,10 @@ void						sig_int_handler(int code);
 void						sig_quit_handler(int code);
 void						init_signals(void);
 void						handle_eof(char *line);
-char *expand_variable(const char *arg, t_env *env);
-void expand_variables_in_args(char **args, t_env *env);
+char *expand_argument(char *arg, t_env *env);
+char *process_variable(char *arg, int *j, t_env *env);
+char *concatenate_parts(char *expanded_arg, char *var_value, char *remaining_arg);
 char *get_env_value(const char *key, t_env *env);
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
 
 #endif

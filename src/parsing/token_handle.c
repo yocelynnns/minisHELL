@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/25 14:43:28 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/26 00:28:56 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,9 @@ void    handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
     }
 }
 
-void handle_variable_expansion(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
+void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
 {
     char *status_str;
-    int var_start;
-    char *var_name;
-    char *var_value;
 
     if (input[*i + 1] == '?')
     {
@@ -123,20 +120,26 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i, 
         free(status_str);
         (*i)++;
     }
-    else if (input[*i + 1] == '\0' || isspace(input[*i + 1]))
-        add_token(&state->token_list, create_token(WORD, ft_strdup("$")));
     else
-    {
-        var_start = *i + 1;
-        while (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_')
-            (*i)++;
-        var_name = ft_strndup(input + var_start, *i - var_start + 1);
-        var_value = get_env_value(var_name, mini->env);
-        if (var_value)
-            add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
-        else
-            add_token(&state->token_list, create_token(WORD, ft_strdup("")));
-        free(var_name);
-    }
-    state->start = *i + 1;
+        return ;    
 }
+
+    // int var_start;
+    // char *var_name;
+    // char *var_value;
+// else if (input[*i + 1] == '\0' || isspace(input[*i + 1]))
+//         add_token(&state->token_list, create_token(WORD, ft_strdup("$")));
+//     else
+//     {
+//         var_start = *i + 1;
+//         while (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_')
+//             (*i)++;
+//         var_name = ft_strndup(input + var_start, *i - var_start + 1);
+//         var_value = get_env_value(var_name, mini->env);
+//         if (var_value)
+//             add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
+//         else
+//             add_token(&state->token_list, create_token(WORD, ft_strdup("")));
+//         free(var_name);
+//     }
+//     state->start = *i + 1;

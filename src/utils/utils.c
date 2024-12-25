@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:32:08 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/18 15:31:33 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/25 17:36:52 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,22 @@ char	*ft_strndup(const char *s, size_t n)
 	}
 	dup[n] = '\0';
 	return (dup);
+}
+
+char	*ft_strncpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < n && src[i] != '\0')
+	{
+		dest[i] = src[i];
+		++i;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }

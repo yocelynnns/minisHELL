@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/25 14:42:02 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/26 00:32:31 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	add_token(t_token **head, t_token *new_token)
 	}
 }
 
-t_token	*lexer(const char *input, t_minishell *mini)
+t_token	*lexer(const char *input)
 {
 	t_lexer_state	state;
 	int				i;
@@ -59,9 +59,9 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	}
 	while (input[i])
 	{
-		if (input[i] == '$' && !state.quote)
-            handle_variable_expansion(&state, input, &i, mini);
-		else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+		if (input[i] == '$' && (!(input[i-1] == '=')) && (!(input[i-1] >= 'a' && input[i-1] <= 'z')))
+            handle_variable_expansion(&state, input, &i);
+		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
 			handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
 			handle_special_char(&state, input, &i);
@@ -77,3 +77,5 @@ t_token	*lexer(const char *input, t_minishell *mini)
 					+ state.start, i - state.start)));
 	return (state.token_list);
 }
+
+			// if (input[i] == '$' && !state.quote)
