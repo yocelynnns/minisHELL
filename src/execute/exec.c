@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/25 00:08:01 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/25 14:55:09 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		exit(EXIT_SUCCESS);
 	if (ast->command->args[0] == NULL || ast->command->args[0][0] == '\0')
 		exit(EXIT_SUCCESS);
-	for (int i = 0; ast->command->args[i] != NULL; i++)
+	int i = 0;
+	while (ast->command->args[i] != NULL)
 	{
-		ast->command->args[i] = expand_variable(ast->command->args[i]);
+		ast->command->args[i] = expand_variable(ast->command->args[i], mini.env);
+		i++;
 	}
 	if (is_directory(ast->command->args[0]))
 	{
@@ -131,27 +133,60 @@ int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
 	return (0);
 }
 
-char	*expand_variable(const char *arg)
+char *get_env_value(const char *key, t_env *env)
 {
-	char	*expanded_arg;
-	char	*var_name;
-	char	*var_value;
+    if (!key || !env)
+        return (NULL);
 
-	expanded_arg = ft_strdup(arg);
-	if (expanded_arg[0] == '$')
-	{
-		var_name = expanded_arg + 1;
-		var_value = getenv(var_name);
-		if (var_value)
-		{
-			free(expanded_arg);
-			expanded_arg = ft_strdup(var_value);
-		}
-	}
-	return (expanded_arg);
+    while (env)
+    {
+        char *delimiter = ft_strchr(env->value, '=');
+        if (delimiter)
+        {
+            size_t key_len = delimiter - env->value;
+
+            if (ft_strlen(key) == key_len && ft_strncmp(env->value, key, key_len) == 0)
+                return delimiter + 1;
+        }
+        env = env->next;
+    }
+    return NULL;
 }
 
-void	expand_variables_in_args(char **args)
+char *expand_variable(const char *arg, t_env *env)
+{
+    if (!arg)
+        return (NULL);
+
+    char *expanded_arg = ft_strdup(arg);
+    
+    if (!expanded_arg)
+        return (NULL);
+
+    if (expanded_arg[0] == '$')
+    {
+        char *var_name = expanded_arg + 1;
+        char *var_value = get_env_value(var_name, env);
+
+        if (var_value)
+        {
+            free(expanded_arg);
+            expanded_arg = ft_strdup(var_value);
+            if (!expanded_arg)
+                return (NULL);
+        }
+        else
+        {
+            free(expanded_arg);
+            expanded_arg = ft_strdup("");
+            if (!expanded_arg)
+                return (NULL);
+        }
+    }
+    return (expanded_arg);
+}
+
+void expand_variables_in_args(char **args, t_env *env)
 {
 	int		i;
 	char	*expanded_arg;
@@ -159,9 +194,10 @@ void	expand_variables_in_args(char **args)
 	i = 0;
 	while (args[i])
 	{
+		// printf("Current arg: '%s'\n", ast->command->args[i]);
 		if (args[i][0] == '$')
 		{
-			expanded_arg = expand_variable(args[i]);
+			expanded_arg = expand_variable(args[i], env);
 			free(args[i]);
 			args[i] = expanded_arg;
 		}
@@ -175,7 +211,7 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-		expand_variables_in_args(ast->command->args);
+		expand_variables_in_args(ast->command->args, mini.env);
 		if (ft_strcmp(ast->command->args[0], "exit") == 0)
 			return (ft_exit(&mini, ast->command->args), 5);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)

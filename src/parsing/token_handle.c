@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/23 18:09:47 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/25 14:43:28 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void    handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
     }
 }
 
-void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
+void handle_variable_expansion(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
 {
     char *status_str;
     int var_start;
@@ -131,7 +131,7 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
         while (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_')
             (*i)++;
         var_name = ft_strndup(input + var_start, *i - var_start + 1);
-        var_value = getenv(var_name);
+        var_value = get_env_value(var_name, mini->env);
         if (var_value)
             add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
         else

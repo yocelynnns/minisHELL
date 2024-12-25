@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_redir.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 00:48:44 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/19 21:30:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/25 14:46:16 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node)
 	else
 	{
 		last = cmd->command->redirect;
-		while (last->redirect->next)
+		while (last->redirect && last->redirect->next)
 			last = last->redirect->next;
 		last->redirect->next = redirect_node;
 	}

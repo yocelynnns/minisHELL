@@ -120,7 +120,7 @@ extern t_signal				g_sig;
 
 t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
-t_token						*lexer(const char *input);
+t_token						*lexer(const char *input, t_minishell *mini);
 void						free_tokens(t_token *tokens);
 void						print_tokens(t_token *tokens);
 //
@@ -134,7 +134,7 @@ void						handle_special_char(t_lexer_state *state,
 void						handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_variable_expansion(t_lexer_state *state,
-								const char *input, int *i);
+								const char *input, int *i, t_minishell *mini);
 
 t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
@@ -231,7 +231,8 @@ void						sig_int_handler(int code);
 void						sig_quit_handler(int code);
 void						init_signals(void);
 void						handle_eof(char *line);
-char						*expand_variable(const char *arg);
-void						expand_variables_in_args(char **args);
+char *expand_variable(const char *arg, t_env *env);
+void expand_variables_in_args(char **args, t_env *env);
+char *get_env_value(const char *key, t_env *env);
 
 #endif

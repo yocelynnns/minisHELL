@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/20 20:11:26 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/25 14:45:19 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ t_ast_node	*parse_command(t_token **tokens)
 	t_ast_node	*cmd;
 	int			arg_count;
 
+	cmd = NULL;
 	cmd = create_ast_node(AST_COMMAND);
 	init_cmd(cmd);
 	arg_count = 0;
@@ -98,11 +99,12 @@ t_ast_node	*parse_redirect(t_token **tokens)
 
 	redirect_node = create_ast_node(AST_REDIRECT);
 	redirect_node->redirect = malloc(sizeof(t_ast_redirect));
+	redirect_node->redirect->next = NULL;
 	redirect_node->redirect->type = (*tokens)->type;
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == WORD)
 	{
-		redirect_node->redirect->file = strdup((*tokens)->value);
+		redirect_node->redirect->file = ft_strdup((*tokens)->value);
 		*tokens = (*tokens)->next;
 	}
 	else
