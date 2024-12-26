@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 00:32:01 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/26 17:43:49 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,11 @@ int	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		{
 			if (!ast->command->redirect)
 				return (ft_export(ast->command->args, &mini.env), 0);
+		}
+		else if (ft_strcmp(ast->command->args[0], "unset") == 0)
+		{
+			if (!ast->command->redirect)
+				return (ft_unset(ast->command->args, &mini), 1);
 		}
 		if (fork_and_execute(ast, env, mini, &status) < 0)
 			return (-1);
