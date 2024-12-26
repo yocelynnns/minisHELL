@@ -6,12 +6,22 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 14:14:53 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 15:00:47 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 int g_exit_status = 0;
+
+void disable_echoctl(void)
+{
+    struct termios term;
+
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+    term.c_lflag &= ~ECHOCTL; // Disable display of control characters
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -33,12 +43,14 @@ int	main(int ac, char **av, char **env)
 	{
 		printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
 	}
+
+	disable_echoctl();
+	init_signals();
 	// print_sorted_env(mini.env);
 	while (1)
 	{
-		init_signals();
-		signal(SIGINT, &sig_int_handler);
-		signal(SIGQUIT, &sig_quit_handler);
+		signal(SIGINT, sig_int_handler);
+		signal(SIGQUIT, sig_quit_handler);
 
 		input = readline("minishell$ ");
 		handle_eof(input);

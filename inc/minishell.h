@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+#include <termios.h>
 # include <sys/wait.h>
 
 # define SUCCESS 0
