@@ -199,9 +199,14 @@ char						*remove_quotes(const char *str);
 int							is_valid_n_flag(const char *arg);
 
 int							ft_env(t_env *env);
+
+int							init_env_list(t_minishell *mini, char **env_array);
+t_env						*create_env_node(char *value);
 int							env_init(t_minishell *mini, char **env);
 void						print_sorted_env(t_env *env);
 void						sort_env_array(char **env_array, int count);
+char						**create_env_array(int count);
+int							copy_env_values(t_env *env, char **env_array);
 char						**env_to_array(t_env *env, int count);
 int							count_env_vars(t_env *env);
 
@@ -222,8 +227,9 @@ char						*get_special_directory_path(int option,
 int							navigate_to_special_dir(int option,
 								t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
-int	handle_special_cd(char **arguments, t_env *env_list);
-int	handle_regular_cd(char *path, t_env *env_list);
+int							handle_special_cd(char **arguments,
+								t_env *env_list);
+int							handle_regular_cd(char *path, t_env *env_list);
 int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
