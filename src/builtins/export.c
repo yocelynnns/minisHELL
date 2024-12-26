@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/21 01:09:37 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/26 15:16:47 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int add_or_update_env(char *arg, t_env **env)
 			last = last->next;
 		last->next = new_node;
 	}
-	print_sorted_env(*env);
 	return (SUCCESS);
 }
 

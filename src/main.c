@@ -6,11 +6,12 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 15:00:47 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 15:15:29 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
 int g_exit_status = 0;
 
 void disable_echoctl(void)
@@ -19,7 +20,7 @@ void disable_echoctl(void)
 
     if (tcgetattr(STDIN_FILENO, &term) == -1)
         return;
-    term.c_lflag &= ~ECHOCTL; // Disable display of control characters
+    term.c_lflag &= ~ECHOCTL;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 }
 
