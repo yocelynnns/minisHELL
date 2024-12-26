@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 00:33:00 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/26 14:14:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@ int	main(int ac, char **av, char **env)
 
 		input = readline("minishell$ ");
 		handle_eof(input);
-
-		if (g_sig.sigint)
-		{
-			g_sig.sigint = 0; // Reset the signal flag
-			free(input);      // Discard interrupted input
-			continue;         // Restart the loop with a fresh prompt
-		}
 
 		if (!input)
 		{
