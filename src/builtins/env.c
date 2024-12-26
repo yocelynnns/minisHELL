@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 18:56:53 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:59:16 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	ft_env(t_env *env)
 	}
 	return (SUCCESS);
 }
+
 int	update_env(char *key, char *new_value, t_env **env)
 {
 	t_env	*tmp;
@@ -74,6 +75,7 @@ int	add_env(char *new_value, t_env **env)
 	}
 	return (SUCCESS);
 }
+
 char	*get_env_variable(t_env *env_list, const char *variable, size_t len)
 {
 	while (env_list)

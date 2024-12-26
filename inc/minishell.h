@@ -222,6 +222,8 @@ char						*get_special_directory_path(int option,
 int							navigate_to_special_dir(int option,
 								t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
+int	handle_special_cd(char **arguments, t_env *env_list);
+int	handle_regular_cd(char *path, t_env *env_list);
 int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 18:56:48 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 19:03:14 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	print_cd_error(const char *path)
 	ft_putstr_fd((char *)path, STDERR);
 	ft_putendl_fd("", STDERR);
 }
+
 int	update_oldpwd(t_env *env_list)
 {
 	char	current_directory[PATH_MAX];
@@ -93,56 +94,18 @@ int	navigate_to_special_dir(int option, t_env *env_list)
 	return (result);
 }
 
-int	handle_tilde(char **path, t_env *env_list)
-{
-	char	*home;
-	char	*expanded_path;
-
-	if (!path || !(*path) || (*path)[0] != '~')
-		return (SUCCESS);
-	home = get_env_variable(env_list, "HOME=", 5);
-	if (!home)
-	{
-		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
-		return (ERROR);
-	}
-	expanded_path = ft_strjoin(home, (*path) + 1);
-	free(home);
-	if (!expanded_path)
-		return (ERROR);
-	free(*path);
-	*path = expanded_path;
-	return (SUCCESS);
-}
-
 int	ft_cd(char **arguments, t_env *env_list)
 {
 	char	*path;
 	int		cd_result;
 
-	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0)
-		return (navigate_to_special_dir(0, env_list));
+	cd_result = handle_special_cd(arguments, env_list);
+	if (cd_result != SUCCESS)
+		return (cd_result);
 	path = ft_strdup(arguments[1]);
 	if (!path)
 		return (ERROR);
-	if (handle_tilde(&path, env_list) != SUCCESS)
-	{
-		free(path);
-		return (ERROR);
-	}
-	if (ft_strcmp(path, "-") == 0)
-		cd_result = navigate_to_special_dir(1, env_list);
-	else
-	{
-		if (update_oldpwd(env_list) != SUCCESS)
-		{
-			free(path);
-			return (ERROR);
-		}
-		cd_result = chdir(path);
-		if (cd_result != 0)
-			print_cd_error(path);
-	}
+	cd_result = handle_regular_cd(path, env_list);
 	free(path);
 	if (cd_result == 0)
 		return (SUCCESS);
