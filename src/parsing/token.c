@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 19:27:02 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 01:36:46 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_token	*lexer(const char *input)
 {
 	t_lexer_state	state;
 	int				i;
+	int flag = 0;
 
 	state.token_list = NULL;
 	state.start = 0;
@@ -62,9 +63,11 @@ t_token	*lexer(const char *input)
 		if (input[i] == '$' && (!(input[i-1] == '=')) && (!(input[i-1] >= 'a' && input[i-1] <= 'z')))
             handle_variable_expansion(&state, input, &i);
 		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
-			handle_quotes_spaces(&state, input, &i);
+			flag = handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
 			handle_special_char(&state, input, &i);
+		else
+			flag = 1;
 		i++;
 	}
 	if (state.quote)
@@ -72,7 +75,7 @@ t_token	*lexer(const char *input)
 		printf("Error: Unclosed quote '%c'\n", state.quote);
 		return (free_tokens(state.token_list), NULL);
 	}
-	else if (i > state.start)
+	if (flag && i > state.start)
 		add_token(&state.token_list, create_token(WORD, ft_strndup(input
 					+ state.start, i - state.start)));
 	return (state.token_list);

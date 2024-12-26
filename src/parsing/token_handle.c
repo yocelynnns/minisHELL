@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 19:24:37 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 01:39:04 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,51 +62,80 @@ void	handle_special_char(t_lexer_state *state, const char *input, int *i)
 	}
 }
 
-void    handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
+int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 {
     if (input[*i] == '\'' || input[*i] == '"')
     {
-        char quote_char = input[*i];
+        char quote_char = input[*i];  // Store the quote type (either single or double)
+
+        // Start handling the quoted section
         if (state->quote == 0)
-            state->quote = quote_char;
+            state->quote = quote_char;  // Opening quote
         else if (state->quote == quote_char)
-            state->quote = 0;
+            state->quote = 0;  // Closing quote
         else
-            return;
-        (*i)++;
-        state->start = *i;
-        char *temp = malloc(strlen(input) + 1);
+            return 1;  // If we encounter mismatched quotes, return and don't handle
+
+        (*i)++;  // Skip the quote mark
         int temp_index = 0;
+        char *quoted_content = malloc(strlen(input) + 1);  // Temporary buffer to store content inside quotes
+
+        // Loop through the content inside the quotes
         while (input[*i])
         {
             if (input[*i] == '\\' && input[*i + 1] == quote_char)
             {
-                temp[temp_index++] = quote_char;
-                (*i) += 2;
+                // Handle escape sequence (e.g., \" or \')
+                quoted_content[temp_index++] = quote_char;
+                (*i) += 2;  // Skip the escape character
             }
             else if (input[*i] == quote_char)
-                break;
+            {
+                state->quote = 0;
+                break;  // End of quoted content, stop when we find the closing quote
+            }
             else
             {
-                temp[temp_index++] = input[*i];
-                (*i)++;
+                quoted_content[temp_index++] = input[*i];
+                (*i)++;  // Continue reading content inside quotes
             }
         }
-        temp[temp_index] = '\0';
+
+        quoted_content[temp_index] = '\0';  // Null-terminate the quoted content
+
+        // Skip the closing quote mark
         if (input[*i] == quote_char)
-        {
-            add_token(&state->token_list, create_token(WORD, ft_strdup(temp)));
-            state->quote = 0;
-        }
-        free(temp);
-        state->start = *i + 1;
+            (*i)++;
+
+        // Now, concatenate the part before the quote (e.g., "a=") with the quoted content (e.g., "Hello")
+        int prefix_len = *i - state->start - strlen(quoted_content) - 2;  // Length of the part before the quote
+        char *final_token = malloc(prefix_len + strlen(quoted_content) + 1);  // Space for both parts
+
+        // Copy the part before the quote into final_token (e.g., "a=")
+        strncpy(final_token, input + state->start, prefix_len);
+        final_token[prefix_len] = '\0';  // Null-terminate the prefix part
+
+        // Concatenate the quoted content (e.g., "Hello")
+        strcat(final_token, quoted_content);
+
+        // Create the token with the combined result
+        add_token(&state->token_list, create_token(WORD, final_token));
+
+        // Clean up temporary variables
+        free(quoted_content);
+        free(final_token);
+
+        // Update start position for the next token
+        state->start = *i;
     }
     else if (isspace(input[*i]) && !state->quote)
     {
+        // Handle spaces outside of quotes (tokenize the part before space)
         if (*i > state->start)
             add_token(&state->token_list, create_token(WORD, ft_strndup(input + state->start, *i - state->start)));
-        state->start = *i + 1;
+        state->start = *i + 1;  // Move start position past the space
     }
+    return state->quote;
 }
 
 void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)

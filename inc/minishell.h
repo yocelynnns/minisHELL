@@ -140,7 +140,7 @@ void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
-void						handle_quotes_spaces(t_lexer_state *state,
+int						handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_variable_expansion(t_lexer_state *state,
 								const char *input, int *i);
