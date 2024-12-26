@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 16:10:55 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:50:44 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	main(int ac, char **av, char **env)
 	t_token		*tokens;
 	t_ast_node	*ast;
 	t_minishell	mini;
-	int			exit_status;
 
 	(void)ac;
 	(void)av;
@@ -91,17 +90,16 @@ int	main(int ac, char **av, char **env)
 			continue;
 		}
 
-		exit_status = execute_command(ast, env, mini);
-		g_exit_status = exit_status;
+		g_exit_status = execute_command(ast, env, mini);
 
-		if (exit_status == 5) // Exit command
-		{
-			free_tokens(tokens);
-			free_ast(ast);
-			free(input);
-			printf("exit\n");
-			break;
-		}
+		// if (exit_status == 5) // Exit command
+		// {
+		// 	free_tokens(tokens);
+		// 	free_ast(ast);
+		// 	free(input);
+		// 	printf("exit\n");
+		// 	break;
+		// }
 
 		free_tokens(tokens);
 		free_ast(ast);

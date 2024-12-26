@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_sort.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 01:07:06 by messs             #+#    #+#             */
-/*   Updated: 2024/12/21 01:09:07 by messs            ###   ########.fr       */
+/*   Updated: 2024/12/26 18:35:27 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,19 @@ void print_sorted_env(t_env *env)
 		i++;
 	}
 	free(env_array);
+}
+int	is_valid_env(char *arg)
+{
+	int	i;
+
+	if (!arg || !ft_isalpha(arg[0]))
+		return (0);
+	i = 1;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }

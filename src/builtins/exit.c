@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2024/12/18 15:27:58 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:49:48 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_exit(t_minishell *mini, char **av)
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		exit(1);
+		return;
 	}
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
