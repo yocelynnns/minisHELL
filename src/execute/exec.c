@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 17:43:49 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:25:28 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,12 @@ char *process_variable(char *arg, int *j, t_env *env)
 	char			*value_to_concatenate;
 
 	init_var(arg, j, &vars);
+	if (!isalnum(arg[vars.var_start]) && arg[vars.var_start] != '_')
+	{
+		vars.new_expanded_arg = concatenate_parts(vars.prefix, "$", arg + vars.var_start);
+		free(vars.prefix);
+		return vars.new_expanded_arg;
+	}
 	while (arg[vars.var_start + vars.var_length] != '\0' && \
 	(isalnum(arg[vars.var_start + vars.var_length]) || \
 	arg[vars.var_start + vars.var_length] == '_'))
@@ -230,6 +236,7 @@ char *process_variable(char *arg, int *j, t_env *env)
 	*j += vars.var_length;
 	return (vars.new_expanded_arg);
 }
+
 
 char *concatenate_parts(char *expanded_arg, char *var_value, char *remaining_arg)
 {

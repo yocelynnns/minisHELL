@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 00:28:56 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/26 19:24:37 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
         add_token(&state->token_list, create_token(WORD, status_str));
         free(status_str);
         (*i)++;
+        state->start = *i + 1;
     }
     else
         return ;    
