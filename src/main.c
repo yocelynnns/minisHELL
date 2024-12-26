@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 15:15:29 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 16:10:55 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,19 @@ void disable_echoctl(void)
 {
     struct termios term;
 
-    if (tcgetattr(STDIN_FILENO, &term) == -1)
+    if (tcgetattr(STDIN, &term) == -1)
         return;
     term.c_lflag &= ~ECHOCTL;
+    tcsetattr(STDIN, TCSAFLUSH, &term);
+}
+
+void enable_echoctl(void)
+{
+    struct termios term;
+
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+    term.c_lflag |= ECHOCTL;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
 }
 
@@ -44,9 +54,8 @@ int	main(int ac, char **av, char **env)
 	{
 		printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
 	}
-
-	disable_echoctl();
 	init_signals();
+	disable_echoctl();
 	// print_sorted_env(mini.env);
 	while (1)
 	{
@@ -99,6 +108,7 @@ int	main(int ac, char **av, char **env)
 		free(input);
 	}
 	// Free the environment
+	enable_echoctl();
 	free_env(mini.env);
 	return (g_exit_status);
 }

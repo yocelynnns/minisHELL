@@ -10,8 +10,8 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-#include <termios.h>
 # include <sys/wait.h>
+# include <termios.h>
 
 # define SUCCESS 0
 # define ERROR 1
@@ -118,13 +118,13 @@ typedef struct s_signal
 
 typedef struct s_var_process
 {
-	char *var_name;
-	char *new_expanded_arg;
-	char *prefix;
-	char *var_value;
-	int var_start;
-	int var_length;
-} t_var_process;
+	char					*var_name;
+	char					*new_expanded_arg;
+	char					*prefix;
+	char					*var_value;
+	int						var_start;
+	int						var_length;
+}							t_var_process;
 
 extern t_signal				g_sig;
 
@@ -214,13 +214,14 @@ int							check_is_number(char *str);
 void						ft_exit(t_minishell *mini, char **av);
 
 void						print_cd_error(const char *path);
-char						*find_env_variable(t_env *env_list,
+char						*get_env_variable(t_env *env_list,
 								const char *variable, size_t len);
-int							update_previous_directory(t_env *env_list);
-int							navigate_to_special_directory(int option,
+int							update_oldpwd(t_env *env_list);
+char	*get_special_directory_path(int option, t_env *env_list);
+int							navigate_to_special_dir(int option,
 								t_env *env_list);
-int							ft_cd(char **arguments, t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
+int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
 int							is_valid_env(char *arg);
@@ -239,10 +240,11 @@ void						sig_int_handler(int code);
 void						sig_quit_handler(int code);
 void						init_signals(void);
 void						handle_eof(char *line);
-char *expand_argument(char *arg, t_env *env);
-char *process_variable(char *arg, int *j, t_env *env);
-char *concatenate_parts(char *expanded_arg, char *var_value, char *remaining_arg);
-char *get_env_value(const char *key, t_env *env);
-char	*ft_strncpy(char *dest, char *src, unsigned int n);
+char						*expand_argument(char *arg, t_env *env);
+char						*process_variable(char *arg, int *j, t_env *env);
+char						*concatenate_parts(char *expanded_arg,
+								char *var_value, char *remaining_arg);
+char						*get_env_value(const char *key, t_env *env);
+char						*ft_strncpy(char *dest, char *src, unsigned int n);
 
 #endif

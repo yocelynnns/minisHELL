@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/11 18:34:37 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 17:44:17 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_cd_error(const char *path)
 	ft_putendl_fd("", STDERR);
 }
 
-char	*find_env_variable(t_env *env_list, const char *variable, size_t len)
+char	*get_env_variable(t_env *env_list, const char *variable, size_t len)
 {
 	while (env_list)
 	{
@@ -35,14 +35,13 @@ char	*find_env_variable(t_env *env_list, const char *variable, size_t len)
 	}
 	return (NULL);
 }
-
-int	update_previous_directory(t_env *env_list)
+int	update_oldpwd(t_env *env_list)
 {
 	char	current_directory[PATH_MAX];
 	char	*new_value;
 	t_env	*oldpwd_node;
 
-	if (!getcwd(current_directory, PATH_MAX))
+	if (!getcwd(current_directory, sizeof(current_directory)))
 		return (ERROR);
 	oldpwd_node = env_list;
 	while (oldpwd_node)
@@ -65,39 +64,44 @@ int	update_previous_directory(t_env *env_list)
 	return (SUCCESS);
 }
 
-int	navigate_to_special_directory(int option, t_env *env_list)
+char	*get_special_directory_path(int option, t_env *env_list)
 {
 	char	*directory_path;
-	int		ret;
 
 	directory_path = NULL;
 	if (option == 0)
 	{
-		directory_path = find_env_variable(env_list, "HOME=", 5);
+		directory_path = get_env_variable(env_list, "HOME=", 5);
 		if (!directory_path)
-		{
-			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
-			return (ERROR);
-		}
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 	}
 	else if (option == 1)
 	{
-		directory_path = find_env_variable(env_list, "OLDPWD=", 7);
+		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
 		if (!directory_path)
-		{
-			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
-			return (ERROR);
-		}
-		ft_putendl_fd(directory_path, STDOUT_FILENO);
+			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
+		else
+			ft_putendl_fd(directory_path, STDOUT_FILENO);
 	}
-	if (update_previous_directory(env_list) != SUCCESS)
+	return (directory_path);
+}
+
+int	navigate_to_special_dir(int option, t_env *env_list)
+{
+	char	*directory_path;
+	int		result;
+
+	directory_path = get_special_directory_path(option, env_list);
+	if (!directory_path)
+		return (ERROR);
+	if (update_oldpwd(env_list) != SUCCESS)
 	{
 		free(directory_path);
 		return (ERROR);
 	}
-	ret = chdir(directory_path);
+	result = chdir(directory_path);
 	free(directory_path);
-	return (ret);
+	return (result);
 }
 
 int	handle_tilde(char **path, t_env *env_list)
@@ -107,7 +111,7 @@ int	handle_tilde(char **path, t_env *env_list)
 
 	if (!path || !(*path) || (*path)[0] != '~')
 		return (SUCCESS);
-	home = find_env_variable(env_list, "HOME=", 5);
+	home = get_env_variable(env_list, "HOME=", 5);
 	if (!home)
 	{
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
@@ -128,7 +132,7 @@ int	ft_cd(char **arguments, t_env *env_list)
 	int		cd_result;
 
 	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0)
-		return (navigate_to_special_directory(0, env_list));
+		return (navigate_to_special_dir(0, env_list));
 	path = ft_strdup(arguments[1]);
 	if (!path)
 		return (ERROR);
@@ -138,12 +142,10 @@ int	ft_cd(char **arguments, t_env *env_list)
 		return (ERROR);
 	}
 	if (ft_strcmp(path, "-") == 0)
-	{
-		cd_result = navigate_to_special_directory(1, env_list);
-	}
+		cd_result = navigate_to_special_dir(1, env_list);
 	else
 	{
-		if (update_previous_directory(env_list) != SUCCESS)
+		if (update_oldpwd(env_list) != SUCCESS)
 		{
 			free(path);
 			return (ERROR);
