@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/26 18:36:12 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:56:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,79 +30,42 @@ int	print_export_error(int error, const char *arg)
 	return (ERROR);
 }
 
-int	update_env(char *key, char *new_value, t_env **env)
+int	extract_key_value(char *arg, char **key, char **new_value)
 {
-	t_env	*tmp;
-	size_t	key_len;
-
-	tmp = *env;
-	key_len = ft_strlen(key);
-	while (tmp)
-	{
-		if (ft_strncmp(tmp->value, key, key_len) == 0
-			&& tmp->value[key_len] == '=')
-		{
-			free(tmp->value);
-			tmp->value = new_value;
-			if (!tmp->value)
-				return (print_export_error(-1, key));
-			return (SUCCESS);
-		}
-		tmp = tmp->next;
-	}
-	return (ERROR);
-}
-
-int	add_env(char *new_value, t_env **env)
-{
-	t_env	*new_node;
-	t_env	*last;
-
-	new_node = malloc(sizeof(t_env));
-	if (!new_node)
-	{
-		free(new_value);
-		return (print_export_error(-1, new_value));
-	}
-	new_node->value = new_value;
-	new_node->next = NULL;
-	if (!*env)
-		*env = new_node;
-	else
-	{
-		last = *env;
-		while (last->next)
-			last = last->next;
-		last->next = new_node;
-	}
-	return (SUCCESS);
-}
-
-int	add_or_update_env(char *arg, t_env **env)
-{
-	char	*key;
-	char	*new_value;
 	size_t	key_len;
 
 	if (ft_strchr(arg, '='))
 		key_len = ft_strchr(arg, '=') - arg;
 	else
 		key_len = ft_strlen(arg);
-	key = ft_substr(arg, 0, key_len);
-	if (!key)
+	*key = ft_substr(arg, 0, key_len);
+	if (!(*key))
 		return (print_export_error(-1, arg));
 	if (ft_strchr(arg, '='))
-		new_value = ft_strdup(arg);
+		*new_value = ft_strdup(arg);
 	else
-		new_value = ft_strjoin(key, "=");
-	if (!new_value)
+		*new_value = ft_strjoin(*key, "=");
+	if (!(*new_value))
 	{
-		free(key);
+		free(*key);
 		return (print_export_error(-1, arg));
 	}
+	return (SUCCESS);
+}
+
+int	add_or_update_env_var(char *arg, t_env **env)
+{
+	char	*key;
+	char	*new_value;
+	int		result;
+
+	result = extract_key_value(arg, &key, &new_value);
+	if (result != SUCCESS)
+		return (result);
 	if (update_env(key, new_value, env) == SUCCESS)
 	{
 		free(key);
+		free(new_value);
 		return (SUCCESS);
 	}
 	free(key);
@@ -125,7 +88,7 @@ int	ft_export(char **args, t_env **env)
 	{
 		if (!is_valid_env(args[i]))
 			error = print_export_error(0, args[i]);
-		else if (add_or_update_env(args[i], env) == ERROR)
+		else if (add_or_update_env_var(args[i], env) == ERROR)
 		{
 			ft_putstr_fd("export: failed to allocate memory for: ", STDERR);
 			ft_putendl_fd(args[i], STDERR);

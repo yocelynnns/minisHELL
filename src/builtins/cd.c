@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 17:44:17 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:56:48 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ void	print_cd_error(const char *path)
 		ft_putstr_fd("error: ", STDERR);
 	ft_putstr_fd((char *)path, STDERR);
 	ft_putendl_fd("", STDERR);
-}
-
-char	*get_env_variable(t_env *env_list, const char *variable, size_t len)
-{
-	while (env_list)
-	{
-		if (env_list->value && ft_strncmp(env_list->value, variable, len) == 0)
-			return (ft_strdup(env_list->value + len));
-		env_list = env_list->next;
-	}
-	return (NULL);
 }
 int	update_oldpwd(t_env *env_list)
 {

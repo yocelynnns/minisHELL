@@ -97,7 +97,6 @@ typedef struct s_minishell
 {
 	t_env					*env;
 	int						exit;
-	int	exit_code;
 }							t_minishell;
 
 typedef struct s_heredoc
@@ -218,7 +217,8 @@ void						print_cd_error(const char *path);
 char						*get_env_variable(t_env *env_list,
 								const char *variable, size_t len);
 int							update_oldpwd(t_env *env_list);
-char	*get_special_directory_path(int option, t_env *env_list);
+char						*get_special_directory_path(int option,
+								t_env *env_list);
 int							navigate_to_special_dir(int option,
 								t_env *env_list);
 int							handle_tilde(char **path, t_env *env_list);
@@ -226,9 +226,11 @@ int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
 int							is_valid_env(char *arg);
-int	update_env(char *key, char *new_value, t_env **env);
-int	add_env(char *new_value, t_env **env);
-int							add_or_update_env(char *arg, t_env **env);
+int							extract_key_value(char *arg, char **key,
+								char **new_value);
+int							update_env(char *key, char *new_value, t_env **env);
+int							add_env(char *new_value, t_env **env);
+int							add_or_update_env_var(char *arg, t_env **env);
 int							ft_export(char **args, t_env **env);
 
 size_t						env_size(char *env);
