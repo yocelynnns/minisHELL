@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/27 15:37:38 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:14:47 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,13 @@ int	add_env(char *new_value, t_env **env)
 
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
-	{
-		value_copy = strdup(new_value);
-		return (print_export_error(-1, value_copy));
-	}
+		return (print_export_error(-1, strdup(new_value)));
 	new_node->value = new_value;
+	if (!new_node->value)
+	{
+		free(new_node);
+		return (ERROR);
+	}
 	new_node->next = NULL;
 	if (!*env)
 		*env = new_node;

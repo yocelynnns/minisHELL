@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
+/*   Updated: 2024/12/27 15:51:45 by hthant           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -159,7 +171,7 @@ void						attach_redirect(t_ast_node *cmd,
 								t_ast_node *redirect_node);
 int							handle_redirect(t_ast_node *cmd, t_token **tokens);
 
-void							execute_command(t_ast_node *ast, char **env,
+void						execute_command(t_ast_node *ast, char **env,
 								t_minishell mini);
 char						*find_executable(char *cmd, t_minishell *mini);
 char						*concat_path(char *dir, char *cmd);
@@ -236,8 +248,7 @@ int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
 int							is_valid_env(char *arg);
-// int							extract_key_value(char *arg, char **key,
-// 								char **new_value);
+char						*parse_key_value(char *arg, char **key);
 int							update_env(char *key, char *new_value, t_env **env);
 int							add_env(char *new_value, t_env **env);
 int							add_or_update_env(char *arg, t_env **env);
