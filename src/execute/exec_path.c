@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/27 14:45:48 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 14:49:35 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,5 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini, int *status)
 	g_sig.pid = pid;
 	waitpid(pid, status, 0);
 	g_sig.pid = 0;
-	if (WIFEXITED(*status))
-		return (WEXITSTATUS(*status));
-	else if (WIFSIGNALED(*status))
-		return (128 + WTERMSIG(*status));
 	return (0);
 }
