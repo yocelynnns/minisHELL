@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 16:45:55 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 17:55:53 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void init_lexstate(t_lexer_state *state)
 	state->start = 0;
 	state->quote = 0;
 	state->flag = 0;
+	state->escquo = 0;
 }
 
 void checkquote(t_lexer_state *state)
