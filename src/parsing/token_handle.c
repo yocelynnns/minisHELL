@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 01:39:04 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/27 14:26:34 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,33 +66,31 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 {
     if (input[*i] == '\'' || input[*i] == '"')
     {
-        char quote_char = input[*i];  // Store the quote type (either single or double)
-
-        // Start handling the quoted section
+        char quote_char = input[*i];
         if (state->quote == 0)
             state->quote = quote_char;  // Opening quote
         else if (state->quote == quote_char)
             state->quote = 0;  // Closing quote
         else
-            return 1;  // If we encounter mismatched quotes, return and don't handle
+            return 1;  // Mismatched quotes
 
         (*i)++;  // Skip the quote mark
         int temp_index = 0;
-        char *quoted_content = malloc(strlen(input) + 1);  // Temporary buffer to store content inside quotes
+        char *quoted_content = malloc(strlen(input) + 1); // Allocate enough space for quoted content
+        if (!quoted_content) return 1; // Check for malloc failure
 
-        // Loop through the content inside the quotes
-        while (input[*i])
+        while (input[*i] && !(input[*i] == quote_char && state->quote == 0))
         {
             if (input[*i] == '\\' && input[*i + 1] == quote_char)
             {
-                // Handle escape sequence (e.g., \" or \')
+                // Handle escape sequence
                 quoted_content[temp_index++] = quote_char;
                 (*i) += 2;  // Skip the escape character
             }
             else if (input[*i] == quote_char)
             {
-                state->quote = 0;
-                break;  // End of quoted content, stop when we find the closing quote
+                state->quote = 0; // Closing quote
+                break;  // End of quoted content
             }
             else
             {
@@ -100,40 +98,27 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
                 (*i)++;  // Continue reading content inside quotes
             }
         }
+        quoted_content[temp_index] = '\0'; // Null-terminate the quoted content
 
-        quoted_content[temp_index] = '\0';  // Null-terminate the quoted content
+        // Calculate prefix length correctly
+        int prefix_len = *i - state->start - temp_index - 1; // -1 for the opening quote
+        char *final_token = malloc(prefix_len + temp_index + 1); // Allocate enough space
+        if (!final_token) { free(quoted_content); return 1; } // Check for malloc failure
 
-        // Skip the closing quote mark
-        if (input[*i] == quote_char)
-            (*i)++;
-
-        // Now, concatenate the part before the quote (e.g., "a=") with the quoted content (e.g., "Hello")
-        int prefix_len = *i - state->start - strlen(quoted_content) - 2;  // Length of the part before the quote
-        char *final_token = malloc(prefix_len + strlen(quoted_content) + 1);  // Space for both parts
-
-        // Copy the part before the quote into final_token (e.g., "a=")
-        strncpy(final_token, input + state->start, prefix_len);
-        final_token[prefix_len] = '\0';  // Null-terminate the prefix part
-
-        // Concatenate the quoted content (e.g., "Hello")
-        strcat(final_token, quoted_content);
-
-        // Create the token with the combined result
+        ft_strncpy(final_token, (char *)(input + state->start), prefix_len);
+        final_token[prefix_len] = '\0'; // Null-terminate the final token
+        strcat(final_token, quoted_content); // Concatenate quoted content
         add_token(&state->token_list, create_token(WORD, final_token));
-
-        // Clean up temporary variables
+        
         free(quoted_content);
         free(final_token);
-
-        // Update start position for the next token
-        state->start = *i;
+        state->start = *i; // Update start position
     }
     else if (isspace(input[*i]) && !state->quote)
     {
-        // Handle spaces outside of quotes (tokenize the part before space)
         if (*i > state->start)
             add_token(&state->token_list, create_token(WORD, ft_strndup(input + state->start, *i - state->start)));
-        state->start = *i + 1;  // Move start position past the space
+        state->start = *i + 1;
     }
     return state->quote;
 }

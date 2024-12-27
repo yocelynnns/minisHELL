@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 01:36:46 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/27 14:26:14 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_token	*lexer(const char *input)
 			flag = handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
 			handle_special_char(&state, input, &i);
-		else
+		else if (input[i] != '\0')
 			flag = 1;
 		i++;
 	}
@@ -80,4 +80,3 @@ t_token	*lexer(const char *input)
 					+ state.start, i - state.start)));
 	return (state.token_list);
 }
-
