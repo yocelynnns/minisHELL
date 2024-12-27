@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/26 19:25:28 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 14:45:36 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		printf("cd: %s: Not a command\n", ast->command->args[0]);
 		exit(EXIT_FAILURE);
 	}
-	executable_path = get_executable_path(ast);
+	executable_path = get_executable_path(ast, &mini);
 	if (executable_path)
 	{
 		execve(executable_path, ast->command->args, env);

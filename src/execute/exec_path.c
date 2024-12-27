@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/25 00:07:58 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 14:45:48 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ char	*check_directory(char *dir, char *cmd)
 	return (NULL);
 }
 
-char	*find_executable(char *cmd)
+char	*find_executable(char *cmd, t_minishell *mini)
 {
 	char	*path_env;
 	char	**dirs;
 	char	*full_path;
 	int		i;
 
-	path_env = getenv("PATH");
+	path_env = get_env_value("PATH", mini->env);
 	if (!path_env)
 		return (NULL);
 	dirs = ft_split(path_env, ':');
@@ -73,7 +73,7 @@ char	*find_executable(char *cmd)
 	return (NULL);
 }
 
-char	*get_executable_path(t_ast_node *ast)
+char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 {
 	char	*command;
 	char	*executable_path;
@@ -86,7 +86,7 @@ char	*get_executable_path(t_ast_node *ast)
 	}
 	else
 	{
-		executable_path = find_executable(command);
+		executable_path = find_executable(command, mini);
 		if (executable_path)
 			return (executable_path);
 	}
