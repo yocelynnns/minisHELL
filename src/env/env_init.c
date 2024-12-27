@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:53:38 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/26 19:18:39 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:45:48 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ t_env	*create_env_node(char *value)
 	if (!new_node->value)
 	{
 		ft_putendl_fd("ft_strdup failed for env value.", 2);
-		free(new_node);
+		free(new_node->value);
+		free_env(new_node);
 		return (NULL);
 	}
 	new_node->next = NULL;
@@ -41,7 +42,10 @@ int	init_env_list(t_minishell *mini, char **env_array)
 
 	env = create_env_node(env_array[0]);
 	if (!env)
+	{
+		free_env(env);
 		return (1);
+	}
 	mini->env = env;
 	i = 1;
 	while (env_array[i])

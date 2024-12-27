@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 14:30:41 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:47:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char	*parse_key_value(char *arg, char **key)
 		new_value = ft_strjoin(*key, "=");
 	if (!new_value)
 	{
+		free(new_value);
 		free(*key);
 		return (NULL);
 	}

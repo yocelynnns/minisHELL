@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 16:35:51 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:45:55 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ t_token	*create_token(t_token_type type, const char *value)
 	}
 	new_token->type = type;
 	new_token->value = ft_strdup(value);
+	if(! new_token->value)
+	{
+		free(new_token->value);
+		free_tokens(new_token);
+		return NULL;
+	}
 	new_token->next = NULL;
 	return (new_token);
 }
