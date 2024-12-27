@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 15:42:34 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:31:24 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 		execute_pipeline(ast, env, mini);
 }
 
-void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
+void cmdchecks(t_ast_node *ast, t_minishell mini)
 {
-	char	*executable_path;
-
 	if (ast->command->redirect)
 		handle_all_redirections(ast);
 	if (ast->command->heredoc)
@@ -84,6 +82,13 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 		printf("cd: %s: Not a command\n", ast->command->args[0]);
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
+{
+	char	*executable_path;
+
+	cmdchecks(ast, mini);
 	executable_path = get_executable_path(ast, &mini);
 	if (executable_path)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/27 16:14:47 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:36:21 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	add_env(char *new_value, t_env **env)
 {
 	t_env	*new_node;
 	t_env	*last;
-	char	*value_copy;
+	// char	*value_copy;
 
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)

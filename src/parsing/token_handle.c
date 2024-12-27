@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 16:16:15 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:37:47 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
 
     if (input[*i + 1] == '?')
     {
-        printf("THE exit status is %d\n",g_exit_status);
         status_str = ft_itoa(g_exit_status);
         add_token(&state->token_list, create_token(WORD, status_str));
         free(status_str);
@@ -149,23 +148,3 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
     else
         return ;
 }
-
-    // int var_start;
-    // char *var_name;
-    // char *var_value;
-// else if (input[*i + 1] == '\0' || isspace(input[*i + 1]))
-//         add_token(&state->token_list, create_token(WORD, ft_strdup("$")));
-//     else
-//     {
-//         var_start = *i + 1;
-//         while (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_')
-//             (*i)++;
-//         var_name = ft_strndup(input + var_start, *i - var_start + 1);
-//         var_value = get_env_value(var_name, mini->env);
-//         if (var_value)
-//             add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
-//         else
-//             add_token(&state->token_list, create_token(WORD, ft_strdup("")));
-//         free(var_name);
-//     }
-//     state->start = *i + 1;

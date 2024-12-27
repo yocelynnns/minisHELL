@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 15:48:18 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 16:35:51 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,41 +43,55 @@ void	add_token(t_token **head, t_token *new_token)
 	}
 }
 
+void checkpipe(const char *input, int *i, t_lexer_state *state)
+{
+	if (input[*i] == '|')
+	{
+		printf("Error: Syntax error near unexpected token `|'\n");
+		free_tokens(state->token_list);
+	}
+}
+
+void init_lexstate(t_lexer_state *state)
+{
+	state->token_list = NULL;
+	state->start = 0;
+	state->quote = 0;
+	state->flag = 0;
+}
+
+void checkquote(t_lexer_state *state)
+{
+	if (state->quote)
+	{
+		printf("Error: Unclosed quote '%c'\n", state->quote);
+		free_tokens(state->token_list);
+	}
+}
+
 t_token	*lexer(const char *input)
 {
 	t_lexer_state	state;
 	int				i;
-	int				flag;
 
-	flag = 0;
-	state.token_list = NULL;
-	state.start = 0;
-	state.quote = 0;
 	i = 0;
-	if (input[i] == '|')
-	{
-		printf("Error: Syntax error near unexpected token `|'\n");
-		return (free_tokens(state.token_list), NULL);
-	}
+	init_lexstate(&state);
+	checkpipe(input, &i, &state);
 	while (input[i])
 	{
 		if (input[i] == '$' && (!(input[i - 1] == '=')) && (!(input[i
 						- 1] >= 'a' && input[i - 1] <= 'z')))
 			handle_variable_expansion(&state, input, &i);
-		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
-			flag = handle_quotes_spaces(&state, input, &i);
+		else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+			state.flag = handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
 			handle_special_char(&state, input, &i);
 		else if (input[i] != '\0')
-			flag = 1;
+			state.flag = 1;
 		i++;
 	}
-	if (state.quote)
-	{
-		printf("Error: Unclosed quote '%c'\n", state.quote);
-		return (free_tokens(state.token_list), NULL);
-	}
-	if (flag && i > state.start)
+	checkquote(&state);
+	if (state.flag && i > state.start)
 		add_token(&state.token_list, create_token(WORD, ft_strndup(input
 					+ state.start, i - state.start)));
 	return (state.token_list);
