@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/25 14:45:19 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/27 15:47:11 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_ast_node	*parse_pipeline(t_token **tokens)
 	return (left);
 }
 
-void init_cmd(t_ast_node *cmd)
+void	init_cmd(t_ast_node *cmd)
 {
 	cmd->command = malloc(sizeof(t_ast_command));
 	cmd->command->args = malloc(sizeof(char *) * 10);
@@ -114,9 +114,4 @@ t_ast_node	*parse_redirect(t_token **tokens)
 		return (NULL);
 	}
 	return (redirect_node);
-}
-
-t_ast_node	*build_ast(t_token *tokens)
-{
-	return (parse_pipeline(&tokens));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 14:26:14 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 15:48:18 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ t_token	*lexer(const char *input)
 {
 	t_lexer_state	state;
 	int				i;
-	int flag = 0;
+	int				flag;
 
+	flag = 0;
 	state.token_list = NULL;
 	state.start = 0;
 	state.quote = 0;
@@ -60,8 +61,9 @@ t_token	*lexer(const char *input)
 	}
 	while (input[i])
 	{
-		if (input[i] == '$' && (!(input[i-1] == '=')) && (!(input[i-1] >= 'a' && input[i-1] <= 'z')))
-            handle_variable_expansion(&state, input, &i);
+		if (input[i] == '$' && (!(input[i - 1] == '=')) && (!(input[i
+						- 1] >= 'a' && input[i - 1] <= 'z')))
+			handle_variable_expansion(&state, input, &i);
 		if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
 			flag = handle_quotes_spaces(&state, input, &i);
 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
@@ -79,4 +81,9 @@ t_token	*lexer(const char *input)
 		add_token(&state.token_list, create_token(WORD, ft_strndup(input
 					+ state.start, i - state.start)));
 	return (state.token_list);
+}
+
+t_ast_node	*build_ast(t_token *tokens)
+{
+	return (parse_pipeline(&tokens));
 }
