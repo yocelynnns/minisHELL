@@ -234,11 +234,11 @@ int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
 int							is_valid_env(char *arg);
-int							extract_key_value(char *arg, char **key,
-								char **new_value);
+// int							extract_key_value(char *arg, char **key,
+// 								char **new_value);
 int							update_env(char *key, char *new_value, t_env **env);
 int							add_env(char *new_value, t_env **env);
-int							add_or_update_env_var(char *arg, t_env **env);
+int							add_or_update_env(char *arg, t_env **env);
 int							ft_export(char **args, t_env **env);
 
 size_t						env_size(char *env);
