@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <termios.h>
 
@@ -140,7 +141,7 @@ void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
-int						handle_quotes_spaces(t_lexer_state *state,
+int							handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_variable_expansion(t_lexer_state *state,
 								const char *input, int *i);
@@ -158,7 +159,7 @@ void						attach_redirect(t_ast_node *cmd,
 								t_ast_node *redirect_node);
 int							handle_redirect(t_ast_node *cmd, t_token **tokens);
 
-int							execute_command(t_ast_node *ast, char **env,
+void							execute_command(t_ast_node *ast, char **env,
 								t_minishell mini);
 char						*find_executable(char *cmd, t_minishell *mini);
 char						*concat_path(char *dir, char *cmd);
@@ -170,7 +171,8 @@ void						handle_redirection(t_ast_node *ast);
 void						handle_heredoc(t_ast_node *ast);
 t_heredoc					*init_heredoc(const char *delimiter);
 char						*check_directory(char *dir, char *cmd);
-char						*get_executable_path(t_ast_node *ast, t_minishell *mini);
+char						*get_executable_path(t_ast_node *ast,
+								t_minishell *mini);
 int							fork_and_execute(t_ast_node *ast, char **env,
 								t_minishell mini, int *status);
 void						execute_in_child(t_ast_node *ast, char **env,

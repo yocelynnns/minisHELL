@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 00:51:57 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2024/12/27 15:17:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ int	main(int ac, char **av, char **env)
 			free(input);
 			continue;
 		}
-
-		g_exit_status = execute_command(ast, env, mini);
+		execute_command(ast, env, mini);
 
 		free_tokens(tokens);
 		free_ast(ast);

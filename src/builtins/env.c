@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 19:54:02 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 15:37:38 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,28 @@ char	*get_env_variable(t_env *env_list, const char *variable, size_t len)
 		if (env_list->value && ft_strncmp(env_list->value, variable, len) == 0)
 			return (ft_strdup(env_list->value + len));
 		env_list = env_list->next;
+	}
+	return (NULL);
+}
+
+char	*get_env_value(const char *key, t_env *env)
+{
+	char	*delimiter;
+	size_t	key_len;
+
+	if (!key || !env)
+		return (NULL);
+	while (env)
+	{
+		delimiter = ft_strchr(env->value, '=');
+		if (delimiter)
+		{
+			key_len = delimiter - env->value;
+			if (ft_strlen(key) == key_len && ft_strncmp(env->value, key,
+					key_len) == 0)
+				return (delimiter + 1);
+		}
+		env = env->next;
 	}
 	return (NULL);
 }

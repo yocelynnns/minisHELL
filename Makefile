@@ -36,6 +36,8 @@ EXEC_DIR		= $(SRC_DIR)execute/exec.c \
 				  $(SRC_DIR)execute/exec_handle.c \
 				  $(SRC_DIR)execute/exec_path.c \
 				  $(SRC_DIR)execute/heredoc.c \
+				  $(SRC_DIR)execute/exec_helper.c\
+				  $(SRC_DIR)execute/exec_utils.c
 
 SRCS            = $(SRC_DIR)main.c $(SRC_DIR)print.c \
 				  $(PARSING_DIR) $(BUILTINS_DIR) \

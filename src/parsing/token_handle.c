@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 14:26:34 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 15:13:00 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
         final_token[prefix_len] = '\0'; // Null-terminate the final token
         strcat(final_token, quoted_content); // Concatenate quoted content
         add_token(&state->token_list, create_token(WORD, final_token));
-        
+
         free(quoted_content);
         free(final_token);
         state->start = *i; // Update start position
@@ -129,6 +129,7 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
 
     if (input[*i + 1] == '?')
     {
+        printf("THE exit status is %d\n",g_exit_status);
         status_str = ft_itoa(g_exit_status);
         add_token(&state->token_list, create_token(WORD, status_str));
         free(status_str);
@@ -136,7 +137,7 @@ void handle_variable_expansion(t_lexer_state *state, const char *input, int *i)
         state->start = *i + 1;
     }
     else
-        return ;    
+        return ;
 }
 
     // int var_start;
