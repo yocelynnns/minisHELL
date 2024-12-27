@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 19:03:14 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 21:22:17 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int	ft_cd(char **arguments, t_env *env_list)
 	cd_result = handle_special_cd(arguments, env_list);
 	if (cd_result != SUCCESS)
 		return (cd_result);
+	// if (!arguments[1])
 	path = ft_strdup(arguments[1]);
 	if (!path)
 		return (ERROR);

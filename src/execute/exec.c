@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 16:31:24 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 21:05:40 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void cmdchecks(t_ast_node *ast, t_minishell mini)
 		exit(EXIT_SUCCESS);
 	if (is_directory(ast->command->args[0]))
 	{
-		printf("cd: %s: Not a command\n", ast->command->args[0]);
-		exit(EXIT_FAILURE);
+		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
+		exit(126);
 	}
 }
 

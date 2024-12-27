@@ -1,5 +1,6 @@
---tool=helgrind
+--track-fds=yes
 --leak-check=full
---show-leak-kinds=all
+--track-origins=yes
 --trace-children=yes
---fair-sched=yes
+--suppressions=rl.supp
+--show-leak-kinds=all

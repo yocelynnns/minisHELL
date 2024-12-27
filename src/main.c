@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 18:19:36 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:08:05 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 
 		tokens = lexer(input);
-		// print_tokens(tokens);
+		print_tokens(tokens);
 		if (!tokens)
 		{
 			free(input);
