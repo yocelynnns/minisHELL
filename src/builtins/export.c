@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 14:21:20 by hthant           ###   ########.fr       */
+/*   Updated: 2024/12/27 14:30:41 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,8 @@ int	print_export_error(int error, const char *arg)
 	return (ERROR);
 }
 
-int	add_or_update_env(char *arg, t_env **env)
+char	*parse_key_value(char *arg, char **key)
 {
-	char	*key;
 	char	*new_value;
 	size_t	key_len;
 
@@ -40,18 +39,29 @@ int	add_or_update_env(char *arg, t_env **env)
 		key_len = ft_strchr(arg, '=') - arg;
 	else
 		key_len = ft_strlen(arg);
-	key = ft_substr(arg, 0, key_len);
-	if (!key)
-		return (print_export_error(-1, arg));
+	*key = ft_substr(arg, 0, key_len);
+	if (!(*key))
+		return (NULL);
 	if (ft_strchr(arg, '='))
 		new_value = ft_strdup(arg);
 	else
-		new_value = ft_strjoin(key, "=");
+		new_value = ft_strjoin(*key, "=");
 	if (!new_value)
 	{
-		free(key);
-		return (print_export_error(-1, arg));
+		free(*key);
+		return (NULL);
 	}
+	return (new_value);
+}
+
+int	add_or_update_env(char *arg, t_env **env)
+{
+	char	*key;
+	char	*new_value;
+
+	new_value = parse_key_value(arg, &key);
+	if (!new_value)
+		return (print_export_error(-1, arg));
 	if (update_env(key, new_value, env) == SUCCESS)
 	{
 		free(key);
@@ -60,7 +70,6 @@ int	add_or_update_env(char *arg, t_env **env)
 	free(key);
 	return (add_env(new_value, env));
 }
-
 
 int	ft_export(char **args, t_env **env)
 {

@@ -140,7 +140,7 @@ void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_special_char(t_lexer_state *state,
 								const char *input, int *i);
-int						handle_quotes_spaces(t_lexer_state *state,
+int							handle_quotes_spaces(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_variable_expansion(t_lexer_state *state,
 								const char *input, int *i);
@@ -234,8 +234,7 @@ int							ft_cd(char **arguments, t_env *env_list);
 
 int							print_export_error(int error, const char *arg);
 int							is_valid_env(char *arg);
-// int							extract_key_value(char *arg, char **key,
-// 								char **new_value);
+char						*parse_key_value(char *arg, char **key);
 int							update_env(char *key, char *new_value, t_env **env);
 int							add_env(char *new_value, t_env **env);
 int							add_or_update_env(char *arg, t_env **env);
