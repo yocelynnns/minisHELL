@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 16:47:54 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/02 17:22:01 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,16 @@ char	*parse_key_value(char *arg, char **key)
 	if (!(*key))
 		return (NULL);
 	if (ft_strchr(arg, '='))
-		new_value = ft_strdup(arg);
+	{
+		if (arg[key_len + 1] == '\0')
+			new_value = ft_strdup(arg);
+		else
+			new_value = ft_strdup(arg);
+	}
 	else
-		new_value = ft_strjoin(*key, "=");
+		new_value = ft_strdup(*key);
 	if (!new_value)
 	{
-		free(new_value);
 		free(*key);
 		return (NULL);
 	}

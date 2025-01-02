@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 17:44:22 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/02 17:12:44 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-// #include <limits.h>
 # include <ctype.h>
 # include <linux/limits.h>
 # include <readline/history.h>
