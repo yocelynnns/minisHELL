@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 19:03:25 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/02 15:09:05 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ int	handle_tilde(char **path, t_env *env_list)
 		return (ERROR);
 	}
 	expanded_path = ft_strjoin(home, (*path) + 1);
-	free(home);
 	if (!expanded_path)
+	{
+		free(home);
 		return (ERROR);
+	}
 	free(*path);
 	*path = expanded_path;
+	free(home);
 	return (SUCCESS);
 }
 
@@ -67,14 +70,25 @@ int	handle_special_cd(char **arguments, t_env *env_list)
 
 int	handle_regular_cd(char *path, t_env *env_list)
 {
-	int	cd_result;
+	char	*expanded_path;
+	int		cd_result;
 
-	if (handle_tilde(&path, env_list) != SUCCESS)
+	expanded_path = ft_strdup(path);
+	if (!expanded_path)
 		return (ERROR);
+	if (handle_tilde(&expanded_path, env_list) != SUCCESS)
+	{
+		free(expanded_path);
+		return (ERROR);
+	}
 	if (update_oldpwd(env_list) != SUCCESS)
+	{
+		free(expanded_path);
 		return (ERROR);
-	cd_result = chdir(path);
+	}
+	cd_result = chdir(expanded_path);
 	if (cd_result != 0)
-		print_cd_error(path);
+		print_cd_error(expanded_path);
+	free(expanded_path);
 	return (cd_result);
 }

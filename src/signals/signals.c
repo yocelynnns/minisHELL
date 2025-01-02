@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 17:18:52 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/02 14:27:36 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	sig_quit_handler(int code)
 	}
 	else
 	{
-		write(STDERR, "Quit: 3\n", 8);
+		// write(STDERR, "Quit: 3\n", 8);
 		g_sig.exit_status = 131;
 	}
 }
