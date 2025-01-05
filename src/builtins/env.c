@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2025/01/05 16:04:13 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/05 17:23:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	ft_env(t_env *env)
 	}
 	while (env)
 	{
-		if (env->value)
-			ft_putendl_fd(env->value, 1);
+		if (ft_strchr(env->value, '='))
+			ft_putendl_fd(env->value, STDOUT);
 		env = env->next;
 	}
 	return (SUCCESS);
