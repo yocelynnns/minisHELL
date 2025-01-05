@@ -6,21 +6,19 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/01/02 15:09:09 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/05 16:14:46 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
 void	print_cd_error(const char *path)
 {
-	ft_putstr_fd("cd: ", STDERR);
-	if (errno == ENOENT)
-		ft_putstr_fd("no such file or directory: ", STDERR);
-	else if (errno == EACCES)
-		ft_putstr_fd("permission denied: ", STDERR);
+	if (access(path, 0) != 0)
+		ft_putstr_fd("cd: no such file or directory: ", STDERR);
+	else if (access(path, 1) != 0)
+		ft_putstr_fd("cd: permission denied: ", STDERR);
 	else
-		ft_putstr_fd("error: ", STDERR);
+		ft_putstr_fd("cd: error: ", STDERR);
 	ft_putstr_fd((char *)path, STDERR);
 	ft_putendl_fd("", STDERR);
 }
@@ -60,18 +58,15 @@ char	*get_special_directory_path(int option, t_env *env_list)
 
 	directory_path = NULL;
 	if (option == 0)
-	{
 		directory_path = get_env_variable(env_list, "HOME=", 5);
-		if (!directory_path)
-			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
-	}
 	else if (option == 1)
-	{
 		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
-		if (!directory_path)
-			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
-		else
-			ft_putendl_fd(directory_path, STDOUT_FILENO);
+	if (!directory_path)
+	{
+		if (option == 0)
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
+		else if (option == 1)
+			ft_putendl_fd("minishell: cd: OLDPWD not set or invalid", STDERR);
 	}
 	return (directory_path);
 }
@@ -82,34 +77,32 @@ int	navigate_to_special_dir(int option, t_env *env_list)
 	int		result;
 
 	directory_path = get_special_directory_path(option, env_list);
-	if (!directory_path)
+	if (!directory_path || access(directory_path, 0) != 0)
+	{
+		if (!directory_path)
+			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
+		else
+			ft_putendl_fd("minishell: cd: no such file or directory", STDERR);
 		return (ERROR);
+	}
 	if (update_oldpwd(env_list) != SUCCESS)
 	{
 		free(directory_path);
 		return (ERROR);
 	}
 	result = chdir(directory_path);
+	if (result != 0)
+		print_cd_error(directory_path);
 	free(directory_path);
 	return (result);
 }
 
 int	ft_cd(char **arguments, t_env *env_list)
 {
-	char	*path;
-	int		cd_result;
-
-	cd_result = handle_special_cd(arguments, env_list);
-	if (cd_result != SUCCESS)
-		return (cd_result);
-	if (!arguments[1])
-		return (ERROR);
-	path = ft_strdup(arguments[1]);
-	if (!path)
-		return (ERROR);
-	cd_result = handle_regular_cd(path, env_list);
-	free(path);
-	if (cd_result == 0)
+	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0
+		|| ft_strcmp(arguments[1], "-") == 0)
+		return (handle_special_cd(arguments, env_list));
+	if (arguments[1] && ft_strcmp(arguments[1], "") == 0)
 		return (SUCCESS);
-	return (ERROR);
+	return (handle_regular_cd(arguments[1], env_list));
 }

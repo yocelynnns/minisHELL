@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2025/01/02 15:09:05 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/05 15:15:04 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	ft_pwd(void)
 		return (ERROR);
 	}
 }
-
 int	handle_tilde(char **path, t_env *env_list)
 {
 	char	*home;
@@ -39,7 +38,7 @@ int	handle_tilde(char **path, t_env *env_list)
 	home = get_env_variable(env_list, "HOME=", 5);
 	if (!home)
 	{
-		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
+		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 		return (ERROR);
 	}
 	expanded_path = ft_strjoin(home, (*path) + 1);

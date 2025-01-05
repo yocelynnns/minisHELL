@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 21:05:40 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/05 14:30:36 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 			if (!ast->command->redirect)
 				ft_unset(ast->command->args, &mini);
 		}
-		if (fork_and_execute(ast, env, mini, &status) < 0)
+		else if (fork_and_execute(ast, env, mini, &status) < 0)
 			return ;
 	}
 	else if (ast->type == AST_PIPELINE)
