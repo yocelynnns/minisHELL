@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/05 17:35:54 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 14:55:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,29 @@ int	add_or_update_env(char *arg, t_env **env)
 	}
 	free(key);
 	return (add_env(new_value, env));
+}
+int	add_env(char *new_value, t_env **env)
+{
+	char	*key;
+	size_t	key_len;
+	char	*delimiter;
+
+	delimiter = ft_strchr(new_value, '=');
+	if (delimiter)
+		key_len = delimiter - new_value;
+	else
+		key_len = ft_strlen(new_value);
+	key = ft_substr(new_value, 0, key_len);
+	if (!key)
+		return (print_export_error(-1, new_value));
+	if (key_exists_in_env(key, *env))
+	{
+		free(key);
+		free(new_value);
+		return (SUCCESS);
+	}
+	free(key);
+	return (add_env_node(new_value, env));
 }
 
 int	ft_export(char **args, t_env **env)

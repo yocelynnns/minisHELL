@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:51:58 by messs             #+#    #+#             */
-/*   Updated: 2025/01/05 17:23:42 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 14:54:07 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ int	ft_env(t_env *env)
 	}
 	return (SUCCESS);
 }
+int	key_exists_in_env(const char *key, t_env *env)
+{
+	if (!key || !env)
+		return (0); // Key doesn't exist in an empty environment
+	while (env)
+	{
+		if (ft_strncmp(env->value, key, ft_strlen(key)) == 0
+			&& (env->value[ft_strlen(key)] == '='
+				|| env->value[ft_strlen(key)] == '\0'))
+			return (1); // Key exists
+		env = env->next;
+	}
+	return (0); // Key not found
+}
 
 int	update_env(char *key, char *new_value, t_env **env)
 {
@@ -38,7 +52,7 @@ int	update_env(char *key, char *new_value, t_env **env)
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->value, key, key_len) == 0
-			&& tmp->value[key_len] == '=')
+			&& (tmp->value[key_len] == '=' || tmp->value[key_len] == '\0'))
 		{
 			free(tmp->value);
 			tmp->value = new_value;
@@ -49,33 +63,6 @@ int	update_env(char *key, char *new_value, t_env **env)
 		tmp = tmp->next;
 	}
 	return (ERROR);
-}
-
-int	add_env(char *new_value, t_env **env)
-{
-	t_env	*new_node;
-	t_env	*last;
-
-	new_node = malloc(sizeof(t_env));
-	if (!new_node)
-		return (print_export_error(-1, strdup(new_value)));
-	new_node->value = new_value;
-	if (!new_node->value)
-	{
-		free(new_node);
-		return (ERROR);
-	}
-	new_node->next = NULL;
-	if (!*env)
-		*env = new_node;
-	else
-	{
-		last = *env;
-		while (last->next)
-			last = last->next;
-		last->next = new_node;
-	}
-	return (SUCCESS);
 }
 
 char	*get_env_variable(t_env *env_list, const char *variable, size_t len)
@@ -106,6 +93,8 @@ char	*get_env_value(const char *key, t_env *env)
 					key_len) == 0)
 				return (delimiter + 1);
 		}
+		else if (ft_strcmp(env->value, key) == 0)
+			return (NULL);
 		env = env->next;
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 18:59:30 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 14:54:09 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,24 @@ void	ft_exit(t_minishell *mini, char **av)
 	exit(0);
 }
 
-// ft_atoi(av[1]). Then, it takes the result modulo 256 (with % 256)
-// to ensure that the exit status is within the valid range of 0–255.
-// This is done because exit statuses in Unix-based systems are
-// limited to the range 0–255,
-// and Bash uses this behavior when exiting with a numeric value
+int	add_env_node(char *new_value, t_env **env)
+{
+	t_env	*new_node;
+	t_env	*last;
+
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return (print_export_error(-1, ft_strdup(new_value)));
+	new_node->value = new_value;
+	new_node->next = NULL;
+	if (!*env)
+		*env = new_node;
+	else
+	{
+		last = *env;
+		while (last->next)
+			last = last->next;
+		last->next = new_node;
+	}
+	return (SUCCESS);
+}

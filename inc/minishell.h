@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/02 17:12:44 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 14:54:00 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include <ctype.h>
 # include <errno.h>
 # include <fcntl.h>
-# include <ctype.h>
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -254,6 +254,8 @@ int							update_env(char *key, char *new_value, t_env **env);
 int							add_env(char *new_value, t_env **env);
 int							add_or_update_env(char *arg, t_env **env);
 int							ft_export(char **args, t_env **env);
+int							key_exists_in_env(const char *key, t_env *env);
+int							add_env_node(char *new_value, t_env **env);
 
 size_t						env_size(char *env);
 int							unset_env_var(t_minishell *mini, char *arg);
