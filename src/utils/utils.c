@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:32:08 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/25 17:36:52 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/01/06 18:08:18 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,36 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 		i++;
 	}
 	return (dest);
+}
+long	ft_atol(const char *str)
+{
+	long	result;
+	int		sign;
+	int		i;
+	long	LONG_MAX;
+	long	LONG_MIN;
+
+	LONG_MAX = 9223372036854775807L;
+	LONG_MIN = -9223372036854775807L - 1;
+	result = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		if (sign == 1 && result > (LONG_MAX - (str[i] - '0')) / 10)
+			return (LONG_MAX);
+		if (sign == -1 && -result < (LONG_MIN + (str[i] - '0')) / 10)
+			return (LONG_MIN);
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
 }

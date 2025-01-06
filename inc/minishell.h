@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/06 16:29:19 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 18:44:52 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void						free_env(t_env *env);
 void						free_node(t_minishell *mini, t_env *env);
 
 int							check_is_number(char *str);
-void						ft_exit(t_minishell *mini, char **av);
+int						ft_exit(t_minishell *mini, char **av);
 
 void						print_cd_error(const char *path);
 char						*get_env_variable(t_env *env_list,
@@ -275,5 +275,6 @@ char						*concatenate_parts(char *expanded_arg,
 								char *var_value, char *remaining_arg);
 char						*get_env_value(const char *key, t_env *env);
 char						*ft_strncpy(char *dest, char *src, unsigned int n);
+long						ft_atol(const char *str);
 
 #endif
