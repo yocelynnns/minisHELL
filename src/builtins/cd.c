@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/01/06 15:15:59 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 15:19:19 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int	navigate_to_special_dir(int option, t_env *env_list)
 	if (!directory_path)
 	{
 		if (option == 0)
-			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 		else if (option == 1)
-			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
+			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
 		return (ERROR);
 	}
 	result = chdir(directory_path);

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/01/02 14:27:36 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 16:46:08 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,11 @@ void	sig_quit_handler(int code)
 	(void)code;
 	if (g_sig.pid == 0)
 	{
-		write(STDERR, "\033[2D  \033[2D", 11);
 		rl_on_new_line();
 		rl_redisplay();
 	}
 	else
 	{
-		// write(STDERR, "Quit: 3\n", 8);
 		g_sig.exit_status = 131;
 	}
 }
