@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2025/01/05 15:15:04 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 15:15:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,27 @@ int	handle_tilde(char **path, t_env *env_list)
 
 int	handle_special_cd(char **arguments, t_env *env_list)
 {
-	int	cd_result;
+	char	*directory_path;
 
 	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0)
+	{
+		directory_path = get_env_variable(env_list, "HOME=", 5);
+		if (!directory_path)
+		{
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
+			return (ERROR);
+		}
 		return (navigate_to_special_dir(0, env_list));
+	}
 	if (ft_strcmp(arguments[1], "-") == 0)
 	{
-		cd_result = navigate_to_special_dir(1, env_list);
-		return (cd_result);
+		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
+		if (!directory_path)
+		{
+			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
+			return (ERROR);
+		}
+		return (navigate_to_special_dir(1, env_list));
 	}
 	return (SUCCESS);
 }

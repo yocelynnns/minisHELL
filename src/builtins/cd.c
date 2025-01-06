@@ -6,11 +6,12 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/01/05 16:14:46 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/06 15:15:59 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
 void	print_cd_error(const char *path)
 {
 	if (access(path, 0) != 0)
@@ -54,21 +55,11 @@ int	update_oldpwd(t_env *env_list)
 
 char	*get_special_directory_path(int option, t_env *env_list)
 {
-	char	*directory_path;
-
-	directory_path = NULL;
 	if (option == 0)
-		directory_path = get_env_variable(env_list, "HOME=", 5);
+		return (get_env_variable(env_list, "HOME=", 5));
 	else if (option == 1)
-		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
-	if (!directory_path)
-	{
-		if (option == 0)
-			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
-		else if (option == 1)
-			ft_putendl_fd("minishell: cd: OLDPWD not set or invalid", STDERR);
-	}
-	return (directory_path);
+		return (get_env_variable(env_list, "OLDPWD=", 7));
+	return (NULL);
 }
 
 int	navigate_to_special_dir(int option, t_env *env_list)
@@ -77,17 +68,12 @@ int	navigate_to_special_dir(int option, t_env *env_list)
 	int		result;
 
 	directory_path = get_special_directory_path(option, env_list);
-	if (!directory_path || access(directory_path, 0) != 0)
+	if (!directory_path)
 	{
-		if (!directory_path)
-			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
-		else
-			ft_putendl_fd("minishell: cd: no such file or directory", STDERR);
-		return (ERROR);
-	}
-	if (update_oldpwd(env_list) != SUCCESS)
-	{
-		free(directory_path);
+		if (option == 0)
+			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
+		else if (option == 1)
+			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
 		return (ERROR);
 	}
 	result = chdir(directory_path);
