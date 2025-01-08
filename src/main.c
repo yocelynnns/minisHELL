@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/06 16:45:35 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 19:12:49 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int ac, char **av, char **env)
 	while (1)
 	{
 		signal(SIGINT, sig_int_handler);
-		signal(SIGQUIT, SIG_IGN);
+		signal(SIGQUIT, sig_quit_handler);
 
 		input = readline("minishell$ ");
 		handle_eof(input);

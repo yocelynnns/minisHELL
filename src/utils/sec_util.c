@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:45:45 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/08 18:38:22 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 19:26:43 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,3 +55,4 @@ char	*format_env_value(const char *env_value)
 	}
 	return (formatted_value);
 }
+
