@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 19:58:14 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/08 21:19:44 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,89 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
             return (1);
         add_token(&state->token_list, create_token(WORD, final_token));
         free(final_token);
-        state->start = *i;
+        state->start = *i + 1;
     }
     else if (isspace(input[*i]) && !state->quote)
         handle_space(state, input, i);
     return (state->quote);
 }
+
+// char    *ft_strcjoin(char *str, char c)
+// {
+//     char    *result;
+//     int     i;
+//     result = malloc(sizeof(char) * (ft_strlen(str) + 2));
+//     i = 0;
+//     while (str && str[i])
+//     {
+//         result[i] = str[i];
+//         i++;
+//     }
+//     result[i++] = c;
+//     result[i] = '\0';
+//     free(str);
+//     return (result);
+// }
+// char    *first_processing(char *str)
+// {
+//     char    *result;
+//     int     i;
+//     int     in_quote;
+//     char    *start;
+//     i = 0;
+//     in_quote = 0;
+//     result = NULL;
+//     while (str[i])
+//     {
+//         if (str[i] == '\\' && !in_quote)
+//         {
+//             if (str[i + 1] == '\\' || str[i + 1] == '\'' \
+//             || str[i + 1] == '$' || str[i + 1] == '\"')
+//             {
+//                 result = ft_strcjoin(result, str[++i]);
+//                 i++;
+//             }
+//             else if (str[i + 1] == '\n')
+//                 i += 2;
+//             else
+//                 result = ft_strcjoin(result, str[i++]);
+//         }
+//         else if (str[i] == '\'')
+//         {
+//             i++;
+//             while (str[i] && str[i] != '\'')
+//                 result = ft_strcjoin(result, str[i++]);
+//             i++;
+//         }
+//         else if (str[i] == '\"')
+//         {
+//             in_quote = str[i++];
+//             while (str[i] && in_quote)
+//             {
+//                 if (str[i] == '\\')
+//                 {
+//                     if (str[i + 1] == '\\' || \
+//                     str[i + 1] == '$' || str[i + 1] == '\"')
+//                     {
+//                         result = ft_strcjoin(result, str[++i]);
+//                         i++;
+//                     }
+//                     else if (str[i + 1] == '\n')
+//                         i += 2;
+//                     else
+//                         result = ft_strcjoin(result, str[i++]);
+//                 }
+//                 else
+//                     result = ft_strcjoin(result, str[i++]);
+//                 if (str[i] == in_quote)
+//                 {
+//                     in_quote = 0;
+//                     i++;
+//                 }
+//             }
+//         }
+//         else
+//             result = ft_strcjoin(result, str[i++]);
+//     }
+//     return (result);
+// }

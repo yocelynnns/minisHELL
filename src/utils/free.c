@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2024/12/18 15:31:38 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 21:20:07 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ void	free_ast(t_ast_node *node)
 	{
 		if (node->redirect)
 		{
-			free(node->redirect->file);
+			if (node->redirect->file)
+    			free(node->redirect->file);
 			free(node->redirect);
 		}
 	}

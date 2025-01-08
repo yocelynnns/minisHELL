@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/02 14:38:35 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 21:19:17 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,23 @@ t_ast_node	*parse_pipeline(t_token **tokens)
 
 void	init_cmd(t_ast_node *cmd)
 {
+	int i;
+	
 	cmd->command = malloc(sizeof(t_ast_command));
+	if (!cmd->command)
+		return ;
 	cmd->command->args = malloc(sizeof(char *) * 10);
+	if (!cmd->command->args)
+	{
+		free(cmd->command);
+		return ;
+	}
+	i = 0;
+	while (i < 10)
+	{
+		cmd->command->args[i] = NULL;
+		i++;
+	}
 	cmd->command->redirect = NULL;
 	cmd->command->heredoc = NULL;
 }
@@ -100,6 +115,7 @@ t_ast_node	*parse_redirect(t_token **tokens)
 	redirect_node = create_ast_node(AST_REDIRECT);
 	redirect_node->redirect = malloc(sizeof(t_ast_redirect));
 	redirect_node->redirect->next = NULL;
+	redirect_node->redirect->file = NULL;
 	redirect_node->redirect->type = (*tokens)->type;
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == WORD)
