@@ -31,7 +31,8 @@ ENV_DIR			= $(SRC_DIR)env/env_init.c \
 				  $(SRC_DIR)env/env_sort.c\
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c \
-				  $(SRC_DIR)utils/utils.c
+				  $(SRC_DIR)utils/utils.c \
+				  $(SRC_DIR)utils/sec_util.c
 
 EXEC_DIR		= $(SRC_DIR)execute/exec.c \
 				  $(SRC_DIR)execute/exec_handle.c \

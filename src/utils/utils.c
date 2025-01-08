@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:32:08 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/06 18:08:18 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 16:01:56 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,7 @@ long	ft_atol(const char *str)
 	long	result;
 	int		sign;
 	int		i;
-	long	LONG_MAX;
-	long	LONG_MIN;
 
-	LONG_MAX = 9223372036854775807L;
-	LONG_MIN = -9223372036854775807L - 1;
 	result = 0;
 	sign = 1;
 	i = 0;

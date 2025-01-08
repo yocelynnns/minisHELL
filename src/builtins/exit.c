@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/01/06 18:48:11 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 17:51:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,23 @@ int	ft_exit(t_minishell *mini, char **av)
 	mini->exit = 1;
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
-		ft_putstr_fd("minishell: exit: ", STDERR);
-		ft_putstr_fd(av[1], STDERR);
-		ft_putendl_fd(": numeric argument required", STDERR);
+		print_exit_error(av);
 		exit(2);
 	}
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		mini->exit = 0;
+		mini->exit = 1;
 		return (1);
 	}
 	if (av[1])
 	{
 		exit_code = ft_atol(av[1]);
+		if (exit_code > INT_MAX || exit_code < INT_MIN)
+			print_exit_error(av);
 		exit(exit_code % 256);
 	}
-	exit(0);
-	return(0);
+	exit(mini->exit);
 }
 
 int	add_env_node(char *new_value, t_env **env)
