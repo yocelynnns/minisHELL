@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/06 18:42:28 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 18:58:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 	{
 		expand_variables_in_args(ast->command->args, mini.env);
 		if (ft_strcmp(ast->command->args[0], "exit") == 0)
-			ft_exit(&mini, ast->command->args);
+			ft_exit(ast->command->args);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			ft_cd(ast->command->args, mini.env);
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)

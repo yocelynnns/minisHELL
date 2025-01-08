@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 01:07:06 by messs             #+#    #+#             */
-/*   Updated: 2024/12/26 19:18:34 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 18:38:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,20 @@ int	copy_env_values(t_env *env, char **env_array)
 {
 	t_env	*tmp;
 	int		i;
+	char	*formatted_value;
 
 	tmp = env;
 	i = 0;
 	while (tmp)
 	{
-		env_array[i] = ft_strdup(tmp->value);
-		if (!env_array[i])
+		formatted_value = format_env_value(tmp->value);
+		if (!formatted_value)
 		{
 			while (i > 0)
 				free(env_array[--i]);
 			return (1);
 		}
-		i++;
+		env_array[i++] = formatted_value;
 		tmp = tmp->next;
 	}
 	return (SUCCESS);
@@ -106,6 +107,7 @@ void	print_sorted_env(t_env *env)
 	i = 0;
 	while (i < count)
 	{
+		ft_putstr_fd("declare -x ", STDOUT);
 		ft_putendl_fd(env_array[i], STDOUT);
 		free(env_array[i]);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/08 17:50:16 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 19:00:36 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ typedef struct s_env
 typedef struct s_minishell
 {
 	t_env					*env;
-	int						exit;
 }							t_minishell;
 
 typedef struct s_heredoc
@@ -126,7 +125,6 @@ typedef struct s_signal
 {
 	int						sigint;
 	int						sigquit;
-	int						exit_status;
 	pid_t					pid;
 }							t_signal;
 
@@ -231,7 +229,7 @@ void						free_env(t_env *env);
 void						free_node(t_minishell *mini, t_env *env);
 
 int							check_is_number(char *str);
-int							ft_exit(t_minishell *mini, char **av);
+int							ft_exit(char **av);
 
 void						print_cd_error(const char *path);
 char						*get_env_variable(t_env *env_list,
@@ -277,5 +275,8 @@ char						*get_env_value(const char *key, t_env *env);
 char						*ft_strncpy(char *dest, char *src, unsigned int n);
 long						ft_atol(const char *str);
 void						print_exit_error(char **av);
+char						*ft_strjoin_three(const char *s1, const char *s2,
+								const char *s3, const char *s4);
+char						*format_env_value(const char *env_value);
 
 #endif
