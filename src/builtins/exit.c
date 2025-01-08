@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/01/08 18:58:17 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/08 19:38:22 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int	ft_exit(char **av)
 	{
 		exit_code = ft_atol(av[1]);
 		if (exit_code > INT_MAX || exit_code < INT_MIN)
+		{
 			print_exit_error(av);
+			exit(2);
+		}
 		exit(exit_code % 256);
 	}
 	exit(g_exit_status);
