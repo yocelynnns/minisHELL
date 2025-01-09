@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2024/12/27 17:55:53 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/09 21:35:14 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,29 @@ void checkquote(t_lexer_state *state)
 	}
 }
 
-t_token	*lexer(const char *input)
+// void handle_expansion(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
+// {
+// 	int var_start;
+// 	char *var_name;
+// 	char *var_value;
+	
+// 	if (input[*i - 1] == '\'')
+// 		return ;
+// 	else
+// 	{
+// 		var_start = *i + 1;
+// 		// while (ft_isdigit(input[*i + 1]) || input[*i + 1] == '_')
+//         // 	(*i)++;
+// 		var_name = ft_strndup(input + var_start, *i - var_start + 1);
+// 		var_value = get_env_value(var_name, mini->env);
+// 		if (var_value)
+// 			add_token(&state->token_list, create_token(WORD, ft_strdup(var_value)));
+// 		free(var_name);
+// 	}
+// 	state->start = *i + 1;
+// }
+
+t_token	*lexer(const char *input, t_minishell *mini)
 {
 	t_lexer_state	state;
 	int				i;
@@ -86,6 +108,8 @@ t_token	*lexer(const char *input)
 	checkpipe(input, &i, &state);
 	while (input[i])
 	{
+		// if (input[i] == '$' && ((input[i + 1] >= 'A' && input[i + 1] <= 'Z')))
+		// 	handle_expansion(&state, input, &i, mini);
 		if (input[i] == '$' && (!(input[i - 1] == '=')) && (!(input[i
 						- 1] >= 'a' && input[i - 1] <= 'z')))
 			handle_variable_expansion(&state, input, &i);
