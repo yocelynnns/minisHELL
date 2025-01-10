@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/01/08 19:34:02 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/10 15:51:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ void	sig_quit_handler(int code)
 	(void)code;
 	if (g_sig.pid == 0)
 	{
+		ft_putstr_fd("\033[2K\r", STDERR);
 		rl_on_new_line();
 		rl_redisplay();
 	}
 	else
 	{
-		ft_putstr_fd("Quit (core dumped)\n ", STDERR);
+		ft_putstr_fd("Quit (core dumped)\n", STDERR);
 		g_exit_status = 131;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/09 21:35:14 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:49:55 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void checkquote(t_lexer_state *state)
 // 	int var_start;
 // 	char *var_name;
 // 	char *var_value;
-	
+
 // 	if (input[*i - 1] == '\'')
 // 		return ;
 // 	else
@@ -104,6 +104,7 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	int				i;
 
 	i = 0;
+	(void) mini;
 	init_lexstate(&state);
 	checkpipe(input, &i, &state);
 	while (input[i])
