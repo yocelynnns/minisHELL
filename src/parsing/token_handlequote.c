@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/08 21:19:44 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:54:21 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 //     {
 //         if (str[i] == '\\' && !in_quote)
 //         {
-//             if (str[i + 1] == '\\' || str[i + 1] == '\'' \
+//             if (str[i + 1] == '\\' || str[i + 1] == '\'' 
 //             || str[i + 1] == '$' || str[i + 1] == '\"')
 //             {
 //                 result = ft_strcjoin(result, str[++i]);
@@ -160,7 +160,7 @@ int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 //             {
 //                 if (str[i] == '\\')
 //                 {
-//                     if (str[i + 1] == '\\' || \
+//                     if (str[i + 1] == '\\' || 
 //                     str[i + 1] == '$' || str[i + 1] == '\"')
 //                     {
 //                         result = ft_strcjoin(result, str[++i]);

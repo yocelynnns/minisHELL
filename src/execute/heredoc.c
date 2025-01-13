@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/13 15:25:13 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:55:24 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ char	*read_heredoc(const char *delimiter)
 		return (NULL);
 	if (read_until_delimiter(hd) < 0)
 	{
-		free(hd);
 		free(hd->content);
+		free(hd);
 		return (NULL);
 	}
 	final_content = malloc(hd->total_length + 1);
