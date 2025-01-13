@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/13 15:51:06 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:57:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 
 		tokens = lexer(input, &mini);
-		print_tokens(tokens);
+		// print_tokens(tokens);
 		if (!tokens)
 		{
 			free(input);
@@ -62,8 +62,7 @@ int	main(int ac, char **av, char **env)
 			continue;
 		}
 		execute_command(ast, env, mini);
-
-
+		
 		free_tokens(tokens);
 		free_ast(ast);
 		free(input);

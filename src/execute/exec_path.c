@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/13 15:42:20 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:57:39 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	char	*executable_path;
 
 	command = ast->command->args[0];
-	printf("command[0] is %c\n",command[0]);
 	if (command[0] == '/' || command[0] == '.')
 	{
 		if (access(command, X_OK) == 0)
@@ -87,7 +86,6 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	}
 	else
 	{
-		printf("pass the execute.\n");
 		executable_path = find_executable(command, mini);
 		if (executable_path)
 			return (executable_path);
