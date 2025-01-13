@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/13 15:57:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/13 21:26:16 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	main(int ac, char **av, char **env)
 	{
 		signal(SIGINT, sig_int_handler);
 		signal(SIGQUIT, sig_quit_handler);
-		input = readline("minishell$ main");
+		
+		input = readline("minishell$ ");
 		handle_eof(input);
 
 		if (*input)
@@ -64,7 +65,7 @@ int	main(int ac, char **av, char **env)
 		execute_command(ast, env, mini);
 		
 		free_tokens(tokens);
-		free_ast(ast);
+		// free_ast(ast);
 		free(input);
 	}
 	// // Free the environment

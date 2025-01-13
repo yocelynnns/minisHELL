@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/13 15:57:28 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:43:07 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-		expand_variables_in_args(ast->command->args, mini.env);
+		// expand_variables_in_args(ast->command->args, mini.env);
 		if (ft_strcmp(ast->command->args[0], "exit") == 0)
 			ft_exit(ast->command->args);
 		else if (ft_strcmp(ast->command->args[0], "cd") == 0)

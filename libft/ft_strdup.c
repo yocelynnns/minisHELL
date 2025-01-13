@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:29:35 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 21:20:44 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:40:34 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*ft_strdup(const char *s)
 	size_t	i;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	str = (char *) malloc (sizeof(char) * ft_strlen(s) + 1);
 	if (! str)
 		return (NULL);
