@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/08 18:58:42 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:38:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,15 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell mini)
 				ft_unset(ast->command->args, &mini);
 		}
 		else if (fork_and_execute(ast, env, mini, &status) < 0)
+		{
 			return ;
+		}
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(ast, env, mini);
 }
 
-void cmdchecks(t_ast_node *ast, t_minishell mini)
+void	cmdchecks(t_ast_node *ast, t_minishell mini)
 {
 	if (ast->command->redirect)
 		handle_all_redirections(ast);
@@ -75,8 +77,8 @@ void cmdchecks(t_ast_node *ast, t_minishell mini)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
 		exit(EXIT_SUCCESS);
-	if (ast->command->args[0] == NULL || ast->command->args[0][0] == '\0')
-		exit(EXIT_SUCCESS);
+	// if (ast->command->args[0] == NULL || ast->command->args[0][0] == '\0')
+	// 	exit(EXIT_SUCCESS);
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
@@ -89,6 +91,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell mini)
 	char	*executable_path;
 
 	cmdchecks(ast, mini);
+
 	executable_path = get_executable_path(ast, &mini);
 	if (executable_path)
 	{

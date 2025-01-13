@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/01/10 15:51:06 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:20:46 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ void	sig_int_handler(int code)
 	if (g_sig.pid == 0)
 	{
 		ft_putstr_fd("\n", STDERR);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		ft_putstr_fd("minishell from signal",STDERR);
+		// rl_on_new_line();
+		// rl_replace_line("", 0);
+		// rl_redisplay();
 	}
 	else
 		ft_putstr_fd("\n", STDERR);

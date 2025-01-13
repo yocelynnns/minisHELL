@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/27 15:43:22 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:36:41 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	handle_heredoc(t_ast_node *ast)
 	pipe(pipefd);
 	write(pipefd[1], ast->command->heredoc, ft_strlen(ast->command->heredoc));
 	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
+	dup2(pipefd[0], STDIN);
 	close(pipefd[0]);
 }
 

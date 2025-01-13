@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/27 15:43:39 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/13 15:25:13 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ char	*resize_buffer(char *content, size_t total_length, size_t *current_size)
 
 ssize_t	read_line(char *content, size_t total_length, size_t current_size)
 {
-	write(STDOUT_FILENO, "> ", 2);
-	return (read(STDIN_FILENO, content + total_length, current_size
-			- total_length - 1));
+	write(STDOUT, "> ", 2);
+	return (read(STDIN, content + total_length, current_size - total_length
+			- 1));
 }
 
 int	is_delimiter(const char *content, const char *delimiter,
@@ -56,6 +56,13 @@ int	read_until_delimiter(t_heredoc *hd)
 			perror("read");
 			return (-1);
 		}
+		else if (bytes_read == 0)
+		{
+			printf("CONTROL D Handle\n");
+			return (-1);
+		}
+		if (g_exit_status == 130)
+			break;
 		hd->content[hd->total_length + bytes_read] = '\0';
 		if (is_delimiter(hd->content, hd->delimiter, hd->total_length,
 				hd->delimiter_length))
@@ -83,6 +90,7 @@ char	*read_heredoc(const char *delimiter)
 	if (read_until_delimiter(hd) < 0)
 	{
 		free(hd);
+		free(hd->content);
 		return (NULL);
 	}
 	final_content = malloc(hd->total_length + 1);
