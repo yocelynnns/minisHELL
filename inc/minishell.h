@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/14 21:22:57 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/15 01:17:58 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,21 @@ typedef struct s_token
 
 typedef struct s_lexer_state
 {
-	t_token					*token_list;
-	int						start;
-	char					quote;
-	int						flag;
-	int						escquo;
-}							t_lexer_state;
+    int i;
+    int start;
+    char quote;
+    int last_token_was_pipe;
+    t_token *token_list;
+} t_lexer_state;
+
+// typedef struct s_lexer_state
+// {
+// 	t_token					*token_list;
+// 	int						start;
+// 	char					quote;
+// 	int						flag;
+// 	int						escquo;
+// }							t_lexer_state;
 
 typedef enum
 {
@@ -146,17 +155,19 @@ t_token						*lexer(const char *input, t_minishell *mini);
 void						free_tokens(t_token *tokens);
 void						print_tokens(t_token *tokens);
 //
-void						handle_redirect_in(t_lexer_state *state,
-								const char *input, int *i);
-void						handle_redirect_out(t_lexer_state *state,
-								const char *input, int *i);
-void	handle_special_char(t_lexer_state *state, \
-const char *input, int *i, t_minishell *mini);
+// void						handle_redirect_in(t_lexer_state *state,
+								// const char *input, int *i);
+// void						h/ndle_redirect_out(t_lexer_state *state,
+								// const char *input, int *i);
+// void	handle_special_char(t_lexer_state *state, 
+// const char *input, int *i, t_minishell *mini);
 // int							handle_quotes_spaces(t_lexer_state *state,
 // 								const char *input, int *i);
-char handle_quotes(char current_quote, char quote);
-void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
-void add_raw_token(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
+// char handle_quotes(char current_quote, char quote);
+void handle_quotes(const char *input, t_lexer_state *state);
+char *first_processing(char *str, t_minishell *mini);
+// void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
+// void add_raw_token(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
 
 void						handle_variable_expansion(t_lexer_state *state,
 								const char *input, int *i, t_minishell *mini);

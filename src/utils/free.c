@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2025/01/08 21:20:07 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/15 00:26:49 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	free_tokens(t_token *tokens)
 	{
 		temp = tokens;
 		tokens = tokens->next;
-		free(temp->value);
+		if (temp->value)
+            free(temp->value);
 		free(temp);
 	}
 }

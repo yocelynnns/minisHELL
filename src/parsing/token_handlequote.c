@@ -3,21 +3,137 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlequote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/14 21:24:54 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/15 01:18:46 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
+typedef struct s_process
 {
-    if (*i > state->start)
-        add_raw_token(state, input, i, mini);
-    state->start = *i + 1;
+    const char *str;
+    int         i;
+    int         in_quote;
+    char        *result;
+    t_minishell *mini;
+}               t_process;
+
+char    *ft_strcjoin(char *str, char c)
+{
+    char    *result;
+    int     i;
+    result = malloc(sizeof(char) * (ft_strlen(str) + 2));
+    i = 0;
+    while (str && str[i])
+    {
+        result[i] = str[i];
+        i++;
+    }
+    result[i++] = c;
+    result[i] = '\0';
+    free(str);
+    return (result);
 }
+
+char *handle_backslash(t_process *proc)
+{
+    if (!proc->in_quote && (proc->str[proc->i + 1] == '\\' || 
+                            proc->str[proc->i + 1] == '\'' || 
+                            proc->str[proc->i + 1] == '$' || 
+                            proc->str[proc->i + 1] == '\"'))
+    {
+        proc->result = ft_strcjoin(proc->result, proc->str[++proc->i]);
+        proc->i++;
+    }
+    else if (!proc->in_quote && proc->str[proc->i + 1] == '\n')
+        proc->i += 2;
+    else
+        proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
+    return proc->result;
+}
+
+char *handle_single_quote(t_process *proc)
+{
+    proc->i++;
+    while (proc->str[proc->i] && proc->str[proc->i] != '\'')
+        proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
+    if (proc->str[proc->i] == '\'')
+        proc->i++;
+    return proc->result;
+}
+
+char *expand_variable(t_process *proc)
+{
+    const char *start = proc->str + proc->i;
+    while (proc->str[proc->i] && !ft_strchr("\\\"\' $", proc->str[proc->i]))
+        proc->i++;
+    char *var_name = ft_strndup(start, proc->str + proc->i - start);
+    char *env_value = get_env_value(var_name, proc->mini->env);
+    free(var_name);
+    if (env_value)
+        proc->result = ft_strjoin(proc->result, env_value);
+    else
+        proc->result = ft_strcjoin(proc->result, '\0'); // Append empty string if undefined
+    return proc->result;
+}
+
+char *handle_double_quote(t_process *proc)
+{
+    proc->i++;
+    while (proc->str[proc->i] && proc->str[proc->i] != '\"')
+    {
+        if (proc->str[proc->i] == '\\')
+            proc->result = handle_backslash(proc);
+        else if (proc->str[proc->i] == '$')
+            proc->result = expand_variable(proc);
+        else
+            proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
+    }
+    if (proc->str[proc->i] == '\"')
+        proc->i++;
+    return proc->result;
+}
+
+char *process_character(t_process *proc)
+{
+    if (proc->str[proc->i] == '\\')
+        proc->result = handle_backslash(proc);
+    else if (proc->str[proc->i] == '$')
+        proc->result = expand_variable(proc);
+    else if (proc->str[proc->i] == '\'')
+        proc->result = handle_single_quote(proc);
+    else if (proc->str[proc->i] == '\"')
+        proc->result = handle_double_quote(proc);
+    else
+        proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
+    return proc->result;
+}
+
+char *first_processing(char *str, t_minishell *mini)
+{
+    t_process proc;
+
+    proc.str = str;
+    proc.i = 0;
+    proc.in_quote = 0;
+    proc.result = NULL;
+    proc.mini = mini;
+
+    while (proc.str[proc.i])
+        process_character(&proc);
+
+    return proc.result;
+}
+
+// void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
+// {
+//     if (*i > state->start)
+//         add_raw_token(state, input, i, mini);
+//     state->start = *i + 1;
+// }
 
 // static int handle_quote_open(t_lexer_state *state, char quote_char)
 // {
@@ -78,14 +194,14 @@ void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *
 //     return (final_token);
 // }
 
-char handle_quotes(char current_quote, char quote)
-{
-    if (quote == 0)
-        return current_quote;
-    else if (quote == current_quote)
-        return 0;
-    return quote;
-}
+// char handle_quotes(char current_quote, char quote)
+// {
+//     if (quote == 0)
+//         return current_quote;
+//     else if (quote == current_quote)
+//         return 0;
+//     return quote;
+// }
 
 // int handle_quotes_spaces(t_lexer_state *state, const char *input, int *i)
 // {
@@ -113,84 +229,4 @@ char handle_quotes(char current_quote, char quote)
 //     else if (isspace(input[*i]) && !state->quote)
 //         handle_space(state, input, i);
 //     return (state->quote);
-// }
-
-// char    *ft_strcjoin(char *str, char c)
-// {
-//     char    *result;
-//     int     i;
-//     result = malloc(sizeof(char) * (ft_strlen(str) + 2));
-//     i = 0;
-//     while (str && str[i])
-//     {
-//         result[i] = str[i];
-//         i++;
-//     }
-//     result[i++] = c;
-//     result[i] = '\0';
-//     free(str);
-//     return (result);
-// }
-// char    *first_processing(char *str)
-// {
-//     char    *result;
-//     int     i;
-//     int     in_quote;
-//     char    *start;
-//     i = 0;
-//     in_quote = 0;
-//     result = NULL;
-//     while (str[i])
-//     {
-//         if (str[i] == '\\' && !in_quote)
-//         {
-//             if (str[i + 1] == '\\' || str[i + 1] == '\'' 
-//             || str[i + 1] == '$' || str[i + 1] == '\"')
-//             {
-//                 result = ft_strcjoin(result, str[++i]);
-//                 i++;
-//             }
-//             else if (str[i + 1] == '\n')
-//                 i += 2;
-//             else
-//                 result = ft_strcjoin(result, str[i++]);
-//         }
-//         else if (str[i] == '\'')
-//         {
-//             i++;
-//             while (str[i] && str[i] != '\'')
-//                 result = ft_strcjoin(result, str[i++]);
-//             i++;
-//         }
-//         else if (str[i] == '\"')
-//         {
-//             in_quote = str[i++];
-//             while (str[i] && in_quote)
-//             {
-//                 if (str[i] == '\\')
-//                 {
-//                     if (str[i + 1] == '\\' || 
-//                     str[i + 1] == '$' || str[i + 1] == '\"')
-//                     {
-//                         result = ft_strcjoin(result, str[++i]);
-//                         i++;
-//                     }
-//                     else if (str[i + 1] == '\n')
-//                         i += 2;
-//                     else
-//                         result = ft_strcjoin(result, str[i++]);
-//                 }
-//                 else
-//                     result = ft_strcjoin(result, str[i++]);
-//                 if (str[i] == in_quote)
-//                 {
-//                     in_quote = 0;
-//                     i++;
-//                 }
-//             }
-//         }
-//         else
-//             result = ft_strcjoin(result, str[i++]);
-//     }
-//     return (result);
 // }
