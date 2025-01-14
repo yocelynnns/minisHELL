@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/13 21:24:04 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:30:00 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,33 +46,6 @@ void	add_token(t_token **head, t_token *new_token)
 		while (temp->next)
 			temp = temp->next;
 		temp->next = new_token;
-	}
-}
-
-void checkpipe(const char *input, int *i, t_lexer_state *state)
-{
-	if (input[*i] == '|')
-	{
-		printf("Error: Syntax error near unexpected token `|'\n");
-		free_tokens(state->token_list);
-	}
-}
-
-void init_lexstate(t_lexer_state *state)
-{
-	state->token_list = NULL;
-	state->start = 0;
-	state->quote = 0;
-	state->flag = 0;
-	state->escquo = 0;
-}
-
-void checkquote(t_lexer_state *state)
-{
-	if (state->quote)
-	{
-		printf("Error: Unclosed quote '%c'\n", state->quote);
-		free_tokens(state->token_list);
 	}
 }
 
@@ -163,14 +136,21 @@ char    *first_processing(char *str, t_minishell *mini)
                     start = ft_strndup(start, (str + i) - start);
                     if (start && *start)
                     {
-                        result = ft_strjoin(result, get_env_value(start, mini->env));
+                        char *env_val = get_env_value(start, mini->env);
+                        if(env_val == NULL)
+                            env_val = ""; 
+                        result = ft_strjoin(result, env_val);
                         free(start);
                     }
                     else
                         result = ft_strcjoin(result, str[i - 1]);
                 }
                 else
-                    result = ft_strcjoin(result, str[i++]);
+                {
+                    while (str[i] && str[i] != '\"')
+                        result = ft_strcjoin(result, str[i++]);
+                    i++;
+                }
                 if (str[i] == in_quote)
                 {
                     in_quote = 0;
@@ -184,7 +164,8 @@ char    *first_processing(char *str, t_minishell *mini)
     return (result);
 }
 
-t_token *lexer(const char *input, t_minishell *mini) {
+t_token *lexer(const char *input, t_minishell *mini)
+{
     t_token *token_list = NULL;
     int i = 0;
     int start = 0;
@@ -211,7 +192,7 @@ t_token *lexer(const char *input, t_minishell *mini) {
                 while (input[i + 1] && (isalnum(input[i + 1]) || input[i + 1] == '_')) {
                     i++;
                 }
-                char *var_name = strndup(input + var_start, i + 1 - var_start);
+                char *var_name = ft_strndup(input + var_start, i + 1 - var_start);
                 char *var_value = get_env_value(var_name, mini->env);
                 free(var_name);
 
@@ -226,12 +207,14 @@ t_token *lexer(const char *input, t_minishell *mini) {
                 start = i + 1; // Set start to the next character after the variable name
             }
 		}
-        else if (input[i] == '\'' || input[i] == '"') {
+        else if (input[i] == '\'' || input[i] == '"')
+         {
             if (quote == 0)
                 quote = input[i]; // first quote
             else if (quote == input[i])
                 quote = 0; // close quote
-        } else if (isspace(input[i]) && !quote) {
+        }
+        else if (isspace(input[i]) && !quote) {
             if (i > start) {
                 char *raw_token = strndup(input + start, i - start);
                 char *processed_token = first_processing(raw_token, mini);
@@ -239,7 +222,8 @@ t_token *lexer(const char *input, t_minishell *mini) {
                 free(raw_token);
             }
             start = i + 1; // move to the next token
-        } else if (input[i] == '<' && !quote) {
+        }
+        else if (input[i] == '<' && !quote) {
             if (i > start) {
                 char *raw_token = strndup(input + start, i - start);
                 char *processed_token = first_processing(raw_token, mini);
@@ -253,7 +237,8 @@ t_token *lexer(const char *input, t_minishell *mini) {
                 add_token(&token_list, create_token(REDIRECT_IN, "<"));
             }
             start = i + 1;
-        } else if (input[i] == '>' && !quote) {
+        }
+        else if (input[i] == '>' && !quote) {
             if (i > start) {
                 char *raw_token = strndup(input + start, i - start);
                 char *processed_token = first_processing(raw_token, mini);
@@ -267,7 +252,8 @@ t_token *lexer(const char *input, t_minishell *mini) {
                 add_token(&token_list, create_token(REDIRECT_OUT, ">"));
             }
             start = i + 1;
-        } else if (input[i] == '|' && !quote) {
+        }
+        else if (input[i] == '|' && !quote) {
             if (last_token_was_pipe) {
                 fprintf(stderr, "Error: Invalid sequence of consecutive '|' operators\n");
                 free_tokens(token_list);
@@ -282,7 +268,8 @@ t_token *lexer(const char *input, t_minishell *mini) {
             }
             add_token(&token_list, create_token(PIPE, "|"));
             start = i + 1;
-        } else {
+        }
+        else {
             last_token_was_pipe = 0; // reset flag if not a pipe
         }
         i++;
@@ -309,6 +296,70 @@ t_ast_node	*build_ast(t_token *tokens)
 	return (parse_pipeline(&tokens));
 }
 
+// void checkpipe(const char *input, int *i, t_lexer_state *state)
+// {
+// 	if (input[*i] == '|')
+// 	{
+// 		printf("Error: Syntax error near unexpected token `|'\n");
+// 		free_tokens(state->token_list);
+// 	}
+// }
+
+// void init_lexstate(t_lexer_state *state)
+// {
+// 	state->token_list = NULL;
+// 	state->start = 0;
+// 	state->quote = 0;
+// 	state->flag = 0;
+// 	state->escquo = 0;
+// }
+
+// void checkquote(t_lexer_state *state)
+// {
+// 	if (state->quote)
+// 	{
+// 		printf("Error: Unclosed quote '%c'\n", state->quote);
+// 		free_tokens(state->token_list);
+// 	}
+// }
+
+// void add_raw_token(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
+// {
+//     char *raw_token = strndup(input + state->start, *i - state->start);
+//     char *processed_token = first_processing(raw_token, mini);
+//     add_token(&state->token_list, create_token(WORD, processed_token));
+//     free(raw_token);
+// } 
+
+// t_token	*lexer(const char *input, t_minishell *mini)
+// {
+// 	t_lexer_state	state;
+// 	int				i;
+
+// 	i = 0;
+// 	init_lexstate(&state);
+// 	checkpipe(input, &i, &state);
+// 	while (input[i])
+// 	{
+// 		if (input[i] == '$' && (input[i - 1] != '=') && (input[i
+// 						- 1] != '\'') && (input[i - 2] != '='))
+// 			handle_variable_expansion(&state, input, &i, mini);
+// 		else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
+// 			state.quote = handle_quotes(input[i], state.quote);
+//         else if (isspace(input[i]) && !state.quote)
+//             handle_space(&state, input, &i, mini);
+// 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
+// 			handle_special_char(&state, input, &i, mini);
+// 		// else if (input[i] != '\0')
+// 		// 	state.flag = 1;
+// 		i++;
+// 	}
+// 	checkquote(&state);
+// 	if (i > state.start)
+// 		add_raw_token(&state, input, i, mini);
+// 	return (state.token_list);
+// }
+
 // void handle_expansion(t_lexer_state *state, const char *input, int *i, t_minishell *mini)
 // {
 // 	int var_start;
@@ -329,35 +380,4 @@ t_ast_node	*build_ast(t_token *tokens)
 // 		free(var_name);
 // 	}
 // 	state->start = *i + 1;
-// }
-
-// t_token	*lexer(const char *input, t_minishell *mini)
-// {
-// 	t_lexer_state	state;
-// 	int				i;
-
-// 	i = 0;
-// 	(void) mini;
-// 	init_lexstate(&state);
-// 	checkpipe(input, &i, &state);
-// 	while (input[i])
-// 	{
-// 		// if (input[i] == '$' && ((input[i + 1] >= 'A' && input[i + 1] <= 'Z')))
-// 		// 	handle_expansion(&state, input, &i, mini);
-// 		if (input[i] == '$' && (!(input[i - 1] == '=')) && (!(input[i
-// 						- 1] >= 'a' && input[i - 1] <= 'z')))
-// 			handle_variable_expansion(&state, input, &i);
-// 		else if (input[i] == '\'' || input[i] == '"' || isspace(input[i]))
-// 			state.flag = handle_quotes_spaces(&state, input, &i);
-// 		else if (input[i] == '<' || input[i] == '>' || input[i] == '|')
-// 			handle_special_char(&state, input, &i);
-// 		else if (input[i] != '\0')
-// 			state.flag = 1;
-// 		i++;
-// 	}
-// 	checkquote(&state);
-// 	if (state.flag && i > state.start)
-// 		add_token(&state.token_list, create_token(WORD, ft_strndup(input
-// 					+ state.start, i - state.start)));
-// 	return (state.token_list);
 // }

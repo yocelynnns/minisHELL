@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/13 17:28:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/14 21:22:57 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,12 +150,16 @@ void						handle_redirect_in(t_lexer_state *state,
 								const char *input, int *i);
 void						handle_redirect_out(t_lexer_state *state,
 								const char *input, int *i);
-void						handle_special_char(t_lexer_state *state,
-								const char *input, int *i);
-int							handle_quotes_spaces(t_lexer_state *state,
-								const char *input, int *i);
+void	handle_special_char(t_lexer_state *state, \
+const char *input, int *i, t_minishell *mini);
+// int							handle_quotes_spaces(t_lexer_state *state,
+// 								const char *input, int *i);
+char handle_quotes(char current_quote, char quote);
+void handle_space(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
+void add_raw_token(t_lexer_state *state, const char *input, int *i, t_minishell *mini);
+
 void						handle_variable_expansion(t_lexer_state *state,
-								const char *input, int *i);
+								const char *input, int *i, t_minishell *mini);
 
 t_ast_node					*create_ast_node(t_ast_node_type type);
 t_ast_node					*parse_command(t_token **tokens);
