@@ -6,24 +6,24 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/13 15:36:41 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/17 15:51:32 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	handle_builtin_commands(t_ast_node *ast, t_minishell mini)
+int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 {
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
 		return (ft_echo(ast->command->args), 1);
 	else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
 		return (ft_pwd(), 1);
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
-		return (ft_env(mini.env), 1);
+		return (ft_env(mini->env), 1);
 	else if (ft_strcmp(ast->command->args[0], "export") == 0)
-		return (ft_export(ast->command->args, &mini.env), 1);
+		return (ft_export(ast->command->args, &mini->env), 1);
 	else if (ft_strcmp(ast->command->args[0], "unset") == 0)
-		return (ft_unset(ast->command->args, &mini), 1);
+		return (ft_unset(ast->command->args, mini), 1);
 	return (-1);
 }
 

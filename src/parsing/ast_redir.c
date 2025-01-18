@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 00:48:44 by yocelynnns        #+#    #+#             */
-/*   Updated: 2024/12/27 15:46:09 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/17 16:13:13 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void	attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node)
 	}
 }
 
-int	handle_redirect(t_ast_node *cmd, t_token **tokens)
+int	handle_redirect(t_ast_node *cmd, t_token **tokens, t_minishell *mini)
 {
 	t_ast_node	*redirect_node;
 
-	redirect_node = parse_redirect(tokens);
+	redirect_node = parse_redirect(tokens, mini);
 	if (!redirect_node)
 	{
 		free_ast(cmd);

@@ -6,14 +6,14 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2024/12/27 15:40:42 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/17 15:49:50 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env,
-		t_minishell mini)
+		t_minishell *mini)
 {
 	pid_t	pid1;
 
@@ -35,7 +35,7 @@ int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env,
 }
 
 int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env,
-		t_minishell mini)
+		t_minishell *mini)
 {
 	pid_t	pid2;
 
@@ -56,7 +56,7 @@ int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env,
 	return (pid2);
 }
 
-int	execute_pipeline(t_ast_node *ast, char **env, t_minishell mini)
+int	execute_pipeline(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	int		pipefd[2];
 	pid_t	pid1;

@@ -3,29 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/17 00:01:57 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/01/19 00:33:18 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int g_exit_status = 0;
-
-int	main(int ac, char **av, char **env)
+int main(int ac, char **av, char **env)
 {
-	char		*input;
-	t_token		*tokens;
-	t_ast_node	*ast;
-	t_minishell	mini;
+	char *input;
+	t_token *tokens;
+	t_ast_node *ast;
+	t_minishell *mini;
+	mini = malloc(sizeof(t_minishell));
+	if (!mini)
+		return 1;
+
+	mini->exit = 0;
 
 	(void)ac;
 	(void)av;
 
 	// Initialize environment variables
-	if (env_init(&mini, env) == ERROR)
+	if (env_init(mini, env) == ERROR)
 	{
 		fprintf(stderr, "Error: Failed to initialize environment variables\n");
 		return (EXIT_FAILURE);
@@ -37,16 +40,16 @@ int	main(int ac, char **av, char **env)
 	// print_sorted_env(mini.env);
 	while (1)
 	{
-		signal(SIGINT, sig_int_handler);
-		signal(SIGQUIT, sig_quit_handler);
-		
+		// signal(SIGINT, sig_int_handler);
+		// signal(SIGQUIT, sig_quit_handler);
+
 		input = readline("minishell$ ");
-		handle_eof(input);
+		handle_eof(input, mini);
 
 		if (*input)
 			add_history(input);
 
-		tokens = lexer(input, &mini);
+		tokens = lexer(input, mini);
 		// print_tokens(tokens);
 		if (!tokens)
 		{
@@ -54,7 +57,7 @@ int	main(int ac, char **av, char **env)
 			continue;
 		}
 
-		ast = build_ast(tokens);
+		ast = build_ast(tokens, mini);
 		// print_ast(ast, 0);
 		if (!ast)
 		{
@@ -63,12 +66,12 @@ int	main(int ac, char **av, char **env)
 			continue;
 		}
 		execute_command(ast, env, mini);
-		
+
 		free_tokens(tokens);
 		// free_ast(ast);
 		free(input);
 	}
 	// // Free the environment
-	free_env(mini.env);
-	return (g_exit_status);
+	free_env(mini->env);
+	return (mini->exit);
 }

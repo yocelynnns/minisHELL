@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   sec_util.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:45:45 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/08 19:26:43 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/17 17:23:51 by messs            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	print_exit_error(char **av)
+void print_exit_error(char **av)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR);
 	ft_putstr_fd(av[1], STDERR);
 	ft_putendl_fd(": numeric argument required", STDERR);
 }
-char	*ft_strjoin_three(const char *s1, const char *s2, const char *s3,
-		const char *s4)
+char *ft_strjoin_three(const char *s1, const char *s2, const char *s3,
+					   const char *s4)
 {
-	char	*result;
-	size_t	len;
+	char *result;
+	size_t len;
 
 	len = ft_strlen(s1) + ft_strlen(s2) + ft_strlen(s3) + ft_strlen(s4) + 1;
 	result = malloc(len);
@@ -34,19 +34,19 @@ char	*ft_strjoin_three(const char *s1, const char *s2, const char *s3,
 	ft_strcat(result, (char *)s4);
 	return (result);
 }
-char	*format_env_value(const char *env_value)
+char *format_env_value(const char *env_value)
 {
-	char	*equal_sign;
-	char	*key;
-	char	*value;
-	char	*formatted_value;
+	char *equal_sign;
+	char *key;
+	char *value;
+	char *formatted_value;
 
 	equal_sign = ft_strchr(env_value, '=');
 	if (equal_sign)
 	{
 		key = ft_substr(env_value, 0, equal_sign - env_value);
 		value = ft_substr(env_value, equal_sign - env_value + 1,
-				ft_strlen(env_value) - (equal_sign - env_value + 1));
+						  ft_strlen(env_value) - (equal_sign - env_value + 1));
 		formatted_value = ft_strjoin_three(key, "=\"", value, "\"");
 	}
 	else
@@ -56,3 +56,17 @@ char	*format_env_value(const char *env_value)
 	return (formatted_value);
 }
 
+int count_cmds(t_token *token)
+{
+	int i;
+
+	i = 0;
+	if (!token)
+		return (-1);
+	while (token)
+	{
+		token = token->next;
+		i++;
+	}
+	return (i);
+}

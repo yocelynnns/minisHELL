@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/13 15:57:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:52:43 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	return (NULL);
 }
 
-int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini, int *status)
+int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini, int *status)
 {
 	pid_t	pid;
 
@@ -112,6 +112,6 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell mini, int *status)
 	waitpid(pid, status, 0);
 	g_sig.pid = 0;
 	if (WIFEXITED(*status))
-		g_exit_status = WEXITSTATUS(*status);
+		return(mini->exit = WEXITSTATUS(*status));
 	return (0);
 }
