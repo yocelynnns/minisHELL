@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: messs <messs@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/17 23:27:32 by messs            ###   ########.fr       */
+/*   Updated: 2025/01/20 17:58:28 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ typedef struct s_signal
 	int sigint;
 	int sigquit;
 	pid_t pid;
+	int	exit_value;
+	int	heredoc;
 } t_signal;
 
 typedef struct s_var_process
@@ -197,7 +199,7 @@ void execute_command(t_ast_node *ast, char **env,
 					 t_minishell *mini);
 char *find_executable(char *cmd, t_minishell *mini);
 char *concat_path(char *dir, char *cmd);
-char *read_heredoc(const char *delim);
+char *read_heredoc(const char *delim, t_minishell *mini);
 
 int handle_builtin_commands(t_ast_node *ast,
 							t_minishell *mini);
@@ -209,7 +211,7 @@ char *get_executable_path(t_ast_node *ast,
 						  t_minishell *mini);
 int fork_and_execute(t_ast_node *ast, char **env,
 					 t_minishell *mini, int *status);
-void execute_in_child(t_ast_node *ast, char **env,
+int execute_in_child(t_ast_node *ast, char **env,
 					  t_minishell *mini);
 int execute_left_command(t_ast_node *ast, int pipefd[2],
 						 char **env, t_minishell *mini);
@@ -224,7 +226,7 @@ ssize_t read_line(char *content, size_t total_length,
 int is_delimiter(const char *content,
 				 const char *delimiter, size_t total_length,
 				 size_t delimiter_length);
-int read_until_delimiter(t_heredoc *hd);
+int read_until_delimiter(t_heredoc *hd, t_minishell *mini);
 void free_dirs(char **dirs);
 void handle_all_redirections(t_ast_node *ast);
 

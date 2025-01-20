@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/17 16:52:30 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/20 14:37:11 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 	}
 }
 
-void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
+int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	char	*executable_path;
 
@@ -96,6 +96,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		{
 			perror("execve");
 			exit(mini->exit);
+			return -1;
 		}
 	}
 	else
@@ -103,5 +104,7 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		printf("Command not found: %s\n", ast->command->args[0]);
 		mini->exit = 127;
 		exit(mini->exit);
+		return -1;
 	}
+	return (0);
 }
