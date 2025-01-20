@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/20 17:58:28 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/20 19:39:43 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,6 @@ typedef struct s_lexer_state
 	t_token *token_list;
 } t_lexer_state;
 
-// typedef struct s_lexer_state
-// {
-// 	t_token					*token_list;
-// 	int						start;
-// 	char					quote;
-// 	int						flag;
-// 	int						escquo;
-// }							t_lexer_state;
-
 typedef enum
 {
 	AST_PIPELINE,
@@ -123,6 +114,8 @@ typedef struct s_env
 typedef struct s_minishell
 {
 	t_env *env;
+	t_token *token;
+	t_ast_node *ast;
 	int exit;
 } t_minishell;
 
@@ -232,7 +225,7 @@ void handle_all_redirections(t_ast_node *ast);
 
 int ft_strcmp(const char *s1, const char *s2);
 int number_of_args(char **args);
-int ft_echo(char **args);
+int	ft_echo(char **args, t_minishell *mini);
 char *remove_quotes(const char *str);
 int is_valid_n_flag(const char *arg);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/17 16:48:33 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/20 20:22:35 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ void	process_remaining_token(const char *input, t_lexer_state *state,
 		if (processed_token)
 			add_token(&state->token_list, create_token(WORD, processed_token));
 		free(raw_token);
+		free(processed_token);
 	}
 }
 

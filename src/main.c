@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/20 18:01:34 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/20 19:02:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int main(int ac, char **av, char **env)
 			add_history(input);
 
 		tokens = lexer(input, mini);
+		mini->token = tokens;
 		// print_tokens(tokens);
 		if (!tokens)
 		{
@@ -58,6 +59,7 @@ int main(int ac, char **av, char **env)
 		}
 
 		ast = build_ast(tokens, mini);
+		mini->ast = ast;
 		// print_ast(ast, 0);
 		if (!ast)
 		{
@@ -68,7 +70,7 @@ int main(int ac, char **av, char **env)
 		execute_command(ast, env, mini);
 
 		free_tokens(tokens);
-		// free_ast(ast);
+		free_ast(ast);
 		free(input);
 	}
 	// // Free the environment

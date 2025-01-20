@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/20 14:37:11 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/20 20:21:49 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,19 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	}
 	else
 	{
-		printf("Command not found: %s\n", ast->command->args[0]);
+		write(2, "Command not found: ", 19);
+		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+		write(2, "\n", 1);
 		mini->exit = 127;
-		exit(mini->exit);
+		free_tokens(mini->token);
+		free_ast(ast);
+		free_env(mini->env);
+		int i = mini->exit;
+		free(mini);
+		exit(i);
 		return -1;
 	}
 	return (0);
 }
+
+		// printf("Command not found: %s\n", ast->command->args[0]);
