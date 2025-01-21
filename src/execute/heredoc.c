@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/21 15:19:25 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 15:26:17 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 		{
 			perror("read");
 			mini->exit = 1;
+			set_signal_handlers(INTERACTIVE);
 			return (-1);
 		}
 		else if (bytes_read == 0)
 		{
 			ft_putstr_fd("Heredoc terminated (Ctrl+D)\n", STDERR_FILENO);
+			set_signal_handlers(INTERACTIVE);
 			return (-1);
 		}
 		hd->content[hd->total_length + bytes_read] = '\0';
@@ -80,9 +82,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 			hd->content = resize_buffer(hd->content, hd->total_length,
 					&hd->current_size);
 			if (!hd->content)
+			{
 				return (-1);
+				set_signal_handlers(INTERACTIVE);
+			}
 		}
 	}
+	set_signal_handlers(INTERACTIVE);
 	return (0);
 }
 
