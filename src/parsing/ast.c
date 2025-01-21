@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/20 18:22:27 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:55:23 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 {
 	t_ast_node	*redirect_node;
 
+	(void)mini;
 	redirect_node = create_ast_node(AST_REDIRECT);
 	redirect_node->redirect = malloc(sizeof(t_ast_redirect));
 	redirect_node->redirect->next = NULL;

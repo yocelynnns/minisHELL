@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/20 18:00:43 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 14:56:18 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 {
 	ssize_t	bytes_read;
 
-	set_signal_handlers(HEREDOC_MODE);
+	(void)mini;
 	while (1)
 	{
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
-		if (g_sig.sigint)
-		{
-			g_sig.sigint = 0;
-			mini->exit = g_sig.exit_value;
-			return (-1);
-		}
 		if (bytes_read < 0)
 		{
 			perror("read");
-			mini->exit = 1;
-			return (-1);
-		}
-		else if (bytes_read == 0)
-		{
-			ft_putstr_fd("Heredoc terminated (Ctrl+D)\n", STDERR_FILENO);
 			return (-1);
 		}
 		hd->content[hd->total_length + bytes_read] = '\0';
@@ -79,15 +67,56 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 			hd->content = resize_buffer(hd->content, hd->total_length,
 					&hd->current_size);
 			if (!hd->content)
-			{
-				mini->exit = 1;
 				return (-1);
-			}
 		}
 	}
-	mini->exit = 0;
 	return (0);
 }
+
+// int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
+// {
+// 	ssize_t	bytes_read;
+
+// 	set_signal_handlers(HEREDOC_MODE);
+// 	while (1)
+// 	{
+// 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
+// 		if (g_sig.sigint)
+// 		{
+// 			g_sig.sigint = 0;
+// 			mini->exit = g_sig.exit_value;
+// 			return (-1);
+// 		}
+// 		if (bytes_read < 0)
+// 		{
+// 			perror("read");
+// 			mini->exit = 1;
+// 			return (-1);
+// 		}
+// 		else if (bytes_read == 0)
+// 		{
+// 			ft_putstr_fd("Heredoc terminated (Ctrl+D)\n", STDERR_FILENO);
+// 			return (-1);
+// 		}
+// 		hd->content[hd->total_length + bytes_read] = '\0';
+// 		if (is_delimiter(hd->content, hd->delimiter, hd->total_length,
+// 				hd->delimiter_length))
+// 			break ;
+// 		hd->total_length += bytes_read;
+// 		if (hd->total_length + 1 >= hd->current_size)
+// 		{
+// 			hd->content = resize_buffer(hd->content, hd->total_length,
+// 					&hd->current_size);
+// 			if (!hd->content)
+// 			{
+// 				mini->exit = 1;
+// 				return (-1);
+// 			}
+// 		}
+// 	}
+// 	mini->exit = 0;
+// 	return (0);
+// }
 
 char	*read_heredoc(const char *delimiter, t_minishell *mini)
 {
