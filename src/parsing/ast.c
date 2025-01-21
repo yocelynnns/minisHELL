@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 14:55:23 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:22:29 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,32 +80,37 @@ void	init_cmd(t_ast_node *cmd, int i)
 	cmd->command->heredoc = NULL;
 }
 
-t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
+t_ast_node *parse_command(t_token **tokens, t_minishell *mini, int i)
 {
-	t_ast_node	*cmd;
-	int			arg_count;
+    t_ast_node *cmd;
+    int arg_count;
 
-	cmd = NULL;
-	cmd = create_ast_node(AST_COMMAND);
-	init_cmd(cmd, i);
-	arg_count = 0;
-	while (*tokens && is_redirect((*tokens)->type))
-	{
-		if (!handle_redirect(cmd, tokens, mini))
-			return (NULL);
-	}
-	while (*tokens && (*tokens)->type == WORD)
-	{
-		cmd->command->args[arg_count++] = ft_strdup((*tokens)->value);
-		*tokens = (*tokens)->next;
-	}
-	cmd->command->args[arg_count] = NULL;
-	while (*tokens && is_redirect((*tokens)->type))
-	{
-		if (!handle_redirect(cmd, tokens, mini))
-			return (NULL);
-	}
-	return (cmd);
+    cmd = create_ast_node(AST_COMMAND);
+    init_cmd(cmd, i);
+    arg_count = 0;
+
+    while (*tokens && is_redirect((*tokens)->type))
+    {
+        if (!handle_redirect(cmd, tokens, mini))
+            return (NULL);
+    }
+    while (*tokens && (*tokens)->type == WORD)
+    {
+        cmd->command->args[arg_count++] = ft_strdup((*tokens)->value);
+        *tokens = (*tokens)->next;
+    }
+    while (*tokens && is_redirect((*tokens)->type))
+    {
+        if (!handle_redirect(cmd, tokens, mini))
+            return (NULL);
+    }
+    while (*tokens && (*tokens)->type == WORD)
+    {
+        cmd->command->args[arg_count++] = ft_strdup((*tokens)->value);
+        *tokens = (*tokens)->next;
+    }
+    cmd->command->args[arg_count] = NULL;
+    return (cmd);
 }
 
 t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
