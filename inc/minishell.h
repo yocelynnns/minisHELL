@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/21 17:10:19 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 17:59:23 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ typedef struct s_minishell
 	t_token *token;
 	t_ast_node *ast;
 	int exit;
+	int flag;
 } t_minishell;
 
 typedef struct s_heredoc

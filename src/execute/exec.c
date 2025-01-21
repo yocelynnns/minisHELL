@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 17:53:16 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 18:07:55 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
 		exit(EXIT_SUCCESS);
-	if ((ast->command->args[0] == NULL || ast->command->args[0][0] == '\0') && !g_sig.sigint)
+	if ((ast->command->args[0] == NULL || ast->command->args[0][0] == '\0') && (mini->flag == 1))
 		exit(0);
 	if (is_directory(ast->command->args[0]))
 	{

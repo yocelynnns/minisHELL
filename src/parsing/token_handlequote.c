@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlequote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 13:46:24 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:01:24 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ char    *ft_strcjoin(char *str, char c)
 
 char *handle_backslash(t_process *proc)
 {
-    if ((proc->str[proc->i] == '\\' || 
-                            proc->str[proc->i] == '\'' || 
-                            proc->str[proc->i] == '$' || 
+    if ((proc->str[proc->i] == '\\' ||
+                            proc->str[proc->i] == '\'' ||
+                            proc->str[proc->i] == '$' ||
                             proc->str[proc->i] == '\"'))
     {
         proc->result = ft_strcjoin(proc->result, proc->str[++proc->i]);
@@ -74,6 +74,7 @@ char *handle_single_quote(t_process *proc)
 
 char *expand_variable(t_process *proc)
 {
+    proc->mini->flag = 1;
     char *start;
     start = ++proc->i + proc->str;
     while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
