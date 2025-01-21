@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/21 14:56:18 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:19:25 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,25 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 	ssize_t	bytes_read;
 
 	(void)mini;
+	set_signal_handlers(HEREDOC_MODE);
 	while (1)
 	{
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
+		if (g_sig.sigint)
+		{
+			mini->exit = 130;
+			set_signal_handlers(INTERACTIVE);
+			return (-1);
+		}
 		if (bytes_read < 0)
 		{
 			perror("read");
+			mini->exit = 1;
+			return (-1);
+		}
+		else if (bytes_read == 0)
+		{
+			ft_putstr_fd("Heredoc terminated (Ctrl+D)\n", STDERR_FILENO);
 			return (-1);
 		}
 		hd->content[hd->total_length + bytes_read] = '\0';
