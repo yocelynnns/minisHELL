@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/20 19:39:21 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:18:44 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 {
-	if (ft_strcmp(ast->command->args[0], "echo") == 0)
-		return (ft_echo(ast->command->args, mini), 1);
-	else if (ft_strcmp(ast->command->args[0], "pwd") == 0)
+	// if (ft_strcmp(ast->command->args[0], "echo") == 0)
+	// 	return (ft_echo(ast->command->args, mini), 1);
+	if (ft_strcmp(ast->command->args[0], "pwd") == 0)
 		return (ft_pwd(), 1);
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
 		return (ft_env(mini->env), 1);

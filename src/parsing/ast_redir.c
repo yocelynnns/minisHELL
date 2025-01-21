@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 00:48:44 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/21 16:45:14 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 17:09:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	handle_redirect(t_ast_node *cmd, t_token **tokens, t_minishell *mini)
 	if (redirect_node->redirect->type == HEREDOC)
 		cmd->command->heredoc = read_heredoc(redirect_node->redirect->file,
 				mini);
-	printf("Exit code is %d\n", mini->exit);
 	return (1);
 }
 

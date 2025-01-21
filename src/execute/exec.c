@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 16:50:06 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 17:53:16 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	int	status;
 
-	printf("Exit code is %d\n", mini->exit);
 	if (ast->type == AST_COMMAND)
 	{
 		// expand_variables_in_args(ast->command->args, mini.env);
@@ -66,7 +65,6 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(ast, env, mini);
-	printf("Exit code is after exec%d\n", mini->exit);
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini)
@@ -77,8 +75,8 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
 		exit(EXIT_SUCCESS);
-	if (ast->command->args[0] == NULL || ast->command->args[0][0] == '\0')
-		exit(EXIT_SUCCESS);
+	if ((ast->command->args[0] == NULL || ast->command->args[0][0] == '\0') && !g_sig.sigint)
+		exit(0);
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);

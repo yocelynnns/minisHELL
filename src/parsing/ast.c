@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 16:46:37 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 17:09:05 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ t_ast_node	*parse_pipeline(t_token **tokens, t_minishell *mini, int i)
 		pipeline_node->pipeline->right = right;
 		left = pipeline_node;
 	}
-	printf("Exit code is %d\n", mini->exit);
 	return (left);
 }
 
@@ -112,7 +111,6 @@ t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
 		*tokens = (*tokens)->next;
 	}
 	cmd->command->args[arg_count] = NULL;
-	printf("Exit code is %d\n", mini->exit);
 	return (cmd);
 }
 
