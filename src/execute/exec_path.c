@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/20 19:27:01 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:51:19 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 {
 	pid_t	pid;
 
+	printf("Exit code is %d\n", mini->exit);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -109,12 +110,17 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		perror("fork");
 		return (-1);
 	}
+	printf("Exit code is %d\n", mini->exit);
 	g_sig.pid = pid;
 	waitpid(pid, status, 0);
 	g_sig.pid = 0;
 	if (WIFEXITED(*status))
+	{
 		mini->exit = WEXITSTATUS(*status);
+		printf("Exit code is %d\n", mini->exit);
+	}
 	else
 		mini->exit = g_sig.exit_value;
+	printf("Exit code is HAHAHAH %d\n", mini->exit);
 	return (mini->exit);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 14:51:05 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:50:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	int	status;
 
+	printf("Exit code is %d\n", mini->exit);
 	if (ast->type == AST_COMMAND)
 	{
 		// expand_variables_in_args(ast->command->args, mini.env);
@@ -65,6 +66,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(ast, env, mini);
+	printf("Exit code is after exec%d\n", mini->exit);
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini)
@@ -87,6 +89,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	char	*executable_path;
+	int		i;
 
 	cmdchecks(ast, mini);
 	executable_path = get_executable_path(ast, mini);
@@ -96,7 +99,7 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		{
 			perror("execve");
 			exit(mini->exit);
-			return -1;
+			return (-1);
 		}
 	}
 	else
@@ -108,12 +111,12 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		free_tokens(mini->token);
 		free_ast(ast);
 		free_env(mini->env);
-		int i = mini->exit;
+		i = mini->exit;
 		free(mini);
 		exit(i);
-		return -1;
+		return (-1);
 	}
 	return (0);
 }
 
-		// printf("Command not found: %s\n", ast->command->args[0]);
+// printf("Command not found: %s\n", ast->command->args[0]);

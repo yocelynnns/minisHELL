@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/21 15:26:17 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/21 16:44:26 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 {
 	ssize_t	bytes_read;
 
-	(void)mini;
 	set_signal_handlers(HEREDOC_MODE);
 	while (1)
 	{
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
 		if (g_sig.sigint)
 		{
-			mini->exit = 130;
+			mini->exit = g_sig.exit_value;
+			g_sig.sigint = 0;
 			set_signal_handlers(INTERACTIVE);
 			return (-1);
 		}
@@ -147,6 +147,7 @@ char	*read_heredoc(const char *delimiter, t_minishell *mini)
 		return (NULL);
 	if (read_until_delimiter(hd, mini) < 0)
 	{
+		printf("Exit code is %d\n", mini->exit);
 		free(hd->content);
 		free(hd);
 		return (NULL);

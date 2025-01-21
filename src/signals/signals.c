@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/01/20 18:30:33 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:51:44 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,9 @@ void init_signals(void)
 void handle_eof(char *line, t_minishell *mini)
 {
 	int i;
-	
+
 	if (!line)
 	{
-		mini->exit = 0;
 		i = mini->exit;
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
 		free_env(mini->env);

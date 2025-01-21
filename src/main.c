@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 14:57:57 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:47:27 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int main(int ac, char **av, char **env)
 		}
 
 		ast = build_ast(tokens, mini);
+
+		printf("Exit code is %d\n", mini->exit);
 		mini->ast = ast;
 		// print_ast(ast, 0);
 		if (!ast)
@@ -68,6 +70,7 @@ int main(int ac, char **av, char **env)
 			continue;
 		}
 		execute_command(ast, env, mini);
+		printf("Exit code is %d\n", mini->exit);
 		free_tokens(tokens);
 		free_ast(ast);
 		free(input);
