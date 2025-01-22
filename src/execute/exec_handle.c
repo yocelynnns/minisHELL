@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/21 17:18:44 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/22 17:47:35 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 {
-	// if (ft_strcmp(ast->command->args[0], "echo") == 0)
-	// 	return (ft_echo(ast->command->args, mini), 1);
+	if (ft_strcmp(ast->command->args[0], "echo") == 0)
+		return (ft_echo(ast->command->args, mini), 1);
 	if (ft_strcmp(ast->command->args[0], "pwd") == 0)
 		return (ft_pwd(), 1);
 	else if (ft_strcmp(ast->command->args[0], "env") == 0)
@@ -27,7 +27,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 	return (-1);
 }
 
-void	handle_redirection(t_ast_node *redirect)
+void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 {
 	int	fd;
 
@@ -43,6 +43,10 @@ void	handle_redirection(t_ast_node *redirect)
 	if (fd < 0)
 	{
 		perror("open");
+		free_tokens(mini->token);
+		free_ast(mini->ast);
+		free_env(mini->env);
+		free(mini);
 		exit(EXIT_FAILURE);
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
@@ -52,14 +56,14 @@ void	handle_redirection(t_ast_node *redirect)
 	close(fd);
 }
 
-void	handle_all_redirections(t_ast_node *ast)
+void	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 {
 	t_ast_node	*redirect;
 
 	redirect = ast->command->redirect;
 	while (redirect)
 	{
-		handle_redirection(redirect);
+		handle_redirection(redirect, mini);
 		redirect = redirect->redirect->next;
 	}
 }

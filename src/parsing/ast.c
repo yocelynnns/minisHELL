@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/21 17:09:05 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/22 20:19:58 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ t_ast_node	*create_ast_node(t_ast_node_type type)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
+	ft_memset(new_node, 0, sizeof(t_ast_node));
 	new_node->type = type;
-	new_node->word = NULL;
-	new_node->pipeline = NULL;
-	new_node->command = NULL;
-	new_node->redirect = NULL;
 	return (new_node);
 }
 
@@ -41,6 +38,12 @@ t_ast_node	*parse_pipeline(t_token **tokens, t_minishell *mini, int i)
 		return (NULL);
 	while (*tokens && (*tokens)->type == PIPE)
 	{
+		if ((*tokens)->next == NULL)
+        {
+            printf("Error: Syntax error near unexpected token '|'\n");
+            mini->exit = 2;
+            return (NULL);
+        }
 		*tokens = (*tokens)->next;
 		right = parse_command(tokens, mini, i);
 		if (!right)
@@ -59,25 +62,17 @@ t_ast_node	*parse_pipeline(t_token **tokens, t_minishell *mini, int i)
 
 void	init_cmd(t_ast_node *cmd, int i)
 {
-	int	j;
-
 	cmd->command = malloc(sizeof(t_ast_command));
 	if (!cmd->command)
 		return ;
+	ft_memset(cmd->command, 0, sizeof(t_ast_command));
 	cmd->command->args = malloc(sizeof(char *) * (i + 1));
 	if (!cmd->command->args)
 	{
 		free(cmd->command);
 		return ;
 	}
-	j = 0;
-	while (j < i)
-	{
-		cmd->command->args[j] = NULL;
-		j++;
-	}
-	cmd->command->redirect = NULL;
-	cmd->command->heredoc = NULL;
+	ft_memset(cmd->command->args, 0, sizeof(char *) * (i + 1));
 }
 
 t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
@@ -103,7 +98,9 @@ t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
 	while (*tokens && is_redirect((*tokens)->type))
 	{
 		if (!handle_redirect(cmd, tokens, mini))
+		{
 			return (NULL);
+		}
 	}
 	while (*tokens && (*tokens)->type == WORD)
 	{
@@ -118,7 +115,6 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 {
 	t_ast_node	*redirect_node;
 
-	(void)mini;
 	redirect_node = create_ast_node(AST_REDIRECT);
 	redirect_node->redirect = malloc(sizeof(t_ast_redirect));
 	redirect_node->redirect->next = NULL;
@@ -128,6 +124,11 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 	if (*tokens && (*tokens)->type == WORD)
 	{
 		redirect_node->redirect->file = ft_strdup((*tokens)->value);
+		if (!redirect_node->redirect->file)
+		{ 
+			free_ast(redirect_node);
+			return (NULL);
+    	}
 		*tokens = (*tokens)->next;
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/21 17:59:23 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/22 21:36:00 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_minishell
 	t_ast_node *ast;
 	int exit;
 	int flag;
+	int here;
 } t_minishell;
 
 typedef struct s_heredoc
@@ -172,8 +173,8 @@ char *first_processing(char *str, t_minishell *mini);
 // // void add_raw_token(t_lexer_state *state, const char *input, int *i,
 // 	t_minishell *mini);
 
-void handle_variable_expansion(t_lexer_state *state,
-							   const char *input, int *i, t_minishell *mini);
+// void handle_variable_expansion(t_lexer_state *state,
+// 							   const char *input, int *i, t_minishell *mini);
 
 t_ast_node *create_ast_node(t_ast_node_type type);
 t_ast_node *parse_command(t_token **tokens, t_minishell *mini, int i);
@@ -196,7 +197,7 @@ char *read_heredoc(const char *delim, t_minishell *mini);
 
 int handle_builtin_commands(t_ast_node *ast,
 							t_minishell *mini);
-void handle_redirection(t_ast_node *ast);
+void handle_redirection(t_ast_node *ast, t_minishell *mini);
 void handle_heredoc(t_ast_node *ast);
 t_heredoc *init_heredoc(const char *delimiter);
 char *check_directory(char *dir, char *cmd);
@@ -221,7 +222,7 @@ int is_delimiter(const char *content,
 				 size_t delimiter_length);
 int read_until_delimiter(t_heredoc *hd, t_minishell *mini);
 void free_dirs(char **dirs);
-void handle_all_redirections(t_ast_node *ast);
+void handle_all_redirections(t_ast_node *ast, t_minishell *mini);
 
 int ft_strcmp(const char *s1, const char *s2);
 int number_of_args(char **args);
