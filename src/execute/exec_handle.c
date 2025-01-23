@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/22 17:47:35 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:23:01 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 	if (fd < 0)
 	{
 		perror("open");
-		free_tokens(mini->token);
-		free_ast(mini->ast);
-		free_env(mini->env);
-		free(mini);
+		cleanup(mini);
 		exit(EXIT_FAILURE);
 	}
 	if (redirect->redirect->type == REDIRECT_IN)

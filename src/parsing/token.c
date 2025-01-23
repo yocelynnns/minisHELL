@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/22 21:04:09 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 20:44:06 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,29 @@ void	handle_spaces(const char *input, t_lexer_state *state,
 	state->start = state->i + 1;
 }
 
+void	handle_redirect_in(t_lexer_state *state, const char *input, t_minishell *mini)
+{
+	if (input[state->i + 1] == '<')
+	{
+        mini->here = 1;
+		add_token(&state->token_list, create_token(HEREDOC, "<<"));
+		state->i++;
+	}
+	else
+		add_token(&state->token_list, create_token(REDIRECT_IN, "<"));
+}
+
+void	handle_redirect_out(t_lexer_state *state, const char *input)
+{
+	if (input[state->i + 1] == '>')
+	{
+		add_token(&state->token_list, create_token(APPEND, ">>"));
+		state->i++;
+	}
+	else
+		add_token(&state->token_list, create_token(REDIRECT_OUT, ">"));
+}
+
 void	handle_redir(const char *input, t_lexer_state *state, char direction,
 		t_minishell *mini)
 {
@@ -139,26 +162,9 @@ void	handle_redir(const char *input, t_lexer_state *state, char direction,
 		free(processed_token);
 	}
 	if (direction == '<')
-	{
-		if (input[state->i + 1] == '<')
-		{
-			mini->here = 1;
-			add_token(&state->token_list, create_token(HEREDOC, "<<"));
-			state->i++;
-		}
-		else
-			add_token(&state->token_list, create_token(REDIRECT_IN, "<"));
-	}
+		handle_redirect_in(state, input, mini);
 	else if (direction == '>')
-	{
-		if (input[state->i + 1] == '>')
-		{
-			add_token(&state->token_list, create_token(APPEND, ">>"));
-			state->i++;
-		}
-		else
-			add_token(&state->token_list, create_token(REDIRECT_OUT, ">"));
-	}
+		handle_redirect_out(state, input);
 	state->start = state->i + 1;
 }
 
@@ -224,6 +230,23 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	return (0);
 }
 
+void lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
+{
+	if (input[state->i] == '$')
+		handle_dollar(input, state, mini);
+	else if ((input[state->i] == '\'' || input[state->i] == '"') && (state->i == 0 || input[state->i - 1] != '\\'))
+		handle_quotes(input, state);
+	else if (isspace(input[state->i]) && !state->quote)
+		handle_spaces(input, state, mini);
+	else if ((input[state->i] == '<' || input[state->i] == '>')
+		&& !state->quote)
+		handle_redir(input, state, input[state->i], mini);
+	else if (input[state->i] == '|' && !state->quote)
+		handle_pipe(input, state, mini);
+	else
+		state->last_token_was_pipe = 0;
+}
+
 t_token	*lexer(const char *input, t_minishell *mini)
 {
 	t_lexer_state	state;
@@ -236,19 +259,7 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	i = checkpipe(input, &state, mini);
 	while (input[state.i])
 	{
-		if (input[state.i] == '$')
-			handle_dollar(input, &state, mini);
-		else if ((input[state.i] == '\'' || input[state.i] == '"') && (state.i == 0 || input[state.i - 1] != '\\'))
-    		handle_quotes(input, &state);
-		else if (isspace(input[state.i]) && !state.quote)
-			handle_spaces(input, &state, mini);
-		else if ((input[state.i] == '<' || input[state.i] == '>')
-			&& !state.quote)
-			handle_redir(input, &state, input[state.i], mini);
-		else if (input[state.i] == '|' && !state.quote)
-			handle_pipe(input, &state, mini);
-		else
-			state.last_token_was_pipe = 0;
+		lexer_checks(input, &state, mini);
 		state.i++;
 	}
 	j = checkquote(&state, mini);
@@ -257,6 +268,20 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	process_remaining_token(input, &state, mini);
 	return (state.token_list);
 }
+
+		// if (input[state.i] == '$')
+		// 	handle_dollar(input, &state, mini);
+		// else if ((input[state.i] == '\'' || input[state.i] == '"') && (state.i == 0 || input[state.i - 1] != '\\'))
+    	// 	handle_quotes(input, &state);
+		// else if (isspace(input[state.i]) && !state.quote)
+		// 	handle_spaces(input, &state, mini);
+		// else if ((input[state.i] == '<' || input[state.i] == '>')
+		// 	&& !state.quote)
+		// 	handle_redir(input, &state, input[state.i], mini);
+		// else if (input[state.i] == '|' && !state.quote)
+		// 	handle_pipe(input, &state, mini);
+		// else
+		// 	state.last_token_was_pipe = 0;
 
 //   if (input[state.i] == '$' && (input[state.i - 1] != '=') &&
 //         (input[state.i - 1] != '\'') && (input[state.i - 2] != '=')

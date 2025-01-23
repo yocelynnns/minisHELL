@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/22 15:34:18 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:23:52 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ int	execute_left_command(t_ast_node *ast, int pipefd[2], char **env,
 		close(pipefd[0]);
 		close(pipefd[1]);
 		execute_command(ast->pipeline->left, env, mini);
-		free_tokens(mini->token);
-		free_ast(ast);
-		free_env(mini->env);
-		free(mini);
+		cleanup(mini);
 		exit(0);
 	}
 	else if (pid1 < 0)
@@ -50,10 +47,7 @@ int	execute_right_command(t_ast_node *ast, int pipefd[2], char **env,
 		close(pipefd[1]);
 		close(pipefd[0]);
 		execute_command(ast->pipeline->right, env, mini);
-		free_tokens(mini->token);
-		free_ast(ast);
-		free_env(mini->env);
-		free(mini);
+		cleanup(mini);
 		exit(0);
 	}
 	else if (pid2 < 0)

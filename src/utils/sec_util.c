@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:45:45 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/22 20:52:43 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:30:33 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ char *format_env_value(const char *env_value)
 		value = ft_substr(env_value, equal_sign - env_value + 1,
 						  ft_strlen(env_value) - (equal_sign - env_value + 1));
 		formatted_value = ft_strjoin_three(key, "=\"", value, "\"");
+		free(key);
+		free(value);
 	}
 	else
 	{
 		formatted_value = ft_strdup(env_value);
 	}
-	free(key);
-	free(value);
 	return (formatted_value);
 }
 

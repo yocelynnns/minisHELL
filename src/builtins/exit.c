@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/01/20 20:07:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:25:52 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,8 @@ int	ft_exit(char **av, t_minishell *mini)
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
 		print_exit_error(av);
-		free_tokens(mini->token);
-		free_ast(mini->ast);
-		free_env(mini->env);
 		exit_code = mini->exit;
-		free(mini);
+		cleanup(mini);
 		exit(exit_code);
 	}
 	if (av[1] && av[2])
@@ -68,11 +65,8 @@ int	ft_exit(char **av, t_minishell *mini)
 		}
 		exit(exit_code % 256);
 	}
-	free_tokens(mini->token);
-	free_ast(mini->ast);
-	free_env(mini->env);
 	exit_code = mini->exit;
-	free(mini);
+	cleanup(mini);
 	exit(exit_code);
 }
 

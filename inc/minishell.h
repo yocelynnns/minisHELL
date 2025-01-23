@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/22 21:36:00 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:22:24 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void add_token(t_token **head, t_token *new_token);
 t_token *lexer(const char *input, t_minishell *mini);
 void free_tokens(t_token *tokens);
 void print_tokens(t_token *tokens);
+void cleanup(t_minishell *mini);
 //
 // void						handle_redirect_in(t_lexer_state *state,
 // const char *input, int *i);
