@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/23 21:24:55 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:18:58 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,12 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 		cleanup(mini);
 		exit(EXIT_SUCCESS);
 	}
-	if ((ast->command->args[0] == NULL) || ((ast->command->args[0][0] == '\0') && (mini->flag == 0)))
-	{
-		cleanup(mini);
-		exit(0);
-	}
+	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
+		&& (mini->flag == 1))
+		{
+			cleanup(mini);
+			exit(0);
+		}
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
@@ -121,4 +122,4 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 }
 
 // printf("Command not found: %s\n", ast->command->args[0]);
-		// expand_variables_in_args(ast->command->args, mini.env);
+// expand_variables_in_args(ast->command->args, mini.env);

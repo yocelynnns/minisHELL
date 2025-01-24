@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/22 15:37:34 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:20:09 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,15 +112,11 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	g_sig.pid = pid;
 	waitpid(pid, status, 0);
 	g_sig.pid = 0;
-	printf("g_sig is %d\n", g_sig.exit_value);
 	if (WIFEXITED(*status))
 	{
 		g_sig.exit_value = WEXITSTATUS(*status);
 	}
 	else
 		g_sig.exit_value = g_sig.exit_value;
-	
-	printf("g_sig is %d\n", g_sig.exit_value);
-		
 	return (g_sig.exit_value);
 }
