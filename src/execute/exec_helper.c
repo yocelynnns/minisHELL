@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_helper.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/23 21:23:52 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:05:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,20 @@ int	execute_pipeline(t_ast_node *ast, char **env, t_minishell *mini)
 		return (-1);
 	}
 	pid1 = execute_left_command(ast, pipefd, env, mini);
+	pid2 = execute_right_command(ast, pipefd, env, mini);
 	if (pid1 > 0)
 	{
 		waitpid(pid1, &status, 0);
+		if (WIFEXITED(status))
+			g_sig.exit_value = WEXITSTATUS(status);
+		close(pipefd[0]);
 		close(pipefd[1]);
 	}
-	pid2 = execute_right_command(ast, pipefd, env, mini);
 	if (pid2 > 0)
 	{
 		waitpid(pid2, &status, 0);
+		if (WIFEXITED(status))
+			g_sig.exit_value = WEXITSTATUS(status);
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}

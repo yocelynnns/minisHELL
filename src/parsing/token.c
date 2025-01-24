@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/23 20:44:06 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 16:05:40 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,7 @@ void	handle_redirect_in(t_lexer_state *state, const char *input, t_minishell *mi
 {
 	if (input[state->i + 1] == '<')
 	{
-        // mini->here = 1;
-		mini->flag = 1;
+        mini->here = 1;
 		add_token(&state->token_list, create_token(HEREDOC, "<<"));
 		state->i++;
 	}

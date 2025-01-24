@@ -6,15 +6,15 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/01/24 14:16:32 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/24 17:36:49 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-t_signal g_sig = {0};
+t_signal	g_sig = {0};
 
-void sig_int_handler(int sigcode)
+void	sig_int_handler(int sigcode)
 {
 	(void)sigcode;
 	if (g_sig.pid == 0)
@@ -32,7 +32,7 @@ void sig_int_handler(int sigcode)
 	g_sig.exit_value = 130;
 }
 
-void sig_quit_handler(int sigcode)
+void	sig_quit_handler(int sigcode)
 {
 	(void)sigcode;
 	if (g_sig.pid == 0)
@@ -48,16 +48,16 @@ void sig_quit_handler(int sigcode)
 	g_sig.exit_value = 131;
 }
 
-void heredoc_sigint_handler(int sigcode)
+void	heredoc_sigint_handler(int sigcode)
 {
 	(void)sigcode;
 	ft_putstr_fd("\n", STDERR_FILENO);
 	g_sig.sigint = 1;
 	g_sig.exit_value = 130;
 }
-void set_signal_handlers(int mode)
+void	set_signal_handlers(int mode)
 {
-	struct sigaction act;
+	struct sigaction	act;
 
 	ft_memset(&act, 0, sizeof(act));
 	if (mode == INTERACTIVE)
@@ -74,8 +74,15 @@ void set_signal_handlers(int mode)
 		act.sa_handler = SIG_IGN;
 		sigaction(SIGQUIT, &act, NULL);
 	}
+	else if (mode == CHILD_PROCESS_MODE)
+	{
+		act.sa_handler = SIG_DFL;
+		sigemptyset(&act.sa_mask);
+		sigaction(SIGINT, &act, NULL);
+		sigaction(SIGQUIT, &act, NULL);
+	}
 }
-void init_signals(void)
+void	init_signals(void)
 {
 	g_sig.sigint = 0;
 	g_sig.sigquit = 0;
@@ -83,9 +90,15 @@ void init_signals(void)
 	set_signal_handlers(INTERACTIVE);
 }
 
-void handle_eof(char *line, t_minishell *mini)
+void	stop_signals(void)
 {
-	int i;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	handle_eof(char *line, t_minishell *mini)
+{
+	int	i;
 
 	if (!line)
 	{

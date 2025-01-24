@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/24 14:18:58 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/24 18:24:34 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-		if (ft_strcmp(ast->command->args[0], "exit") == 0)
-			ft_exit(ast->command->args, mini);
-		else if (ft_strcmp(ast->command->args[0], "cd") == 0)
+		// if (ft_strcmp(ast->command->args[0], "exit") == 0)
+		// ft_exit(ast->command->args, mini);
+		if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			ft_cd(ast->command->args, mini->env);
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)
 		{
@@ -61,9 +61,13 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 		}
 		else if (fork_and_execute(ast, env, mini, &status) < 0)
 			return ;
+		else if (ft_strcmp(ast->command->args[0], "exit") == 0)
+			ft_exit(ast->command->args, mini);
 	}
 	else if (ast->type == AST_PIPELINE)
+	{
 		execute_pipeline(ast, env, mini);
+	}
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini)
@@ -79,10 +83,10 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 	}
 	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
-		{
-			cleanup(mini);
-			exit(0);
-		}
+	{
+		cleanup(mini);
+		exit(0);
+	}
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);

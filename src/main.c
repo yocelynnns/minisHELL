@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/23 20:27:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 18:22:43 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ void run_shell_loop(t_minishell *mini, char **env)
 
     while (1)
     {
+        init_signals();
         input = readline("minishell$ ");
         prompt(input, mini);
         tokens = lexer(input, mini);
+        print_tokens(tokens);
         mini->token = tokens;
         if (!tokens)
         {
@@ -58,6 +60,7 @@ void run_shell_loop(t_minishell *mini, char **env)
         }
         execute_command(ast, env, mini);
         free_minishell(mini, input);
+        set_signal_handlers(CHILD_PROCESS_MODE);
     }
 }
 
@@ -100,7 +103,6 @@ int main(int ac, char **av, char **env)
         return (EXIT_FAILURE);
 
     print_welcome_message();
-    init_signals();
     run_shell_loop(mini, env);
     free_env(mini->env);
     free(mini);

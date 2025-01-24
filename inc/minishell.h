@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/24 15:40:12 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/24 17:27:04 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef enum e_signal_mode
 {
 	INTERACTIVE,
 	HEREDOC_MODE,
+	CHILD_PROCESS_MODE,
 }							t_signal_mode;
 
 typedef enum
@@ -282,7 +283,7 @@ char						*concatenate_parts(char *expanded_arg,
 								char *var_value, char *remaining_arg);
 char						*get_env_value(const char *key, t_env *env);
 char						*ft_strncpy(char *dest, char *src, unsigned int n);
-long						ft_atol(const char *str, t_minishell *mini);
+long						ft_atol(char *str, t_minishell *mini);
 void						print_exit_error(char *av);
 char						*ft_strjoin_three(const char *s1, const char *s2,
 								const char *s3, const char *s4);
@@ -290,5 +291,6 @@ char						*format_env_value(const char *env_value);
 int							count_cmds(t_token *token);
 void						set_signal_handlers(int mode);
 void						heredoc_sigint_handler(int sigcode);
+void stop_signals(void);
 
 #endif

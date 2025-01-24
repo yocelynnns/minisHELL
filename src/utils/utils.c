@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:32:08 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/24 15:33:51 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/24 16:03:34 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n)
 	return (dest);
 }
 
-int check_limit(int sign, unsigned long long result, t_minishell *mini, const char *av)
+int check_limit(int sign, unsigned long long result, t_minishell *mini,char *av)
 {
 	if ((sign == 1 && result > LONG_MAX)
 		|| (sign == -1 && result > -(unsigned long)LONG_MIN))
@@ -96,7 +96,7 @@ int check_limit(int sign, unsigned long long result, t_minishell *mini, const ch
 	}
 	return 0;
 }
-long	ft_atol(const char *str, t_minishell *mini)
+long	ft_atol(char *str, t_minishell *mini)
 {
 	unsigned long long	result;
 	int		sign;

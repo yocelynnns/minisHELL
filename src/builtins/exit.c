@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/01/24 15:34:26 by hthant           ###   ########.fr       */
+/*   Updated: 2025/01/24 16:37:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,36 +39,29 @@ int	check_is_number(char *str)
 
 int	ft_exit(char **av, t_minishell *mini)
 {
-	long	exit_code;
-
-	ft_putstr_fd("exit\n", STDERR);
-	g_sig.exit_value = 0;
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
-		print_exit_error(av[1]); // Custom function to handle exit error printing
-		cleanup(mini);        // Cleanup before exit
+		ft_putstr_fd("exit a\n", STDERR);
+		print_exit_error(av[1]);
+		cleanup(mini);
 		exit(2);
 	}
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		g_sig.exit_value = 1; // Set exit value to 1 to indicate an error
-		return (1);           // Return 1 instead of exiting immediately
+		g_sig.exit_value = 1;
+		return (1);
 	}
 	if (av[1])
 	{
-		exit_code = ft_atol(av[1], mini);
-		// if (exit_code > 9223372036854775807 || exit_code < -9223372036854775807 - 1)
-		// {
-		// 	print_exit_error(av); // Print an appropriate error message
-		// 	cleanup(mini);        // Cleanup before exiting
-		// 	exit(2);
-		// }
-		exit(exit_code % 256);
+		ft_putstr_fd("exit\n", STDERR);
+		g_sig.exit_value = ft_atol(av[1], mini);
+		printf("eixt code is %d\n", g_sig.exit_value);
+		exit(g_sig.exit_value % 256);
 	}
-	exit_code = g_sig.exit_value;
-	cleanup(mini); // Cleanup before exiting
-	exit(exit_code % 256);
+	printf("hi\n");
+	cleanup(mini);
+	exit(g_sig.exit_value % 256);
 }
 
 int	add_env_node(char *new_value, t_env **env)

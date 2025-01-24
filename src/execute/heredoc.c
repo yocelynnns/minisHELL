@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/22 21:34:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:32:28 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	is_delimiter(const char *content, const char *delimiter,
 int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 {
 	ssize_t	bytes_read;
-	(void)mini;
 
+	(void)mini;
 	set_signal_handlers(HEREDOC_MODE);
 	while (1)
 	{
@@ -58,6 +58,7 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 			g_sig.exit_value = g_sig.exit_value;
 			g_sig.sigint = 0;
 			set_signal_handlers(INTERACTIVE);
+			// stop_signals();
 			return (-1);
 		}
 		if (bytes_read < 0)
@@ -65,11 +66,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 			perror("read");
 			g_sig.exit_value = 1;
 			set_signal_handlers(INTERACTIVE);
+			// stop_signals();
 			return (-1);
 		}
 		else if (bytes_read == 0)
 		{
 			set_signal_handlers(INTERACTIVE);
+			// stop_signals();
 			return (-1);
 		}
 		hd->content[hd->total_length + bytes_read] = '\0';
@@ -83,11 +86,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 					&hd->current_size);
 			if (!hd->content)
 			{
-				return (-1);
+				// stop_signals();
 				set_signal_handlers(INTERACTIVE);
+				return (-1);
 			}
 		}
 	}
+	// stop_signals();
 	set_signal_handlers(INTERACTIVE);
 	return (0);
 }
