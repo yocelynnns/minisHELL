@@ -47,6 +47,7 @@ int	is_delimiter(const char *content, const char *delimiter,
 int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 {
 	ssize_t	bytes_read;
+	(void)mini;
 
 	set_signal_handlers(HEREDOC_MODE);
 	while (1)
@@ -54,7 +55,7 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
 		if (g_sig.sigint)
 		{
-			mini->exit = g_sig.exit_value;
+			g_sig.exit_value = g_sig.exit_value;
 			g_sig.sigint = 0;
 			set_signal_handlers(INTERACTIVE);
 			return (-1);
@@ -62,7 +63,7 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 		if (bytes_read < 0)
 		{
 			perror("read");
-			mini->exit = 1;
+			g_sig.exit_value = 1;
 			set_signal_handlers(INTERACTIVE);
 			return (-1);
 		}
@@ -102,13 +103,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 		if (g_sig.sigint)
 // 		{
 // 			g_sig.sigint = 0;
-// 			mini->exit = g_sig.exit_value;
+// 			g_sig.exit_value = g_sig.exit_value;
 // 			return (-1);
 // 		}
 // 		if (bytes_read < 0)
 // 		{
 // 			perror("read");
-// 			mini->exit = 1;
+// 			g_sig.exit_value = 1;
 // 			return (-1);
 // 		}
 // 		else if (bytes_read == 0)
@@ -127,12 +128,12 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 					&hd->current_size);
 // 			if (!hd->content)
 // 			{
-// 				mini->exit = 1;
+// 				g_sig.exit_value = 1;
 // 				return (-1);
 // 			}
 // 		}
 // 	}
-// 	mini->exit = 0;
+// 	g_sig.exit_value = 0;
 // 	return (0);
 // }
 

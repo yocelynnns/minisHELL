@@ -89,7 +89,7 @@ void handle_eof(char *line, t_minishell *mini)
 
 	if (!line)
 	{
-		i = mini->exit;
+		i = g_sig.exit_value;
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
 		free_env(mini->env);
 		free(mini);

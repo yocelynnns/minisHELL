@@ -67,11 +67,12 @@ void	init_lexstate(t_lexer_state *state)
 
 int	checkquote(t_lexer_state *state, t_minishell *mini)
 {
+	(void)mini;
 	if (state->quote)
 	{
 		printf("Error: Unclosed quote '%c'\n", state->quote);
 		free_tokens(state->token_list);
-		mini->exit = 2;
+		g_sig.exit_value = 2;
 		return (1);
 	}
 	return (0);
@@ -80,12 +81,13 @@ int	checkquote(t_lexer_state *state, t_minishell *mini)
 void	handle_dollar(const char *input, t_lexer_state *state,
 		t_minishell *mini)
 {
+	(void)mini;
 	char	*status_str;
 		char *empty;
 
 	if (input[state->i + 1] == '?')
 	{
-		status_str = ft_itoa(mini->exit);
+		status_str = ft_itoa(g_sig.exit_value);
 		add_token(&state->token_list, create_token(WORD, status_str));
 		free(status_str);
 		state->i++;
@@ -128,7 +130,8 @@ void	handle_redirect_in(t_lexer_state *state, const char *input, t_minishell *mi
 {
 	if (input[state->i + 1] == '<')
 	{
-        mini->here = 1;
+        // mini->here = 1;
+		mini->flag = 1;
 		add_token(&state->token_list, create_token(HEREDOC, "<<"));
 		state->i++;
 	}
@@ -179,7 +182,7 @@ void	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 			"Error: Invalid sequence of consecutive '|' operators\n");
 		free_tokens(state->token_list);
 		state->token_list = NULL;
-		mini->exit = 2;
+		g_sig.exit_value = 2;
 	}
 	state->last_token_was_pipe = 1;
 	if (state->i > state->start)
@@ -212,10 +215,11 @@ void	process_remaining_token(const char *input, t_lexer_state *state,
 
 int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 {
+	(void)mini;
 	if (input[state->i] == '|' && input[state->i + 1] != '|')
 	{
 		printf("Error: Syntax error near unexpected token `|'\n");
-		mini->exit = 2;
+		g_sig.exit_value = 2;
 		free_tokens(state->token_list);
 		return (1);
 	}
@@ -223,7 +227,7 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 			&& (input[state->i + 1] == '"' || input[state->i + 1] == '\''))
 	{
 		printf("Command not found: ''\n");
-		mini->exit = 127;
+		g_sig.exit_value = 127;
 		free_tokens(state->token_list);
 		return (1);
 	}

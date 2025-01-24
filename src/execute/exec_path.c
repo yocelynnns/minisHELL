@@ -112,11 +112,15 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	g_sig.pid = pid;
 	waitpid(pid, status, 0);
 	g_sig.pid = 0;
+	printf("g_sig is %d\n", g_sig.exit_value);
 	if (WIFEXITED(*status))
 	{
-		mini->exit = WEXITSTATUS(*status);
+		g_sig.exit_value = WEXITSTATUS(*status);
 	}
 	else
-		mini->exit = g_sig.exit_value;
-	return (mini->exit);
+		g_sig.exit_value = g_sig.exit_value;
+	
+	printf("g_sig is %d\n", g_sig.exit_value);
+		
+	return (g_sig.exit_value);
 }

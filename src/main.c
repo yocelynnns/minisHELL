@@ -79,7 +79,7 @@ t_minishell *init_minishell(char **env)
     mini = malloc(sizeof(t_minishell));
     if (!mini)
         return (NULL);
-    mini->exit = 0;
+    g_sig.exit_value = 0;
     if (env_init(mini, env) == ERROR)
     {
         fprintf(stderr, "Error: Failed to initialize environment variables\n");
@@ -105,7 +105,7 @@ int main(int ac, char **av, char **env)
     free_env(mini->env);
     free(mini);
 
-    return (mini->exit);
+    return (g_sig.exit_value);
 }
 
 // int main(int ac, char **av, char **env)
@@ -118,7 +118,7 @@ int main(int ac, char **av, char **env)
 // 	if (!mini)
 // 		return 1;
 
-// 	mini->exit = 0;
+// 	g_sig.exit_value = 0;
 
 // 	(void)ac;
 // 	(void)av;
@@ -170,5 +170,5 @@ int main(int ac, char **av, char **env)
 // 	}
 // 	// // Free the environment
 // 	free_env(mini->env);
-// 	return (mini->exit);
+// 	return (g_sig.exit_value);
 // }

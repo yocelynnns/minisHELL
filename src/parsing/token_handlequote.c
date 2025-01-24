@@ -98,7 +98,7 @@ char *handle_double_quote(t_process *proc)
     {
         if (proc->str[proc->i] == '\\' && proc->str[proc->i + 1] != '\'')
             proc->result = handle_backslash(proc);
-        else if (proc->str[proc->i] == '$' && proc->str[proc->i - 1] != '\\' && proc->mini->here)
+        else if (proc->str[proc->i] == '$' && proc->str[proc->i - 1] != '\\')
             proc->result = expand_variable(proc);
         else if (proc->str[proc->i] == proc->in_quote)
         {
@@ -116,7 +116,7 @@ char *process_character(t_process *proc)
 {
     if (proc->str[proc->i] == '\\' && !proc->in_quote)
         proc->result = handle_backslash(proc);
-    else if (proc->str[proc->i] == '$' && proc->mini->here)
+    else if (proc->str[proc->i] == '$')
         proc->result = expand_variable(proc);
     else if (proc->str[proc->i] == '\'')
         proc->result = handle_single_quote(proc);
@@ -136,8 +136,8 @@ char *first_processing(char *str, t_minishell *mini)
     proc.in_quote = 0;
     proc.result = NULL;
     proc.mini = mini;
-    proc.mini->here = 0;
-    mini->flag = 0;
+    // proc.mini->here = 0;
+    mini->flag = 0; 
 
     while (proc.str[proc.i])
         process_character(&proc);

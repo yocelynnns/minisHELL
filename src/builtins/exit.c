@@ -41,18 +41,18 @@ int	ft_exit(char **av, t_minishell *mini)
 	long	exit_code;
 
 	ft_putstr_fd("exit\n", STDERR);
-	mini->exit = 0;
+	g_sig.exit_value = 0;
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
 		print_exit_error(av);
-		exit_code = mini->exit;
+		exit_code = g_sig.exit_value;
 		cleanup(mini);
 		exit(exit_code);
 	}
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		mini->exit = 1;
+		g_sig.exit_value = 1;
 		return 1;
 	}
 	if (av[1])
@@ -65,7 +65,7 @@ int	ft_exit(char **av, t_minishell *mini)
 		}
 		exit(exit_code % 256);
 	}
-	exit_code = mini->exit;
+	exit_code = g_sig.exit_value;
 	cleanup(mini);
 	exit(exit_code);
 }

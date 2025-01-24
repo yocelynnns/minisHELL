@@ -29,10 +29,11 @@ t_ast_node	*create_ast_node(t_ast_node_type type)
 
 static int handle_pipe_error(t_token **tokens, t_minishell *mini)
 {
+    (void)mini;
     if ((*tokens)->next == NULL)
     {
         printf("Error: Syntax error near unexpected token '|'\n");
-        mini->exit = 2;
+        g_sig.exit_value = 2;
         return (0);
     }
     return (1);
@@ -129,6 +130,7 @@ t_ast_node *parse_command(t_token **tokens, t_minishell *mini, int i)
 
 t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 {
+    (void)mini;
 	t_ast_node	*redirect_node;
 
 	redirect_node = create_ast_node(AST_REDIRECT);
@@ -150,7 +152,7 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 	{
 		printf("Error: Syntax error near unexpected token `newline'\n");
 		free_ast(redirect_node);
-		mini->exit = 2;
+		g_sig.exit_value = 2;
 		return (NULL);
 	}
 	return (redirect_node);
@@ -170,7 +172,7 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 // 		if ((*tokens)->next == NULL)
 //         {
 //             printf("Error: Syntax error near unexpected token '|'\n");
-//             mini->exit = 2;
+//             g_sig.exit_value = 2;
 //             return (NULL);
 //         }
 // 		*tokens = (*tokens)->next;

@@ -77,10 +77,10 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 		cleanup(mini);
 		exit(EXIT_SUCCESS);
 	}
-	if ((ast->command->args[0] == NULL) || ((ast->command->args[0][0] == '\0') && (mini->flag == 1)))
+	if ((ast->command->args[0] == NULL) || ((ast->command->args[0][0] == '\0') && (mini->flag == 0)))
 	{
 		cleanup(mini);
-		exit(EXIT_SUCCESS);
+		exit(0);
 	}
 	if (is_directory(ast->command->args[0]))
 	{
@@ -102,7 +102,7 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		if (execve(executable_path, ast->command->args, env) == -1)
 		{
 			perror("execve");
-			exit(mini->exit);
+			exit(g_sig.exit_value);
 			return (-1);
 		}
 	}
@@ -111,8 +111,8 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 		write(2, "Command not found: ", 19);
 		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
 		write(2, "\n", 1);
-		mini->exit = 127;
-		i = mini->exit;
+		g_sig.exit_value = 127;
+		i = g_sig.exit_value;
 		cleanup(mini);
 		exit(i);
 		return (-1);
