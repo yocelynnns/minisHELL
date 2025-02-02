@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/24 16:05:40 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/02 23:44:04 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ void	process_remaining_token(const char *input, t_lexer_state *state,
 
 	if (state->i > state->start)
 	{
-		raw_token = strndup(input + state->start, state->i - state->start);
+		raw_token = ft_strndup(input + state->start, state->i - state->start);
 		processed_token = first_processing(raw_token, mini);
 		if (processed_token)
 			add_token(&state->token_list, create_token(WORD, processed_token));
@@ -222,8 +222,8 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 		free_tokens(state->token_list);
 		return (1);
 	}
-	if ((input[state->i] == '"' || input[state->i] == '\'')
-			&& (input[state->i + 1] == '"' || input[state->i + 1] == '\''))
+	if (((input[state->i] == '"' && input[state->i + 1] == '"') ||
+	(input[state->i] == '\'' && input[state->i + 1] == '\'')) && (input[state->i + 2] == '\0'))
 	{
 		printf("Command not found: ''\n");
 		g_sig.exit_value = 127;

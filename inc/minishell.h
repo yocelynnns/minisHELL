@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/01/24 17:27:04 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/02 23:31:29 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,17 @@ typedef enum
 	HEREDOC,
 	APPEND
 }							t_token_type;
+
+typedef struct s_minishell t_minishell;
+
+typedef struct s_process
+{
+    char *str;
+    int         i;
+    int         in_quote;
+    char        *result;
+    t_minishell *mini;
+}               t_process;
 
 typedef struct s_token
 {
@@ -118,6 +129,7 @@ typedef struct s_minishell
 	t_env					*env;
 	t_token					*token;
 	t_ast_node				*ast;
+	t_process *proc;
 	int						flag;
 	int						here;
 }							t_minishell;

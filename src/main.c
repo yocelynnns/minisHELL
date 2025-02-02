@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/24 18:29:51 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/03 00:16:06 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void run_shell_loop(t_minishell *mini, char **env)
         input = readline("minishell$ ");
         prompt(input, mini);
         tokens = lexer(input, mini);
-        print_tokens(tokens);
+        // print_tokens(tokens);
         mini->token = tokens;
         if (!tokens)
         {

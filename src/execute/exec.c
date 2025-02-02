@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/24 18:24:34 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/03 00:23:44 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 
 	if (ast->type == AST_COMMAND)
 	{
-		// if (ft_strcmp(ast->command->args[0], "exit") == 0)
-		// ft_exit(ast->command->args, mini);
 		if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			ft_cd(ast->command->args, mini->env);
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)
