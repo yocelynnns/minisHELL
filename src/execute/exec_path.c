@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/24 17:28:02 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/03 15:10:36 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,16 +110,10 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		return (-1);
 	}
 	g_sig.pid = pid;
-	if (g_sig.pid == 0)
-		set_signal_handlers(CHILD_PROCESS_MODE);
-	else
-	{
-		waitpid(g_sig.pid, status, 0);
-		g_sig.pid = 0;
-	}
+	waitpid(g_sig.pid, status, 0);
+	set_signal_handlers(INTERACTIVE);
+	g_sig.pid = 0;
 	if (WIFEXITED(*status))
-	{
 		g_sig.exit_value = WEXITSTATUS(*status);
-	}
 	return (g_sig.exit_value);
 }

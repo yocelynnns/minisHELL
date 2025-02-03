@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/03 00:16:06 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/03 15:10:39 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void run_shell_loop(t_minishell *mini, char **env)
         }
         execute_command(ast, env, mini);
         free_minishell(mini, input);
-        set_signal_handlers(CHILD_PROCESS_MODE);
     }
 }
 

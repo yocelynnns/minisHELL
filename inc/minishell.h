@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/02 23:31:29 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/03 14:15:15 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,16 @@ typedef enum
 	APPEND
 }							t_token_type;
 
-typedef struct s_minishell t_minishell;
+typedef struct s_minishell	t_minishell;
 
 typedef struct s_process
 {
-    char *str;
-    int         i;
-    int         in_quote;
-    char        *result;
-    t_minishell *mini;
-}               t_process;
+	char					*str;
+	int						i;
+	int						in_quote;
+	char					*result;
+	t_minishell				*mini;
+}							t_process;
 
 typedef struct s_token
 {
@@ -129,7 +129,7 @@ typedef struct s_minishell
 	t_env					*env;
 	t_token					*token;
 	t_ast_node				*ast;
-	t_process *proc;
+	t_process				*proc;
 	int						flag;
 	int						here;
 }							t_minishell;
@@ -303,6 +303,7 @@ char						*format_env_value(const char *env_value);
 int							count_cmds(t_token *token);
 void						set_signal_handlers(int mode);
 void						heredoc_sigint_handler(int sigcode);
-void stop_signals(void);
+void						stop_signals(void);
+void	child_sigint_handler(int sigcode);
 
 #endif
