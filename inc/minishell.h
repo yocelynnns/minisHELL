@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/03 14:15:15 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/03 18:59:34 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,9 +284,6 @@ int							ft_unset(char **args, t_minishell *mini);
 char						*ft_strcpy(char *s1, char *s2);
 char						*ft_strcat(char *dest, char *src);
 char						*ft_strndup(const char *s, size_t n);
-
-void						sig_int_handler(int code);
-void						sig_quit_handler(int code);
 void						init_signals(void);
 void						handle_eof(char *line, t_minishell *mini);
 char						*expand_argument(char *arg, t_env *env);
@@ -301,9 +298,10 @@ char						*ft_strjoin_three(const char *s1, const char *s2,
 								const char *s3, const char *s4);
 char						*format_env_value(const char *env_value);
 int							count_cmds(t_token *token);
-void						set_signal_handlers(int mode);
-void						heredoc_sigint_handler(int sigcode);
-void						stop_signals(void);
-void	child_sigint_handler(int sigcode);
+void						ignore_sigquit(void);
+void						set_signals_noninteractive(void);
+void						signal_print_newline(int signal);
+void						set_signals_interactive(void);
+void						signal_reset_prompt(int signo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/03 15:10:36 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/03 18:59:29 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,9 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	pid = fork();
 	if (pid == 0)
 	{
+		setpgid(0, 0);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (execute_in_child(ast, env, mini) == -1)
 			exit(EXIT_FAILURE);
 	}
@@ -111,7 +114,6 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	}
 	g_sig.pid = pid;
 	waitpid(g_sig.pid, status, 0);
-	set_signal_handlers(INTERACTIVE);
 	g_sig.pid = 0;
 	if (WIFEXITED(*status))
 		g_sig.exit_value = WEXITSTATUS(*status);
