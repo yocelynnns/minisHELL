@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/03 18:59:29 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 13:52:38 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	char	*command;
 	char	*executable_path;
 
+	// if (!ast || !ast->command || !ast->command->args || !ast->command->args[0])
+    //     return NULL;
 	command = ast->command->args[0];
 	if (command[0] == '/' || command[0] == '.')
 	{

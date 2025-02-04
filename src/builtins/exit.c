@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/01/24 16:37:42 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 14:47:14 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	ft_exit(char **av, t_minishell *mini)
 		printf("eixt code is %d\n", g_sig.exit_value);
 		exit(g_sig.exit_value % 256);
 	}
-	printf("hi\n");
+	printf("exit\n");
 	cleanup(mini);
 	exit(g_sig.exit_value % 256);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/03 15:10:39 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 14:13:26 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void run_shell_loop(t_minishell *mini, char **env)
             continue;
         }
         ast = build_ast(tokens, mini);
+        // print_ast(ast, 0);
         mini->ast = ast;
         if (!ast)
         {
