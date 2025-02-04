@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 15:24:11 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:24:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	signal_print_newline(int signal)
 {
 	(void)signal;
 	g_sig.sigint = 1;
+	g_sig.exit_value = 130;
 	ft_putstr_fd("\n", STDOUT_FILENO);
 	rl_on_new_line();
 }
