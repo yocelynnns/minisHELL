@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/04 19:30:21 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 20:15:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	int	status;
 	int org_fd[2];
-	
+
 	org_fd[0] = dup(STDIN_FILENO);
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast->type == AST_COMMAND)
@@ -74,7 +74,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	dup2(org_fd[1], STDOUT_FILENO);
 	close(org_fd[0]);
 	close(org_fd[1]);
-	
+
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini)
@@ -86,7 +86,8 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 	if (handle_builtin_commands(ast, mini) == 1)
 	{
 		cleanup(mini);
-		exit(EXIT_SUCCESS);
+		return;
+		// exit(EXIT_SUCCESS);
 	}
 	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))

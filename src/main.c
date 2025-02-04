@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/04 19:42:58 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 20:05:51 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ int main(int ac, char **av, char **env)
     run_shell_loop(mini, env);
     free_env(mini->env);
     free(mini);
+    init_signals();
 
     return (g_sig.exit_value);
 }
