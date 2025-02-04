@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/04 20:51:30 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/05 01:02:06 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,12 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 
 	if (handle_builtin_commands(ast, mini) == 0)
 		return g_sig.exit_value;
+	if (is_directory(ast->command->args[0]))
+	{
+		g_sig.exit_value = 126;
+		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
+		return g_sig.exit_value;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
@@ -113,6 +119,9 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		perror("fork");
 		return (-1);
 	}
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
 	g_sig.pid = pid;
 	waitpid(g_sig.pid, status, 0);
 	g_sig.pid = 0;

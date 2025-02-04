@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/04 21:11:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/05 00:45:35 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,8 @@ typedef struct s_var_process
 }							t_var_process;
 
 extern t_signal				g_sig;
+
+int	is_directory(const char *path);
 void stop_signals(void);
 void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd);
 t_token						*create_token(t_token_type type, const char *value);
