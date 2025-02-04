@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 15:24:54 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:47:25 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,17 @@ void	set_signals_heredoc(void)
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &signal_print_newline;
 	sigaction(SIGINT, &act, NULL);
-	ft_memset(&act, 0, sizeof(act));
-	act.sa_handler = &signal_print_newline;
-	sigaction(SIGQUIT, &act, NULL);
-}
-
-void	ignore_sigquit(void)
-{
-	struct sigaction	act;
 
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &act, NULL);
+}
+
+void	ignore_sigquit(int signo)
+{
+	(void) signo;
+	ft_putstr_fd("\033[2K\r", STDERR_FILENO);
+	ft_putstr_fd("> ",STDERR);
 }
 
 void	init_signals(void)

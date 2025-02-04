@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/04 15:21:03 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:49:01 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,7 @@ char						*ft_strjoin_three(const char *s1, const char *s2,
 								const char *s3, const char *s4);
 char						*format_env_value(const char *env_value);
 int							count_cmds(t_token *token);
-void						ignore_sigquit(void);
+void						ignore_sigquit(int signo);
 void						set_signals_heredoc(void);
 void						signal_print_newline(int signal);
 void						set_signals_interactive(void);
