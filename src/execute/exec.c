@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/04 20:15:42 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 21:08:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,9 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast->type == AST_COMMAND)
 	{
-		cmdchecks(ast, mini);
-		// if (ast->command->redirect)
-		// 	handle_all_redirections(ast, mini);
-		// if (ft_strcmp(ast->command->args[0], "cd") == 0)
-		// 	ft_cd(ast->command->args, mini->env);
-		// else if (ft_strcmp(ast->command->args[0], "export") == 0)
-		// {
-		// 	if (!ast->command->redirect)
-		// 		ft_export(ast->command->args, &mini->env);
-		// }
-		// else if (ft_strcmp(ast->command->args[0], "unset") == 0)
-		// {
-		// 	if (!ast->command->redirect)
-		// 		ft_unset(ast->command->args, mini);
-		// }
+		cmdchecks(ast, mini, org_fd);
 		if (fork_and_execute(ast, env, mini, &status) < 0)
 			return ;
-		// else if (ft_strcmp(ast->command->args[0], "exit") == 0)
-		// 	ft_exit(ast->command->args, mini);
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(ast, env, mini);
@@ -74,32 +58,26 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	dup2(org_fd[1], STDOUT_FILENO);
 	close(org_fd[0]);
 	close(org_fd[1]);
-
 }
 
-void	cmdchecks(t_ast_node *ast, t_minishell *mini)
+void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 {
 	if (ast->command->redirect)
 		handle_all_redirections(ast, mini);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
-	if (handle_builtin_commands(ast, mini) == 1)
-	{
-		cleanup(mini);
-		return;
-		// exit(EXIT_SUCCESS);
-	}
 	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
 	{
+		close(org_fd[0]);
+		close(org_fd[1]);
 		cleanup(mini);
-		exit(0);
+		return ;
 	}
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
-		cleanup(mini);
-		exit(126);
+		return ;
 	}
 }
 
@@ -108,7 +86,6 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	char	*executable_path;
 	int		i;
 
-	// cmdchecks(ast, mini);
 	if (ast->command->args[0] == NULL)
 		exit(EXIT_SUCCESS);
 	executable_path = get_executable_path(ast, mini);
@@ -134,6 +111,23 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	}
 	return (0);
 }
+
+		// if (ast->command->redirect)
+		// 	handle_all_redirections(ast, mini);
+		// if (ft_strcmp(ast->command->args[0], "cd") == 0)
+		// 	ft_cd(ast->command->args, mini->env);
+		// else if (ft_strcmp(ast->command->args[0], "export") == 0)
+		// {
+		// 	if (!ast->command->redirect)
+		// 		ft_export(ast->command->args, &mini->env);
+		// }
+		// else if (ft_strcmp(ast->command->args[0], "unset") == 0)
+		// {
+		// 	if (!ast->command->redirect)
+		// 		ft_unset(ast->command->args, mini);
+		// }
+		// else if (ft_strcmp(ast->command->args[0], "exit") == 0)
+		// 	ft_exit(ast->command->args, mini);
 
 // printf("Command not found: %s\n", ast->command->args[0]);
 // expand_variables_in_args(ast->command->args, mini.env);

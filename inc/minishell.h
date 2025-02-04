@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/04 19:43:13 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 21:11:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ typedef struct s_var_process
 
 extern t_signal				g_sig;
 void stop_signals(void);
-void	cmdchecks(t_ast_node *ast, t_minishell *mini);
+void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd);
 t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
 t_token						*lexer(const char *input, t_minishell *mini);

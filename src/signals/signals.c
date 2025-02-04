@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 20:14:05 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 20:20:23 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,10 @@ t_signal	g_sig = {0};
 void	signal_reset_prompt(int signo)
 {
 	(void)signo;
-	if (g_sig.pid == 0)
-	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	else
-	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-	}
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 	g_sig.sigint = 1;
 	g_sig.exit_value = 130;
 }
@@ -35,16 +28,9 @@ void	signal_reset_prompt(int signo)
 void	handle_sigquit(int signo)
 {
 	(void)signo;
-	if (g_sig.pid == 0)
-	{
-		ft_putstr_fd("\033[2K\r", STDERR_FILENO);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else
-	{
-		ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-	}
+	ft_putstr_fd("\033[2K\r", STDERR_FILENO);
+	rl_on_new_line();
+	rl_redisplay();
 	g_sig.exit_value = 131;
 }
 

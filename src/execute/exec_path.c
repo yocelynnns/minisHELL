@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/04 20:11:00 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 20:51:30 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	pid_t	pid;
 	int		signal;
 
+	if (handle_builtin_commands(ast, mini) == 0)
+		return g_sig.exit_value;
 	pid = fork();
 	if (pid == 0)
 	{
