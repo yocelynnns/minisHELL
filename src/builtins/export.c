@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/03 13:43:23 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:05:16 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,23 @@ int	add_or_update_env(char *arg, t_env **env)
 		return (print_export_error(-1, arg));
 	if (!new_value)
 	{
-		if (!key_exists_in_env(key, *env))
+		if (key_exists_in_env(key, *env))
 		{
 			free(key);
-			return (print_export_error(-3, arg));
+			return (SUCCESS);
 		}
-		free(key);
-		return (SUCCESS);
+		new_value = ft_strjoin(key, "=");
+		if (!new_value)
+		{
+			free(key);
+			return (print_export_error(-1, arg));
+		}
 	}
 	if (update_env(key, new_value, env) == SUCCESS)
 	{
 		free(key);
 		return (SUCCESS);
 	}
-	free(key);
 	return (add_env(new_value, env));
 }
 
@@ -92,6 +95,8 @@ int	add_env(char *new_value, t_env **env)
 	size_t	key_len;
 	char	*delimiter;
 
+	if (!new_value)
+		return (ERROR);
 	delimiter = ft_strchr(new_value, '=');
 	if (delimiter)
 		key_len = delimiter - new_value;
