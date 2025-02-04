@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/04 15:05:16 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:11:07 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	print_export_error(int error, const char *arg)
 
 char	*parse_key_value(char *arg, char **key)
 {
-	char	*new_value;
 	size_t	key_len;
 
 	if (ft_strchr(arg, '='))
@@ -43,20 +42,8 @@ char	*parse_key_value(char *arg, char **key)
 	if (!(*key))
 		return (NULL);
 	if (ft_strchr(arg, '='))
-	{
-		if (arg[key_len + 1] == '\0')
-			new_value = ft_strdup(arg);
-		else
-			new_value = ft_strdup(arg);
-	}
-	else
-		new_value = NULL;
-	if (!new_value && ft_strchr(arg, '='))
-	{
-		free(*key);
-		return (NULL);
-	}
-	return (new_value);
+		return (ft_strdup(arg));
+	return (NULL);
 }
 
 int	add_or_update_env(char *arg, t_env **env)
@@ -74,12 +61,13 @@ int	add_or_update_env(char *arg, t_env **env)
 			free(key);
 			return (SUCCESS);
 		}
-		new_value = ft_strjoin(key, "=");
-		if (!new_value)
+		if (add_env_node(ft_strdup(key), env) == ERROR)
 		{
 			free(key);
 			return (print_export_error(-1, arg));
 		}
+		free(key);
+		return (SUCCESS);
 	}
 	if (update_env(key, new_value, env) == SUCCESS)
 	{
