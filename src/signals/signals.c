@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 15:47:25 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 19:42:44 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,9 @@ void	handle_eof(char *line, t_minishell *mini)
 		free(mini);
 		exit(i);
 	}
+}
+void stop_signals(void)
+{
+	signal(SIGINT,SIG_IGN);
+	signal(SIGQUIT,SIG_IGN);
 }

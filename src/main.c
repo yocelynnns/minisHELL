@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/04 14:13:26 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 19:42:58 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void run_shell_loop(t_minishell *mini, char **env)
     {
         init_signals();
         input = readline("minishell$ ");
+        stop_signals();
         prompt(input, mini);
         tokens = lexer(input, mini);
         // print_tokens(tokens);
