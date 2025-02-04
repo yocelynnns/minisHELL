@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/03 18:11:44 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:20:48 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 	ssize_t	bytes_read;
 
 	(void)mini;
-	set_signals_noninteractive();
+	set_signals_heredoc();
 	while (1)
 	{
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);

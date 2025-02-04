@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/03 18:55:28 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/04 15:24:11 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	signal_reset_prompt(int signo)
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
+	g_sig.sigint = 1;
 	g_sig.exit_value = 130;
 }
 
@@ -62,16 +63,20 @@ void	set_signals_interactive(void)
 void	signal_print_newline(int signal)
 {
 	(void)signal;
+	g_sig.sigint = 1;
+	ft_putstr_fd("\n", STDOUT_FILENO);
 	rl_on_new_line();
 }
 
-void	set_signals_noninteractive(void)
+void	set_signals_heredoc(void)
 {
 	struct sigaction	act;
 
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &signal_print_newline;
 	sigaction(SIGINT, &act, NULL);
+	ft_memset(&act, 0, sizeof(act));
+	act.sa_handler = &signal_print_newline;
 	sigaction(SIGQUIT, &act, NULL);
 }
 
