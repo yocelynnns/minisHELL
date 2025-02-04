@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/04 13:52:38 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 17:52:51 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,8 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	char	*command;
 	char	*executable_path;
 
-	// if (!ast || !ast->command || !ast->command->args || !ast->command->args[0])
-    //     return NULL;
 	command = ast->command->args[0];
-	if (command[0] == '/' || command[0] == '.')
+	if (command && (command[0] == '/' || command[0] == '.'))
 	{
 		if (access(command, X_OK) == 0)
 			return (command);
@@ -103,9 +101,6 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	pid = fork();
 	if (pid == 0)
 	{
-		setpgid(0, 0);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
 		if (execute_in_child(ast, env, mini) == -1)
 			exit(EXIT_FAILURE);
 	}

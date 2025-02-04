@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/03 00:23:44 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/04 18:01:22 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,14 @@ int	is_directory(const char *path)
 void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	int	status;
-
+	int org_fd[2];
+	
+	org_fd[0] = dup(STDIN_FILENO);
+	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast->type == AST_COMMAND)
 	{
+		if (ast->command->redirect)
+			handle_all_redirections(ast, mini);
 		if (ft_strcmp(ast->command->args[0], "cd") == 0)
 			ft_cd(ast->command->args, mini->env);
 		else if (ft_strcmp(ast->command->args[0], "export") == 0)
@@ -59,19 +64,24 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 		}
 		else if (fork_and_execute(ast, env, mini, &status) < 0)
 			return ;
-		else if (ft_strcmp(ast->command->args[0], "exit") == 0)
-			ft_exit(ast->command->args, mini);
+		// else if (ft_strcmp(ast->command->args[0], "exit") == 0)
+		// 	ft_exit(ast->command->args, mini);
 	}
 	else if (ast->type == AST_PIPELINE)
 	{
 		execute_pipeline(ast, env, mini);
 	}
+	dup2(org_fd[0], STDIN_FILENO);
+	dup2(org_fd[1], STDOUT_FILENO);
+	close(org_fd[0]);
+	close(org_fd[1]);
+	
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini)
 {
-	if (ast->command->redirect)
-		handle_all_redirections(ast, mini);
+	// if (ast->command->redirect)
+	// 	handle_all_redirections(ast, mini);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
 	if (handle_builtin_commands(ast, mini) == 1)
@@ -99,6 +109,8 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	int		i;
 
 	cmdchecks(ast, mini);
+	if (ast->command->args[0] == NULL)
+		exit(EXIT_SUCCESS);
 	executable_path = get_executable_path(ast, mini);
 	if (executable_path)
 	{
