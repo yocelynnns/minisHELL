@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 20:13:01 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/05 16:15:35 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,27 @@ int	add_env_node(char *new_value, t_env **env)
 		last->next = new_node;
 	}
 	return (SUCCESS);
+}
+
+int	handle_key_value(char *key, char *new_value, t_env **env)
+{
+	if (update_env(key, new_value, env) == SUCCESS)
+	{
+		free(key);
+		return (SUCCESS);
+	}
+	return (add_env(new_value, env));
+}
+
+int	add_or_update_env(char *arg, t_env **env)
+{
+	char	*key;
+	char	*new_value;
+
+	new_value = parse_key_value(arg, &key);
+	if (!key)
+		return (print_export_error(-1, arg));
+	if (!new_value)
+		return (handle_key_only(key, arg, env));
+	return (handle_key_value(key, new_value, env));
 }
