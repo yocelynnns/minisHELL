@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/05 17:39:20 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/05 18:58:53 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,16 +195,16 @@ char						*read_heredoc(const char *delim, t_minishell *mini);
 int							handle_builtin_commands(t_ast_node *ast,
 								t_minishell *mini);
 void						handle_redirection(t_ast_node *ast,
-								t_minishell *mini);
+								t_minishell *mini, int *org_fd);
 void						handle_heredoc(t_ast_node *ast);
 t_heredoc					*init_heredoc(const char *delimiter);
 char						*check_directory(char *dir, char *cmd);
 char						*get_executable_path(t_ast_node *ast,
 								t_minishell *mini);
-int							fork_and_execute(t_ast_node *ast, char **env,
-								t_minishell *mini, int *status);
+int							fork_and_execute(char **env,
+								t_minishell *mini, int *status, int *org_fd);
 int							execute_in_child(t_ast_node *ast, char **env,
-								t_minishell *mini);
+								t_minishell *mini, int *org_fd);
 int							execute_left_command(t_ast_node *ast, int pipefd[2],
 								char **env, t_minishell *mini);
 int							execute_right_command(t_ast_node *ast,
@@ -222,7 +222,7 @@ int							read_until_delimiter(t_heredoc *hd,
 								t_minishell *mini);
 void						free_dirs(char **dirs);
 void						handle_all_redirections(t_ast_node *ast,
-								t_minishell *mini);
+								t_minishell *mini, int *org_fd);
 
 int							ft_strcmp(const char *s1, const char *s2);
 int							number_of_args(char **args);

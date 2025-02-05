@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/05 01:03:18 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/05 19:02:24 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	if (ast->type == AST_COMMAND)
 	{
 		cmdchecks(ast, mini, org_fd);
-		if (fork_and_execute(ast, env, mini, &status) < 0)
+		if (fork_and_execute(env, mini, &status, org_fd) < 0)
 			return ;
 	}
 	else if (ast->type == AST_PIPELINE)
@@ -45,7 +45,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 {
 	if (ast->command->redirect)
-		handle_all_redirections(ast, mini);
+		handle_all_redirections(ast, mini, org_fd);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
 	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
@@ -58,7 +58,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 	}
 }
 
-int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
+int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, int *org_fd)
 {
 	char	*executable_path;
 	int		i;
@@ -68,6 +68,8 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	executable_path = get_executable_path(ast, mini);
 	if (executable_path)
 	{
+		close(org_fd[0]);
+		close(org_fd[1]);
 		if (execve(executable_path, ast->command->args, env) == -1)
 		{
 			perror("execve");

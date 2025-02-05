@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/05 01:00:08 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/05 19:00:25 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 	return (1);
 }
 
-void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
+void	handle_redirection(t_ast_node *redirect, t_minishell *mini, int *org_fd)
 {
 	int	fd;
+	(void)mini;
 
 	if (redirect->redirect->type == REDIRECT_IN)
 		fd = open(redirect->redirect->file, O_RDONLY);
@@ -49,24 +50,29 @@ void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 	if (fd < 0)
 	{
 		perror("open");
-		cleanup(mini);
-		exit(EXIT_FAILURE);
+		return ;
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
+	{
+		close(org_fd[1]);
 		dup2(fd, STDIN_FILENO);
+	}
 	else
+	{
+		close(org_fd[0]);
 		dup2(fd, STDOUT_FILENO);
+	}	
 	close(fd);
 }
 
-void	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
+void	handle_all_redirections(t_ast_node *ast, t_minishell *mini, int *org_fd)
 {
 	t_ast_node	*redirect;
 
 	redirect = ast->command->redirect;
 	while (redirect)
 	{
-		handle_redirection(redirect, mini);
+		handle_redirection(redirect, mini, org_fd);
 		redirect = redirect->redirect->next;
 	}
 }
