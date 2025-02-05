@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/02/05 16:15:35 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/05 17:39:49 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,21 @@ int	ft_exit(char **av, t_minishell *mini)
 {
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
-		ft_putstr_fd("exit a\n", STDERR);
 		print_exit_error(av[1]);
 		cleanup(mini);
 		exit(2);
 	}
-	if (av[1] && av[2])
+	else if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
 		g_sig.exit_value = 1;
 		return (1);
 	}
-	if (av[1])
-	{
-		ft_putstr_fd("exit\n", STDERR);
+	else if (av[1])
 		g_sig.exit_value = ft_atol(av[1], mini);
-		exit(g_sig.exit_value % 256);
-	}
-	printf("exit\n");
 	cleanup(mini);
+	if(isatty(STDIN))
+		ft_putstr_fd("exit\n",STDERR);
 	exit(g_sig.exit_value % 256);
 }
 
