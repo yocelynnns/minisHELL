@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/06 16:55:15 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:55:09 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 {
 	if (!ast || ast->type != AST_COMMAND || !ast->command
-		|| !ast->command->args)
-		return (1);
+		|| !*(ast->command->args))
+		return (0);
 	g_sig.exit_value = 0;
-	printf("AST COMMAND IS %s\n", ast->command->args[0]);
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
 		return (ft_echo(ast->command->args, mini), 0);
 	else if (ft_strcmp(ast->command->args[0], "cd") == 0)
@@ -54,6 +53,7 @@ void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 	if (fd < 0)
 	{
 		perror("open");
+		// cleanup(mini);
 		return ;
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
@@ -71,6 +71,8 @@ void	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 	while (redirect)
 	{
 		handle_redirection(redirect, mini);
+		if (!redirect->redirect)
+			break;
 		redirect = redirect->redirect->next;
 	}
 }

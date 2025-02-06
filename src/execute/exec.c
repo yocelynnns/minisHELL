@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/06 16:59:48 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:38:45 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,12 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	{
 		cmdchecks(ast, mini, org_fd);
 		if (fork_and_execute(ast, env, mini, &status) < 0)
+		{
+			// to fix
+			close(org_fd[0]);
+			close(org_fd[1]);
 			return ;
+		}
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(ast, env, mini);
@@ -66,9 +71,10 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 		handle_all_redirections(ast, mini);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
-	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
+	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
 	{
+		printf("here\n");
 		close(org_fd[0]);
 		close(org_fd[1]);
 		cleanup(mini);
@@ -79,6 +85,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
 		return ;
 	}
+	// free_ast(mini->ast);
 }
 
 int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)

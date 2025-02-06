@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/01/23 21:07:09 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/06 20:54:05 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ t_ast_node	*create_ast_node(t_ast_node_type type)
 		exit(EXIT_FAILURE);
 	}
 	ft_memset(new_node, 0, sizeof(t_ast_node));
+	new_node->command = NULL;
+	new_node->pipeline = NULL;
+	new_node->redirect = NULL;
+	new_node->word = NULL;
 	new_node->type = type;
 	return (new_node);
 }
@@ -83,10 +87,14 @@ void	init_cmd(t_ast_node *cmd, int i)
 	if (!cmd->command)
 		return ;
 	ft_memset(cmd->command, 0, sizeof(t_ast_command));
+	cmd->command->heredoc = NULL;
+	cmd->command->redirect = NULL;
+	cmd->command->args = NULL;
 	cmd->command->args = malloc(sizeof(char *) * (i + 1));
 	if (!cmd->command->args)
 	{
 		free(cmd->command);
+		cmd->command = NULL;
 		return ;
 	}
 	ft_memset(cmd->command->args, 0, sizeof(char *) * (i + 1));
@@ -136,16 +144,14 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 	redirect_node = create_ast_node(AST_REDIRECT);
 	redirect_node->redirect = malloc(sizeof(t_ast_redirect));
 	ft_memset(redirect_node->redirect, 0, sizeof(t_ast_redirect));
+	redirect_node->redirect->next = NULL;
 	redirect_node->redirect->type = (*tokens)->type;
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == WORD)
 	{
 		redirect_node->redirect->file = ft_strdup((*tokens)->value);
 		if (!redirect_node->redirect->file)
-		{ 
-			free_ast(redirect_node);
-			return (NULL);
-    	}
+			return (free_ast(redirect_node), NULL);
 		*tokens = (*tokens)->next;
 	}
 	else

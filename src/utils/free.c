@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2025/02/06 16:57:44 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/06 20:42:05 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,18 @@ static void	free_command(t_ast_node *node)
 		while (node->command->args[i])
 		{
 			free(node->command->args[i]);
+			node->command->args[i] = NULL;
 			i++;
 		}
 		free(node->command->args);
+		node->command->args = NULL;
 	}
-	free(node->command->heredoc);
 	free_ast(node->command->redirect);
+	if (node->command->heredoc)
+		free(node->command->heredoc);
+	node->command->heredoc = NULL;
 	free(node->command);
+	node->command = NULL;
 }
 
 static void	free_pipeline(t_ast_node *node)
@@ -85,9 +90,11 @@ static void	free_redirect(t_ast_node *node)
 {
 	if (!node->redirect)
 		return ;
-	free_ast(node->redirect->next);
 	free(node->redirect->file);
+	node->redirect->file = NULL;
+	free_ast(node->redirect->next);
 	free(node->redirect);
+	node->redirect = NULL;
 }
 
 void	free_ast(t_ast_node *node)
@@ -102,7 +109,7 @@ void	free_ast(t_ast_node *node)
 		free_redirect(node);
 	else if (node->type == AST_WORD)
 		free(node->word);
-	free(node);
+	// free(node);
 }
 
 void	free_node(t_minishell *mini, t_env *env)
@@ -120,10 +127,14 @@ void	free_node(t_minishell *mini, t_env *env)
 
 void	cleanup(t_minishell *mini)
 {
-	free_tokens(mini->token);
-	free_ast(mini->ast);
-	free_env(mini->env);
-	free(mini);
+	if (mini->token)
+		free_tokens(mini->token);
+	if (mini->ast)
+		free_ast(mini->ast);
+	if (mini->env)
+		free_env(mini->env);
+	if (mini)
+		free(mini);
 }
 
 // void	free_ast(t_ast_node *node)

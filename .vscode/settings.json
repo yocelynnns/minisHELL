@@ -1,9 +1,43 @@
 {
-  "files.associations": {
-    "libft.h": "c",
-    "minishell.h": "c",
-    "limits.h": "c",
-    "unistd.h": "c",
-    "fcntl.h": "c"
-  }
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"editor.renderWhitespace": "boundary",
+	"workbench.editor.enablePreview": false,
+	"editor.defaultFormatter": "keyhr.42-c-format",
+	"editor.indentSize": "tabSize",
+	"editor.rulers": [80],
+	"terminal.external.linuxExec": "/usr/bin/gnome-terminal",
+	"editor.language.colorizedBracketPairs": [
+	
+	],
+	"editor.minimap.autohide": true,
+	"editor.formatOnSave": false,
+	"editor.formatOnPaste": false,
+	"files.associations": {
+		"pushswap.h": "c",
+		"get_next_line.h": "c",
+		"ft_printf.h": "c",
+		"array": "c",
+		"string": "c",
+		"string_view": "c",
+		"mlx.h": "c",
+		"iterator": "c",
+		"libft.h": "c",
+		"solong.h": "c",
+		"solongb.h": "c",
+		"wait.h": "c",
+		"signal.h": "c",
+		"philo.h": "c",
+		"stdlib.h": "c",
+		"stdio.h": "c",
+		"history.h": "c",
+		"readline.h": "c",
+		"minishell.h": "c",
+		"stat.h": "c",
+		"types.h": "c",
+		"dirent.h": "c",
+		"fcntl.h": "c",
+		"string.h": "c",
+		"msdata.h": "c"
+	}
 }

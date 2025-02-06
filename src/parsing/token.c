@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/06 16:52:11 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/06 21:26:21 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,9 +179,9 @@ void	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	{
 		fprintf(stderr,
 			"Error: Invalid sequence of consecutive '|' operators\n");
-		free_tokens(state->token_list);
-		state->token_list = NULL;
-		g_sig.exit_value = 2;
+		// free_tokens(state->token_list);
+		// state->token_list = NULL;
+		g_sig.exit_value = 217;
 	}
 	state->last_token_was_pipe = 1;
 	if (state->i > state->start)
@@ -287,6 +287,12 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	{
 		lexer_checks(input, &state, mini);
 		state.i++;
+	}
+	if (g_sig.exit_value == 217)
+	{
+		// free_tokens(mini->token);
+		g_sig.exit_value = 2;
+		return (NULL);
 	}
 	j = checkquote(&state, mini);
 	if (j || i)
