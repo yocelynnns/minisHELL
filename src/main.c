@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/04 20:05:51 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/06 17:17:20 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,22 @@ void run_shell_loop(t_minishell *mini, char **env)
         stop_signals();
         prompt(input, mini);
         tokens = lexer(input, mini);
-        // print_tokens(tokens);
+        print_tokens(tokens);
         mini->token = tokens;
         if (!tokens)
         {
+            free_tokens(mini->token);
+            free_tokens(tokens);
             free(input);
             continue;
         }
         ast = build_ast(tokens, mini);
-        // print_ast(ast, 0);
+        print_ast(ast, 0);
         mini->ast = ast;
         if (!ast)
         {
+            free_ast(mini->ast);
+            free_ast(ast);
             free_tokent(tokens, input);
             continue;
         }

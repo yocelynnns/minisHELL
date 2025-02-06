@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2025/01/23 21:22:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:57:44 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,66 +46,63 @@ void	free_tokens(t_token *tokens)
 	{
 		temp = tokens;
 		tokens = tokens->next;
-		if (temp->value)
-            free(temp->value);
+		free(temp->value);
 		free(temp);
 	}
 }
 
-static void free_command(t_ast_node *node)
+static void	free_command(t_ast_node *node)
 {
-    int i;
+	int	i;
 
-    if (!node->command)
-        return;
-    if (node->command->args)
-    {
-        i = 0;
-        while (node->command->args[i])
-        {
-            free(node->command->args[i]);
-            i++;
-        }
-        free(node->command->args);
-    }
-    free(node->command->heredoc);
-    free_ast(node->command->redirect);
-    free(node->command);
+	if (!node->command)
+		return ;
+	if (node->command->args)
+	{
+		i = 0;
+		while (node->command->args[i])
+		{
+			free(node->command->args[i]);
+			i++;
+		}
+		free(node->command->args);
+	}
+	free(node->command->heredoc);
+	free_ast(node->command->redirect);
+	free(node->command);
 }
 
-static void free_pipeline(t_ast_node *node)
+static void	free_pipeline(t_ast_node *node)
 {
-    if (!node->pipeline)
-        return;
-    free_ast(node->pipeline->left);
-    free_ast(node->pipeline->right);
-    free(node->pipeline);
+	if (!node->pipeline)
+		return ;
+	free_ast(node->pipeline->left);
+	free_ast(node->pipeline->right);
+	free(node->pipeline);
 }
 
-static void free_redirect(t_ast_node *node)
+static void	free_redirect(t_ast_node *node)
 {
-    if (!node->redirect)
-        return;
-    free_ast(node->redirect->next);
-    free(node->redirect->file);
-    free(node->redirect);
+	if (!node->redirect)
+		return ;
+	free_ast(node->redirect->next);
+	free(node->redirect->file);
+	free(node->redirect);
 }
 
-void free_ast(t_ast_node *node)
+void	free_ast(t_ast_node *node)
 {
-    if (!node)
-        return;
-
-    if (node->type == AST_COMMAND)
-        free_command(node);
-    else if (node->type == AST_PIPELINE)
-        free_pipeline(node);
-    else if (node->type == AST_REDIRECT)
-        free_redirect(node);
-    else if (node->type == AST_WORD)
-        free(node->word);
-
-    free(node);
+	if (!node)
+		return ;
+	if (node->type == AST_COMMAND)
+		free_command(node);
+	else if (node->type == AST_PIPELINE)
+		free_pipeline(node);
+	else if (node->type == AST_REDIRECT)
+		free_redirect(node);
+	else if (node->type == AST_WORD)
+		free(node->word);
+	free(node);
 }
 
 void	free_node(t_minishell *mini, t_env *env)
@@ -121,12 +118,12 @@ void	free_node(t_minishell *mini, t_env *env)
 	free(env);
 }
 
-void cleanup(t_minishell *mini)
+void	cleanup(t_minishell *mini)
 {
-    free_tokens(mini->token);
-    free_ast(mini->ast);
-    free_env(mini->env);
-    free(mini);
+	free_tokens(mini->token);
+	free_ast(mini->ast);
+	free_env(mini->env);
+	free(mini);
 }
 
 // void	free_ast(t_ast_node *node)
@@ -176,4 +173,3 @@ void cleanup(t_minishell *mini)
 // 		free(node->word);
 // 	free(node);
 // }
-

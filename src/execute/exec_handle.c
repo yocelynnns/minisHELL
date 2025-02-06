@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/04 20:49:53 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:55:15 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 {
+	if (!ast || ast->type != AST_COMMAND || !ast->command
+		|| !ast->command->args)
+		return (1);
+	g_sig.exit_value = 0;
+	printf("AST COMMAND IS %s\n", ast->command->args[0]);
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
 		return (ft_echo(ast->command->args, mini), 0);
 	else if (ft_strcmp(ast->command->args[0], "cd") == 0)
@@ -28,6 +33,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 		return (ft_unset(ast->command->args, mini), 0);
 	else if (ft_strcmp(ast->command->args[0], "exit") == 0)
 		return (ft_exit(ast->command->args, mini), 0);
+	g_sig.exit_value = 1;
 	return (1);
 }
 
@@ -44,11 +50,11 @@ void	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 				0644);
 	else
 		return ;
+	(void) mini;
 	if (fd < 0)
 	{
 		perror("open");
-		cleanup(mini);
-		exit(EXIT_FAILURE);
+		return ;
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
 		dup2(fd, STDIN_FILENO);
