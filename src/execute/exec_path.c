@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/05 19:01:19 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 20:51:30 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,25 +93,19 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	return (NULL);
 }
 
-int	fork_and_execute(char **env, t_minishell *mini,
-		int *status, int *org_fd)
+int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
+		int *status)
 {
 	pid_t	pid;
 	int		signal;
 
-	if (handle_builtin_commands(mini->ast, mini) == 0)
+	if (handle_builtin_commands(ast, mini) == 0)
 		return g_sig.exit_value;
-	if (is_directory(mini->ast->command->args[0]))
-	{
-		g_sig.exit_value = 126;
-		printf("minishell: %s: Is a directory\n", mini->ast->command->args[0]);
-		return g_sig.exit_value;
-	}
 	pid = fork();
 	if (pid == 0)
 	{
 		init_signals();
-		if (execute_in_child(mini->ast, env, mini, org_fd) == -1)
+		if (execute_in_child(ast, env, mini) == -1)
 			exit(EXIT_FAILURE);
 	}
 	else if (pid < 0)

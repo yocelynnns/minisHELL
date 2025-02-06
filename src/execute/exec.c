@@ -6,11 +6,29 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/05 19:02:24 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 21:08:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	expand_variables_in_args(char **args, t_env *env)
+{
+	int		i;
+	char	*expanded_arg;
+
+	i = 0;
+	while (args[i])
+	{
+		expanded_arg = expand_argument(args[i], env);
+		if (expanded_arg)
+		{
+			free(args[i]);
+			args[i] = expanded_arg;
+		}
+		i++;
+	}
+}
 
 int	is_directory(const char *path)
 {
@@ -31,7 +49,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	if (ast->type == AST_COMMAND)
 	{
 		cmdchecks(ast, mini, org_fd);
-		if (fork_and_execute(env, mini, &status, org_fd) < 0)
+		if (fork_and_execute(ast, env, mini, &status) < 0)
 			return ;
 	}
 	else if (ast->type == AST_PIPELINE)
@@ -45,7 +63,7 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 {
 	if (ast->command->redirect)
-		handle_all_redirections(ast, mini, org_fd);
+		handle_all_redirections(ast, mini);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
 	if (((ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
@@ -56,9 +74,14 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 		cleanup(mini);
 		return ;
 	}
+	if (is_directory(ast->command->args[0]))
+	{
+		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
+		return ;
+	}
 }
 
-int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, int *org_fd)
+int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 {
 	char	*executable_path;
 	int		i;
@@ -68,8 +91,6 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, int *org_fd
 	executable_path = get_executable_path(ast, mini);
 	if (executable_path)
 	{
-		close(org_fd[0]);
-		close(org_fd[1]);
 		if (execve(executable_path, ast->command->args, env) == -1)
 		{
 			perror("execve");

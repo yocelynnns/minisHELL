@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/05 18:58:53 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/04 21:11:10 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@
 
 # define BUFF_SIZE 4096
 # define INITIAL_SIZE 4096
+
+typedef enum e_signal_mode
+{
+	INTERACTIVE,
+	HEREDOC_MODE,
+	CHILD_PROCESS_MODE,
+}							t_signal_mode;
 
 typedef enum
 {
@@ -155,11 +162,8 @@ typedef struct s_var_process
 }							t_var_process;
 
 extern t_signal				g_sig;
-
-int							is_directory(const char *path);
-void						stop_signals(void);
-void						cmdchecks(t_ast_node *ast, t_minishell *mini,
-								int *org_fd);
+void stop_signals(void);
+void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd);
 t_token						*create_token(t_token_type type, const char *value);
 void						add_token(t_token **head, t_token *new_token);
 t_token						*lexer(const char *input, t_minishell *mini);
@@ -195,16 +199,16 @@ char						*read_heredoc(const char *delim, t_minishell *mini);
 int							handle_builtin_commands(t_ast_node *ast,
 								t_minishell *mini);
 void						handle_redirection(t_ast_node *ast,
-								t_minishell *mini, int *org_fd);
+								t_minishell *mini);
 void						handle_heredoc(t_ast_node *ast);
 t_heredoc					*init_heredoc(const char *delimiter);
 char						*check_directory(char *dir, char *cmd);
 char						*get_executable_path(t_ast_node *ast,
 								t_minishell *mini);
-int							fork_and_execute(char **env,
-								t_minishell *mini, int *status, int *org_fd);
+int							fork_and_execute(t_ast_node *ast, char **env,
+								t_minishell *mini, int *status);
 int							execute_in_child(t_ast_node *ast, char **env,
-								t_minishell *mini, int *org_fd);
+								t_minishell *mini);
 int							execute_left_command(t_ast_node *ast, int pipefd[2],
 								char **env, t_minishell *mini);
 int							execute_right_command(t_ast_node *ast,
@@ -222,7 +226,7 @@ int							read_until_delimiter(t_heredoc *hd,
 								t_minishell *mini);
 void						free_dirs(char **dirs);
 void						handle_all_redirections(t_ast_node *ast,
-								t_minishell *mini, int *org_fd);
+								t_minishell *mini);
 
 int							ft_strcmp(const char *s1, const char *s2);
 int							number_of_args(char **args);
@@ -300,10 +304,5 @@ void						set_signals_heredoc(void);
 void						signal_print_newline(int signal);
 void						set_signals_interactive(void);
 void						signal_reset_prompt(int signo);
-int							handle_key_value(char *key, char *new_value,
-								t_env **env);
-int							handle_key_only(char *key, char *arg, t_env **env);
-int							remove_env_var(t_minishell *mini, t_env *target,
-								t_env *prev);
-t_env						*find_env_var(t_env *env, char *arg, t_env **prev);
+
 #endif
