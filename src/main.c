@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/06 20:56:51 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/11 01:56:48 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void free_tokent(t_token *tokens, char *input)
 
 void run_shell_loop(t_minishell *mini, char **env)
 {
-    char *input;
+    char *input; 
     t_token *tokens;
     t_ast_node *ast;
 
@@ -45,7 +45,7 @@ void run_shell_loop(t_minishell *mini, char **env)
         stop_signals();
         prompt(input, mini);
         tokens = lexer(input, mini);
-        print_tokens(tokens);
+        // print_tokens(tokens);
         mini->token = tokens;
         if (!tokens)
         {
@@ -55,7 +55,7 @@ void run_shell_loop(t_minishell *mini, char **env)
             continue;
         }
         ast = build_ast(tokens, mini);
-        print_ast(ast, 0);
+        // print_ast(ast, 0);
         mini->ast = ast;
         if (!ast)
         {

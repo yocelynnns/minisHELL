@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:41:11 by messs             #+#    #+#             */
-/*   Updated: 2025/02/06 20:42:05 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/11 01:34:53 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,13 @@ void	free_tokens(t_token *tokens)
 	{
 		temp = tokens;
 		tokens = tokens->next;
-		free(temp->value);
+		if (temp->value)
+		{
+			free(temp->value);
+			temp->value = NULL;
+		}
 		free(temp);
+		temp = NULL;
 	}
 }
 
@@ -109,7 +114,7 @@ void	free_ast(t_ast_node *node)
 		free_redirect(node);
 	else if (node->type == AST_WORD)
 		free(node->word);
-	// free(node);
+	free(node);
 }
 
 void	free_node(t_minishell *mini, t_env *env)

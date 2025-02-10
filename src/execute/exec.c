@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/06 20:38:45 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/11 02:02:23 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-void	expand_variables_in_args(char **args, t_env *env)
-{
-	int		i;
-	char	*expanded_arg;
-
-	i = 0;
-	while (args[i])
-	{
-		expanded_arg = expand_argument(args[i], env);
-		if (expanded_arg)
-		{
-			free(args[i]);
-			args[i] = expanded_arg;
-		}
-		i++;
-	}
-}
 
 int	is_directory(const char *path)
 {
@@ -74,18 +56,11 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
 	{
-		printf("here\n");
 		close(org_fd[0]);
 		close(org_fd[1]);
-		cleanup(mini);
+		// cleanup(mini);
 		return ;
 	}
-	if (is_directory(ast->command->args[0]))
-	{
-		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
-		return ;
-	}
-	// free_ast(mini->ast);
 }
 
 int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
@@ -95,6 +70,13 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 
 	if (ast->command->args[0] == NULL)
 		exit(EXIT_SUCCESS);
+	if (is_directory(ast->command->args[0]))
+	{
+		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
+		g_sig.exit_value = 126;
+		cleanup(mini);
+		exit(g_sig.exit_value);
+	}
 	executable_path = get_executable_path(ast, mini);
 	if (executable_path)
 	{
@@ -118,6 +100,24 @@ int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
 	}
 	return (0);
 }
+
+// void	expand_variables_in_args(char **args, t_env *env)
+// {
+// 	int		i;
+// 	char	*expanded_arg;
+
+// 	i = 0;
+// 	while (args[i])
+// 	{
+// 		expanded_arg = expand_argument(args[i], env);
+// 		if (expanded_arg)
+// 		{
+// 			free(args[i]);
+// 			args[i] = expanded_arg;
+// 		}
+// 		i++;
+// 	}
+// }
 
 		// if (ast->command->redirect)
 		// 	handle_all_redirections(ast, mini);
