@@ -49,18 +49,18 @@ int	ft_exit(char **av, t_minishell *mini)
 	if (av[1] && av[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR);
-		g_sig.exit_value = 1;
+		mini->exit = 1;
 		return (1);
 	}
 	if (av[1])
 	{
 		ft_putstr_fd("exit\n", STDERR);
-		g_sig.exit_value = ft_atol(av[1], mini);
-		exit(g_sig.exit_value % 256);
+		mini->exit = ft_atol(av[1], mini);
+		exit(mini->exit % 256);
 	}
 	printf("exit\n");
 	cleanup(mini);
-	exit(g_sig.exit_value % 256);
+	exit(mini->exit % 256);
 }
 
 int	add_env_node(char *new_value, t_env **env)

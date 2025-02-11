@@ -17,7 +17,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	if (!ast || ast->type != AST_COMMAND || !ast->command
 		|| !*(ast->command->args))
 		return (0);
-	g_sig.exit_value = 0;
+	mini->exit = 0;
 	if (ft_strcmp(ast->command->args[0], "echo") == 0)
 		return (ft_echo(ast->command->args, mini), 0);
 	else if (ft_strcmp(ast->command->args[0], "cd") == 0)
@@ -36,7 +36,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 		close(m->org_fd[1]);
 		return (ft_exit(ast->command->args, mini), 0);
 	}
-	g_sig.exit_value = 1;
+	mini->exit = 1;
 	return (1);
 }
 

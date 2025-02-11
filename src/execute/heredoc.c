@@ -81,14 +81,14 @@ int	is_delimiter(const char *content, const char *delimiter,
 //         bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
 //         if (g_sig.sigint)
 //         {
-//             g_sig.exit_value = g_sig.exit_value;
+//             mini->exit = mini->exit;
 //             g_sig.sigint = 0;
 //             return (-1);
 //         }
 //         if (bytes_read < 0)
 //         {
 //             perror("read");
-//             g_sig.exit_value = 1;
+//             mini->exit = 1;
 //             return (-1);
 //         }
 //         else if (bytes_read == 0)
@@ -140,14 +140,14 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
 		if (g_sig.sigint)
 		{
-			g_sig.exit_value = g_sig.exit_value;
+			mini->exit = mini->exit;
 			g_sig.sigint = 0;
 			return (-1);
 		}
 		if (bytes_read < 0)
 		{
 			perror("read");
-			g_sig.exit_value = 1;
+			mini->exit = 1;
 			return (-1);
 		}
 		else if (bytes_read == 0)
@@ -184,13 +184,13 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 		if (g_sig.sigint)
 // 		{
 // 			g_sig.sigint = 0;
-// 			g_sig.exit_value = g_sig.exit_value;
+// 			mini->exit = mini->exit;
 // 			return (-1);
 // 		}
 // 		if (bytes_read < 0)
 // 		{
 // 			perror("read");
-// 			g_sig.exit_value = 1;
+// 			mini->exit = 1;
 // 			return (-1);
 // 		}
 // 		else if (bytes_read == 0)
@@ -209,12 +209,12 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 					&hd->current_size);
 // 			if (!hd->content)
 // 			{
-// 				g_sig.exit_value = 1;
+// 				mini->exit = 1;
 // 				return (-1);
 // 			}
 // 		}
 // 	}
-// 	g_sig.exit_value = 0;
+// 	mini->exit = 0;
 // 	return (0);
 // }
 

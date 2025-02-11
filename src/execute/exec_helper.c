@@ -86,7 +86,7 @@ int	execute_pipeline(char **env, t_minishell *mini, t_cmd *m)
 	{
 		waitpid(pid1, &status, 0);
 		if (WIFEXITED(status))
-			g_sig.exit_value = WEXITSTATUS(status);
+			mini->exit = WEXITSTATUS(status);
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
@@ -94,7 +94,7 @@ int	execute_pipeline(char **env, t_minishell *mini, t_cmd *m)
 	{
 		waitpid(pid2, &status, 0);
 		if (WIFEXITED(status))
-			g_sig.exit_value = WEXITSTATUS(status);
+			mini->exit = WEXITSTATUS(status);
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}

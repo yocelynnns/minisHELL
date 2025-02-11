@@ -138,6 +138,7 @@ typedef struct s_minishell
 	t_process				*proc;
 	int						flag;
 	int						here;
+	int						exit;
 }							t_minishell;
 
 typedef struct s_heredoc
@@ -154,7 +155,7 @@ typedef struct s_signal
 	int						sigint;
 	// int						sigquit;
 	// pid_t					pid;
-	int						exit_value;
+	// int						exit_value;
 }							t_signal;
 
 typedef struct s_var_process

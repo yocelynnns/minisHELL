@@ -37,7 +37,7 @@ static int handle_pipe_error(t_token **tokens, t_minishell *mini)
     if ((*tokens)->next == NULL)
     {
         printf("Error: Syntax error near unexpected token '|'\n");
-        g_sig.exit_value = 2;
+        mini->exit = 2;
         return (0);
     }
     return (1);
@@ -158,7 +158,7 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 	{
 		printf("Error: Syntax error near unexpected token `newline'\n");
 		free_ast(redirect_node);
-		g_sig.exit_value = 2;
+		mini->exit = 2;
 		return (NULL);
 	}
 	return (redirect_node);
@@ -178,7 +178,7 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 // 		if ((*tokens)->next == NULL)
 //         {
 //             printf("Error: Syntax error near unexpected token '|'\n");
-//             g_sig.exit_value = 2;
+//             mini->exit = 2;
 //             return (NULL);
 //         }
 // 		*tokens = (*tokens)->next;

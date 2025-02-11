@@ -72,7 +72,7 @@ int	checkquote(t_lexer_state *state, t_minishell *mini)
 	{
 		printf("Error: Unclosed quote '%c'\n", state->quote);
 		free_tokens(state->token_list);
-		g_sig.exit_value = 2;
+		mini->exit = 2;
 		return (1);
 	}
 	return (0);
@@ -87,7 +87,7 @@ void	handle_dollar(const char *input, t_lexer_state *state,
 
 	if (input[state->i + 1] == '?')
 	{
-		status_str = ft_itoa(g_sig.exit_value);
+		status_str = ft_itoa(mini->exit);
 		add_token(&state->token_list, create_token(WORD, status_str));
 		free(status_str);
 		state->i++;
@@ -181,7 +181,7 @@ void	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 			"Error: Invalid sequence of consecutive '|' operators\n");
 		// free_tokens(state->token_list);
 		// state->token_list = NULL;
-		g_sig.exit_value = 217;
+		mini->exit = 217;
 	}
 	state->last_token_was_pipe = 1;
 	if (state->i > state->start)
@@ -241,7 +241,7 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	if (input[state->i] == '|' && input[state->i + 1] != '|')
 	{
 		printf("Error: Syntax error near unexpected token `|'\n");
-		g_sig.exit_value = 2;
+		mini->exit = 2;
 		free_tokens(state->token_list);
 		return (1);
 	}
@@ -249,7 +249,7 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	(input[state->i] == '\'' && input[state->i + 1] == '\'')) && (input[state->i + 2] == '\0'))
 	{
 		printf("Command not found: ''\n");
-		g_sig.exit_value = 127;
+		mini->exit = 127;
 		free_tokens(state->token_list);
 		return (1);
 	}
@@ -288,10 +288,10 @@ t_token	*lexer(const char *input, t_minishell *mini)
 		lexer_checks(input, &state, mini);
 		state.i++;
 	}
-	if (g_sig.exit_value == 217)
+	if (mini->exit == 217)
 	{
 		// free_tokens(mini->token);
-		g_sig.exit_value = 2;
+		mini->exit = 2;
 		return (NULL);
 	}
 	j = checkquote(&state, mini);

@@ -22,7 +22,6 @@ void	signal_reset_prompt(int signo)
 	rl_replace_line("", 0);
 	rl_redisplay();
 	g_sig.sigint = 1;
-	g_sig.exit_value = 130;
 }
 
 void	handle_sigquit(int signo)
@@ -31,7 +30,6 @@ void	handle_sigquit(int signo)
 	ft_putstr_fd("\033[2K\r", STDERR_FILENO);
 	rl_on_new_line();
 	rl_redisplay();
-	g_sig.exit_value = 131;
 }
 
 void	set_signals_interactive(void)
@@ -50,7 +48,6 @@ void	signal_print_newline(int signal)
 {
 	(void)signal;
 	g_sig.sigint = 1;
-	g_sig.exit_value = 130;
 	ft_putstr_fd("\n", STDOUT_FILENO);
 	rl_on_new_line();
 }

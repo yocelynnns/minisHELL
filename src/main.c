@@ -42,6 +42,8 @@ void run_shell_loop(t_minishell *mini, char **env)
 	{
 		init_signals();
 		input = readline("minishell$ ");
+		if(g_sig.sigint == 1)
+			mini->exit = 130;
 		stop_signals();
 		prompt(input, mini);
 		tokens = lexer(input, mini);
@@ -87,7 +89,7 @@ t_minishell *init_minishell(char **env)
 	mini = malloc(sizeof(t_minishell));
 	if (!mini)
 		return (NULL);
-	g_sig.exit_value = 0;
+	mini->exit = 0;
 	if (env_init(mini, env) == ERROR)
 	{
 		ft_putstr_fd("Error: Failed to initialize environment variables\n",STDERR);
@@ -113,7 +115,7 @@ int main(int ac, char **av, char **env)
 	free(mini);
 	init_signals();
 
-	return (g_sig.exit_value);
+	return (mini->exit);
 }
 
 // int main(int ac, char **av, char **env)
@@ -126,7 +128,7 @@ int main(int ac, char **av, char **env)
 // 	if (!mini)
 // 		return 1;
 
-// 	g_sig.exit_value = 0;
+// 	mini->exit = 0;
 
 // 	(void)ac;
 // 	(void)av;
@@ -178,5 +180,5 @@ int main(int ac, char **av, char **env)
 // 	}
 // 	// // Free the environment
 // 	free_env(mini->env);
-// 	return (g_sig.exit_value);
+// 	return (mini->exit);
 // }

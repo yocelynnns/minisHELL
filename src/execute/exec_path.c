@@ -100,7 +100,7 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	int		signal;
 
 	if (handle_builtin_commands(ast, mini, m) == 0)
-		return (g_sig.exit_value);
+		return (mini->exit);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -126,13 +126,13 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		if (signal == SIGINT)
 		{
 			g_sig.sigint = 1;
-			g_sig.exit_value = 130;
+			mini->exit = 130;
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			rl_on_new_line();
 		}
 		else if (signal == SIGQUIT)
 		{
-			g_sig.exit_value = 131;
+			mini->exit = 131;
 			if (WCOREDUMP(m->status))
 				write(STDERR_FILENO, "Quit (core dumped)\n", 20);
 			else
@@ -141,6 +141,6 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		}
 	}
 	else if (WIFEXITED(m->status))
-		g_sig.exit_value = WEXITSTATUS(m->status);
-	return (g_sig.exit_value);
+		mini->exit = WEXITSTATUS(m->status);
+	return (mini->exit);
 }

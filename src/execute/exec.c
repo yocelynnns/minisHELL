@@ -62,7 +62,7 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 }
 void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 {
-	g_sig.exit_value = returnval;
+	mini->exit = returnval;
 	close(m->org_fd[0]);
 	close(m->org_fd[1]);
 	cleanup(mini);
