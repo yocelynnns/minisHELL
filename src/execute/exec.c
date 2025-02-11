@@ -23,32 +23,32 @@ int	is_directory(const char *path)
 
 void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 {
-	int	status;
-	int org_fd[2];
+	t_cmd	m;
 
-	org_fd[0] = dup(STDIN_FILENO);
-	org_fd[1] = dup(STDOUT_FILENO);
+	m.org_fd[0] = dup(STDIN_FILENO);
+	m.org_fd[1] = dup(STDOUT_FILENO);
 	if (ast->type == AST_COMMAND)
 	{
-		cmdchecks(ast, mini, org_fd);
-		if (fork_and_execute(ast, env, mini, &status) < 0)
+		cmdchecks(ast, mini, m.org_fd);
+		if (fork_and_execute(ast, env, mini, &m) < 0)
 		{
 			// to fix
-			close(org_fd[0]);
-			close(org_fd[1]);
+			close(m.org_fd[0]);
+			close(m.org_fd[1]);
 			return ;
 		}
 	}
 	else if (ast->type == AST_PIPELINE)
-		execute_pipeline(ast, env, mini);
-	dup2(org_fd[0], STDIN_FILENO);
-	dup2(org_fd[1], STDOUT_FILENO);
-	close(org_fd[0]);
-	close(org_fd[1]);
+		execute_pipeline(env, mini, &m);
+	dup2(m.org_fd[0], STDIN_FILENO);
+	dup2(m.org_fd[1], STDOUT_FILENO);
+	close(m.org_fd[0]);
+	close(m.org_fd[1]);
 }
 
 void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 {
+	(void)org_fd;
 	if (ast->command->redirect)
 		handle_all_redirections(ast, mini);
 	if (ast->command->heredoc)
@@ -56,49 +56,49 @@ void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
 	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
 	{
-		close(org_fd[0]);
-		close(org_fd[1]);
 		// cleanup(mini);
 		return ;
 	}
 }
+void fkoff(t_minishell *mini, t_cmd *m, int returnval)
+{
+	g_sig.exit_value = returnval;
+	close(m->org_fd[0]);
+	close(m->org_fd[1]);
+	cleanup(mini);
+	exit(returnval);
+}
 
-int	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini)
+void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
-	int		i;
 
 	if (ast->command->args[0] == NULL)
-		exit(EXIT_SUCCESS);
+		fkoff(mini, m, EXIT_SUCCESS);
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
-		g_sig.exit_value = 126;
-		cleanup(mini);
-		exit(g_sig.exit_value);
+		fkoff(mini, m, 126);
 	}
 	executable_path = get_executable_path(ast, mini);
-	if (executable_path)
+	// close(m->org_fd[0]);
+	// close(m->org_fd[1]);
+	if ((executable_path) && (execve(executable_path, ast->command->args, env) == -1))
 	{
-		if (execve(executable_path, ast->command->args, env) == -1)
-		{
+		// if (execve(executable_path, ast->command->args, env) == -1)
+		// {
 			perror("execve");
-			exit(g_sig.exit_value);
-			return (-1);
-		}
+			fkoff(mini, m, EXIT_FAILURE);
+		// }
 	}
 	else
 	{
 		write(2, "Command not found: ", 19);
 		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
 		write(2, "\n", 1);
-		g_sig.exit_value = 127;
-		i = g_sig.exit_value;
-		cleanup(mini);
-		exit(i);
-		return (-1);
+		fkoff(mini, m, 127);
 	}
-	return (0);
+	// return (0);
 }
 
 // void	expand_variables_in_args(char **args, t_env *env)

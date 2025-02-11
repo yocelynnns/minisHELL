@@ -94,7 +94,7 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 }
 
 int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
-		int *status)
+		t_cmd *m)
 {
 	pid_t	pid;
 	int		signal;
@@ -105,20 +105,24 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	if (pid == 0)
 	{
 		init_signals();
-		if (execute_in_child(ast, env, mini) == -1)
-			exit(EXIT_FAILURE);
+		close(m->org_fd[0]);
+		close(m->org_fd[1]);
+		execute_in_child(ast, env, mini, m);
+		// if (execute_in_child(ast, env, mini, m) == -1)
+		// 	return (-1);
 	}
 	else if (pid < 0)
 	{
 		perror("fork");
 		return (-1);
 	}
-	g_sig.pid = pid;
-	waitpid(g_sig.pid, status, 0);
-	g_sig.pid = 0;
-	if (WIFSIGNALED(*status))
+	// g_sig.pid = pid;
+	// waitpid(g_sig.pid, &m->status, 0);
+	// g_sig.pid = 0;
+	waitpid(pid, &m->status, 0);
+	if (WIFSIGNALED(m->status))
 	{
-		signal = WTERMSIG(*status);
+		signal = WTERMSIG(m->status);
 		if (signal == SIGINT)
 		{
 			g_sig.sigint = 1;
@@ -129,14 +133,14 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		else if (signal == SIGQUIT)
 		{
 			g_sig.exit_value = 131;
-			if (WCOREDUMP(*status))
+			if (WCOREDUMP(m->status))
 				write(STDERR_FILENO, "Quit (core dumped)\n", 20);
 			else
 				write(STDERR_FILENO, "Quit\n", 5);
 			return (131);
 		}
 	}
-	else if (WIFEXITED(*status))
-		g_sig.exit_value = WEXITSTATUS(*status);
+	else if (WIFEXITED(m->status))
+		g_sig.exit_value = WEXITSTATUS(m->status);
 	return (g_sig.exit_value);
 }

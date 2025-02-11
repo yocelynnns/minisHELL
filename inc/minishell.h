@@ -124,6 +124,12 @@ typedef struct s_env
 	struct s_env			*next;
 }							t_env;
 
+typedef struct s_cmd
+{
+	int						status;
+	int						org_fd[2];
+}							t_cmd;
+
 typedef struct s_minishell
 {
 	t_env					*env;
@@ -146,8 +152,8 @@ typedef struct s_heredoc
 typedef struct s_signal
 {
 	int						sigint;
-	int						sigquit;
-	pid_t					pid;
+	// int						sigquit;
+	// pid_t					pid;
 	int						exit_value;
 }							t_signal;
 
@@ -162,6 +168,8 @@ typedef struct s_var_process
 }							t_var_process;
 
 extern t_signal				g_sig;
+
+char    *ft_strcjoin(char *str, char c);
 void stop_signals(void);
 void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd);
 t_token						*create_token(t_token_type type, const char *value);
@@ -206,15 +214,14 @@ char						*check_directory(char *dir, char *cmd);
 char						*get_executable_path(t_ast_node *ast,
 								t_minishell *mini);
 int							fork_and_execute(t_ast_node *ast, char **env,
-								t_minishell *mini, int *status);
-int							execute_in_child(t_ast_node *ast, char **env,
-								t_minishell *mini);
-int							execute_left_command(t_ast_node *ast, int pipefd[2],
+								t_minishell *mini, t_cmd *m);
+void							execute_in_child(t_ast_node *ast, char **env,
+								t_minishell *mini, t_cmd *m);
+int							execute_left_command(t_cmd *m, int pipefd[2],
 								char **env, t_minishell *mini);
-int							execute_right_command(t_ast_node *ast,
+int							execute_right_command(t_cmd *m,
 								int pipefd[2], char **env, t_minishell *mini);
-int							execute_pipeline(t_ast_node *ast, char **env,
-								t_minishell *mini);
+int							execute_pipeline(char **env, t_minishell *mini, t_cmd *m);
 char						*resize_buffer(char *content, size_t total_length,
 								size_t *current_size);
 ssize_t						read_line(char *content, size_t total_length,

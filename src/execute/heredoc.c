@@ -44,6 +44,90 @@ int	is_delimiter(const char *content, const char *delimiter,
 			|| content[total_length + delimiter_length] == '\0'));
 }
 
+// char *expand_variables(char *str, t_minishell *mini)
+// {
+//     char *start;
+// 	char result = NULL;
+// 	int i = 0;
+//     start = ++i + str;
+//     while (str[i] && !ft_strchr("\\\"\'$ ", str[i]))
+//         i++;
+//     start = ft_strndup(start, str + i - start);
+//     char *env_value = get_env_value(start, mini->env);
+//     if (!result)
+// 			result = ft_strdup(""); // need to free
+//     if (env_value)
+//     {
+//         char *temp = result;
+//         result = ft_strjoin(result, env_value);  
+//         free(temp);
+//     }
+//     else
+//         result = ft_strcjoin(result, '\0');
+//     free(start);
+//     return result;
+// }
+
+// int read_until_delimiter(t_heredoc *hd, t_minishell *mini)
+// {
+//     ssize_t bytes_read;
+//     char *expanded_line = NULL; // Initialize expanded_line to NULL
+
+//     (void)mini;
+//     set_signals_heredoc();
+//     signal(SIGQUIT, ignore_sigquit);
+//     while (1)
+//     {
+//         bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
+//         if (g_sig.sigint)
+//         {
+//             g_sig.exit_value = g_sig.exit_value;
+//             g_sig.sigint = 0;
+//             return (-1);
+//         }
+//         if (bytes_read < 0)
+//         {
+//             perror("read");
+//             g_sig.exit_value = 1;
+//             return (-1);
+//         }
+//         else if (bytes_read == 0)
+//         {
+//             printf("EOF Handle\n");
+//             return (-1);
+//         }
+        
+//         hd->content[hd->total_length + bytes_read] = '\0';
+        
+//         if (is_delimiter(hd->content, hd->delimiter, hd->total_length, hd->delimiter_length))
+//             break;
+
+//         expanded_line = expand_variables(hd->content, mini);
+//         if (!expanded_line)
+//         {
+//             return (-1);
+//         }
+
+//         // Append the expanded line to the heredoc content
+//         size_t expanded_length = ft_strlen(expanded_line);
+//         if (hd->total_length + expanded_length + 1 >= hd->current_size)
+//         {
+//             hd->content = resize_buffer(hd->content, hd->total_length, &hd->current_size);
+//             if (!hd->content)
+//             {
+//                 free(expanded_line);
+//                 return (-1);
+//             }
+//         }
+
+//         ft_memcpy(hd->content + hd->total_length, expanded_line, expanded_length);
+//         hd->total_length += expanded_length;
+//         hd->content[hd->total_length] = '\0'; // Null-terminate the content
+//         // free(expanded_line);
+//     }
+//     return (0);
+// }
+
 int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 {
 	ssize_t	bytes_read;
