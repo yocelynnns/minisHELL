@@ -17,15 +17,18 @@ int	execute_left_command(t_cmd *m, int pipefd[2], char **env,
 {
 	pid_t	pid1;
 
-	(void) m;
+	// (void) m;
 	pid1 = fork();
 	if (pid1 == 0)
 	{
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[0]);
 		close(pipefd[1]);
-		// close(m->org_fd[0]);
-		// close(m->org_fd[1]);
+		if (ft_strcmp(mini->ast->pipeline->left->command->args[0], "exit") == 0)
+		{
+			close(m->org_fd[0]);
+			close(m->org_fd[1]);
+		}
 		execute_command(mini->ast->pipeline->left, env, mini);
 		// printf("-----------------dfadsf\n");
 		// cleanup(mini);

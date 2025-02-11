@@ -99,7 +99,7 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 	pid_t	pid;
 	int		signal;
 
-	if (handle_builtin_commands(ast, mini) == 0)
+	if (handle_builtin_commands(ast, mini, m) == 0)
 		return (g_sig.exit_value);
 	pid = fork();
 	if (pid == 0)

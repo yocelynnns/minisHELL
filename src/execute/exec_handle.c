@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
+int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	if (!ast || ast->type != AST_COMMAND || !ast->command
 		|| !*(ast->command->args))
@@ -31,7 +31,11 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini)
 	else if (ft_strcmp(ast->command->args[0], "unset") == 0)
 		return (ft_unset(ast->command->args, mini), 0);
 	else if (ft_strcmp(ast->command->args[0], "exit") == 0)
+	{
+		close(m->org_fd[0]);
+		close(m->org_fd[1]);
 		return (ft_exit(ast->command->args, mini), 0);
+	}
 	g_sig.exit_value = 1;
 	return (1);
 }

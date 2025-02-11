@@ -21,99 +21,99 @@ void free_minishell(t_minishell *mini, char *input)
 
 void prompt(char *input, t_minishell *mini)
 {
-    handle_eof(input, mini);
-    if (*input)
-        add_history(input);
+	handle_eof(input, mini);
+	if (*input)
+		add_history(input);
 }
 
 void free_tokent(t_token *tokens, char *input)
 {
-    free_tokens(tokens);
-    free(input);
+	free_tokens(tokens);
+	free(input);
 }
 
 void run_shell_loop(t_minishell *mini, char **env)
 {
-    char *input; 
-    t_token *tokens;
-    t_ast_node *ast;
+	char *input; 
+	t_token *tokens;
+	t_ast_node *ast;
 
-    while (1)
-    {
-        init_signals();
-        input = readline("minishell$ ");
-        stop_signals();
-        prompt(input, mini);
-        tokens = lexer(input, mini);
-        // print_tokens(tokens);
-        mini->token = tokens;
-        if (!tokens)
-        {
-            free_tokens(mini->token);
-            free_tokens(tokens);
-            free(input);
-            continue;
-        }
-        ast = build_ast(tokens, mini);
-        // print_ast(ast, 0);
-        mini->ast = ast;
-        if (!ast)
-        {
-            free_ast(mini->ast);
-            free_ast(ast);
-            free_tokent(tokens, input);
-            continue;
-        }
-        execute_command(ast, env, mini);
-        free_minishell(mini, input);
-    }
+	while (1)
+	{
+		init_signals();
+		input = readline("minishell$ ");
+		stop_signals();
+		prompt(input, mini);
+		tokens = lexer(input, mini);
+		// print_tokens(tokens);
+		mini->token = tokens;
+		if (!tokens)
+		{
+			free_tokens(mini->token);
+			free_tokens(tokens);
+			free(input);
+			continue;
+		}
+		ast = build_ast(tokens, mini);
+		// print_ast(ast, 0);
+		mini->ast = ast;
+		if (!ast)
+		{
+			free_ast(mini->ast);
+			free_ast(ast);
+			free_tokent(tokens, input);
+			continue;
+		}
+		execute_command(ast, env, mini);
+		free_minishell(mini, input);
+	}
 }
 
 void print_welcome_message(void)
 {
-    printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n");
-    printf("|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n");
-    printf("|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n");
-    printf("|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n");
-    printf("|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n");
-    printf("| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n");
-    printf("|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
+	printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n");
+	printf("|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n");
+	printf("|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n");
+	printf("|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n");
+	printf("|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n");
+	printf("| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n");
+	printf("|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
 }
 
 t_minishell *init_minishell(char **env)
 {
-    t_minishell *mini;
+	t_minishell *mini;
 
-    mini = malloc(sizeof(t_minishell));
-    if (!mini)
-        return (NULL);
-    g_sig.exit_value = 0;
-    if (env_init(mini, env) == ERROR)
-    {
-        ft_putstr_fd("Error: Failed to initialize environment variables\n",STDERR);
-        free(mini);
-        return (NULL);
-    }
-    return (mini);
+	mini = malloc(sizeof(t_minishell));
+	if (!mini)
+		return (NULL);
+	g_sig.exit_value = 0;
+	if (env_init(mini, env) == ERROR)
+	{
+		ft_putstr_fd("Error: Failed to initialize environment variables\n",STDERR);
+		free(mini);
+		return (NULL);
+	}
+	return (mini);
 }
 
 int main(int ac, char **av, char **env)
 {
-    t_minishell *mini;
+	t_minishell *mini;
 
-    (void)ac;
-    (void)av;
-    mini = init_minishell(env);
-    if (!mini)
-        return (EXIT_FAILURE);
+	(void)ac;
+	(void)av;
+	mini = init_minishell(env);
+	if (!mini)
+		return (EXIT_FAILURE);
 
-    print_welcome_message();
-    run_shell_loop(mini, env);
-    free_env(mini->env);
-    free(mini);
-    init_signals();
+	print_welcome_message();
+	run_shell_loop(mini, env);
+	free_env(mini->env);
+	free(mini);
+	init_signals();
 
-    return (g_sig.exit_value);
+	return (g_sig.exit_value);
 }
 
 // int main(int ac, char **av, char **env)

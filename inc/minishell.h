@@ -204,8 +204,7 @@ char						*find_executable(char *cmd, t_minishell *mini);
 char						*concat_path(char *dir, char *cmd);
 char						*read_heredoc(const char *delim, t_minishell *mini);
 
-int							handle_builtin_commands(t_ast_node *ast,
-								t_minishell *mini);
+int							handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 void						handle_redirection(t_ast_node *ast,
 								t_minishell *mini);
 void						handle_heredoc(t_ast_node *ast);
