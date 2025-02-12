@@ -138,7 +138,6 @@ t_ast_node *parse_command(t_token **tokens, t_minishell *mini, int i)
 
 t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 {
-    (void)mini;
 	t_ast_node	*redirect_node;
 
 	redirect_node = create_ast_node(AST_REDIRECT);

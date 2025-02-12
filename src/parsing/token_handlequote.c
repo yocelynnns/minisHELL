@@ -16,6 +16,7 @@ char    *ft_strcjoin(char *str, char c)
 {
     char    *result;
     int     i;
+	
     result = malloc(sizeof(char) * (ft_strlen(str) + 2));
     i = 0;
     while (str && str[i])
@@ -65,14 +66,18 @@ char *handle_single_quote(t_process *proc)
 
 char *expand_variable(t_process *proc)
 {
-    proc->mini->flag = 1;
+	int it;
     char *start;
     char *env_value;
-    
-    if (proc->str[proc->i + 1] == '?')  // Check if "$?" is being expanded
+	char *temp;
+
+    proc->mini->flag = 1;
+	it = 0;    
+    if (proc->str[proc->i + 1] == '?')
     {
-        env_value = ft_itoa(proc->mini->exit);  // Convert exit status to string
-        proc->i += 2;  // Skip "$?"
+		it = 1;
+        env_value = ft_itoa(proc->mini->exit);
+        proc->i += 2;
     }
     else
     {
@@ -80,7 +85,7 @@ char *expand_variable(t_process *proc)
         while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
             proc->i++;
         start = ft_strndup(start, proc->str + proc->i - start);
-		if (!*start)  // If variable name is empty, just append '$' itself
+		if (!*start)
 		{
 			proc->result = ft_strcjoin(proc->result, '$');
 			free(start);
@@ -89,45 +94,23 @@ char *expand_variable(t_process *proc)
         env_value = get_env_value(start, proc->mini->env);
         free(start);
     }
-
     if (!proc->result)
         proc->result = ft_strdup("");
-    
     if (env_value)
     {
-        char *temp = proc->result;
+        temp = proc->result;
         proc->result = ft_strjoin(proc->result, env_value);  
         free(temp);
+		if (it)
+		{
+			free(env_value);
+			it = 0;
+		}
     }
     else
         proc->result = ft_strcjoin(proc->result, '\0');
-		
-	// free(env_value);
     return proc->result;
 }
-
-// char *expand_variable(t_process *proc)
-// {
-//     proc->mini->flag = 1;
-//     char *start;
-//     start = ++proc->i + proc->str;
-//     while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
-//         proc->i++;
-//     start = ft_strndup(start, proc->str + proc->i - start);
-//     char *env_value = get_env_value(start, proc->mini->env);
-//     if (!proc->result)
-// 			proc->result = ft_strdup("");
-//     if (env_value)
-//     {
-//         char *temp = proc->result;
-//         proc->result = ft_strjoin(proc->result, env_value);  
-//         free(temp);
-//     }
-//     else
-//         proc->result = ft_strcjoin(proc->result, '\0');
-//     free(start);
-//     return proc->result;
-// }
 
 char *handle_double_quote(t_process *proc)
 {
@@ -136,7 +119,8 @@ char *handle_double_quote(t_process *proc)
     {
         if (proc->str[proc->i] == '\\' && proc->str[proc->i + 1] != '\'')
             proc->result = handle_backslash(proc);
-        else if (proc->str[proc->i] == '$' && proc->str[proc->i - 1] != '\\' && !proc->mini->here)
+        else if (proc->str[proc->i] == '$' && proc->str[proc->i - 1] != '\\' \
+		&& !proc->mini->here)
             proc->result = expand_variable(proc);
         else if (proc->str[proc->i] == proc->in_quote)
         {
@@ -181,3 +165,26 @@ char *first_processing(char *str, t_minishell *mini)
 
     return proc.result;
 }
+
+// char *expand_variable(t_process *proc)
+// {
+//     proc->mini->flag = 1;
+//     char *start;
+//     start = ++proc->i + proc->str;
+//     while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
+//         proc->i++;
+//     start = ft_strndup(start, proc->str + proc->i - start);
+//     char *env_value = get_env_value(start, proc->mini->env);
+//     if (!proc->result)
+// 			proc->result = ft_strdup("");
+//     if (env_value)
+//     {
+//         char *temp = proc->result;
+//         proc->result = ft_strjoin(proc->result, env_value);  
+//         free(temp);
+//     }
+//     else
+//         proc->result = ft_strcjoin(proc->result, '\0');
+//     free(start);
+//     return proc->result;
+// }

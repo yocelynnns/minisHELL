@@ -44,6 +44,86 @@ int	is_delimiter(const char *content, const char *delimiter,
 			|| content[total_length + delimiter_length] == '\0'));
 }
 
+int bytes_check(ssize_t bytes_read, t_minishell *mini, t_heredoc *hd)
+{
+	if (g_sig.sigint)
+	{
+		mini->exit = mini->exit;
+		g_sig.sigint = 0;
+		return (-1);
+	}
+	if (bytes_read < 0)
+	{
+		perror("read");
+		mini->exit = 1;
+		return (-1);
+	}
+	else if (bytes_read == 0)
+	{
+		printf("\nminishell: warning: here-document is");
+		printf(" delimited by end-of-file (wanted '%s')\n", hd->delimiter);
+		return (-1);
+	}
+	return (0);
+}
+
+int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
+{
+	ssize_t	bytes_read;
+
+	(void)mini;
+	set_signals_heredoc();
+	signal(SIGQUIT,ignore_sigquit);
+	while (1)
+	{
+		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
+		if (bytes_check(bytes_read, mini, hd) == -1)
+			return (-1);
+		hd->content[hd->total_length + bytes_read] = '\0';
+		if (is_delimiter(hd->content, hd->delimiter, hd->total_length,
+				hd->delimiter_length))
+			break ;
+		hd->total_length += bytes_read;
+		if (hd->total_length + 1 >= hd->current_size)
+		{
+			hd->content = resize_buffer(hd->content, hd->total_length,
+					&hd->current_size);
+			if (!hd->content)
+				return (-1);
+		}
+	}
+	return (0);
+}
+
+char	*read_heredoc(const char *delimiter, t_minishell *mini)
+{
+	t_heredoc	*hd;
+	char		*final_content;
+
+	hd = init_heredoc(delimiter);
+	if (!hd)
+		return (NULL);
+	if (read_until_delimiter(hd, mini) < 0)
+	{
+		free(hd->content);
+		free(hd);
+		return (NULL);
+	}
+	final_content = malloc(hd->total_length + 1);
+	if (!final_content)
+	{
+		perror("malloc");
+		free(hd->content);
+		free(hd);
+		return (NULL);
+	}
+	ft_memcpy(final_content, hd->content, hd->total_length);
+	final_content[hd->total_length] = '\0';
+	free(hd->content);
+	free(hd);
+	return (final_content);
+}
+
 // char *expand_variables(char *str, t_minishell *mini)
 // {
 //     char *start;
@@ -128,51 +208,6 @@ int	is_delimiter(const char *content, const char *delimiter,
 //     return (0);
 // }
 
-int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
-{
-	ssize_t	bytes_read;
-
-	(void)mini;
-	set_signals_heredoc();
-	signal(SIGQUIT,ignore_sigquit);
-	while (1)
-	{
-		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
-		if (g_sig.sigint)
-		{
-			mini->exit = mini->exit;
-			g_sig.sigint = 0;
-			return (-1);
-		}
-		if (bytes_read < 0)
-		{
-			perror("read");
-			mini->exit = 1;
-			return (-1);
-		}
-		else if (bytes_read == 0)
-		{
-			printf("EOF Handle\n");
-			return (-1);
-		}
-		hd->content[hd->total_length + bytes_read] = '\0';
-		if (is_delimiter(hd->content, hd->delimiter, hd->total_length,
-				hd->delimiter_length))
-			break ;
-		hd->total_length += bytes_read;
-		if (hd->total_length + 1 >= hd->current_size)
-		{
-			hd->content = resize_buffer(hd->content, hd->total_length,
-					&hd->current_size);
-			if (!hd->content)
-			{
-				return (-1);
-			}
-		}
-	}
-	return (0);
-}
-
 // int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // {
 // 	ssize_t	bytes_read;
@@ -217,32 +252,3 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 	mini->exit = 0;
 // 	return (0);
 // }
-
-char	*read_heredoc(const char *delimiter, t_minishell *mini)
-{
-	t_heredoc	*hd;
-	char		*final_content;
-
-	hd = init_heredoc(delimiter);
-	if (!hd)
-		return (NULL);
-	if (read_until_delimiter(hd, mini) < 0)
-	{
-		free(hd->content);
-		free(hd);
-		return (NULL);
-	}
-	final_content = malloc(hd->total_length + 1);
-	if (!final_content)
-	{
-		perror("malloc");
-		free(hd->content);
-		free(hd);
-		return (NULL);
-	}
-	ft_memcpy(final_content, hd->content, hd->total_length);
-	final_content[hd->total_length] = '\0';
-	free(hd->content);
-	free(hd);
-	return (final_content);
-}

@@ -78,7 +78,7 @@ int	env_init(t_minishell *mini, char **env_array)
 	}
 	if (init_env_list(mini, env_array) != 0)
 		return (1);
-	ft_putendl_fd("Environment variables successfully initialized.", 2);
+	// ft_putendl_fd("Environment variables successfully initialized.", 2);
 	return (0);
 }
 
