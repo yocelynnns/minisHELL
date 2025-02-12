@@ -53,7 +53,7 @@ t_ast_node	*build_ast(t_token *tokens, t_minishell *mini)
 	int	i;
 
 	i = count_cmds(tokens);
-	return (parse_pipeline(&tokens, mini, i));
+	return (parse_pipeline(tokens, mini, i));
 }
 
 void	init_lexstate(t_lexer_state *state)

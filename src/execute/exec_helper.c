@@ -79,7 +79,7 @@ int	execute_pipeline(t_minishell *mini, t_cmd *m, t_ast_node *ast)
 		return (-1);
 	}
 	pid1 = execute_left_command(m, pipefd, ast->pipeline->left, mini);
-	execute_pipeline(mini, m, ast->pipeline->right);
+	execute_command(ast->pipeline->right, mini);
 	// pid2 = execute_right_command(m, pipefd, ast->pipeline->right, mini);
 	if (pid1 > 0)
 	{

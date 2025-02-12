@@ -186,7 +186,7 @@ char *first_processing(char *str, t_minishell *mini);
 t_ast_node *create_ast_node(t_ast_node_type type);
 t_ast_node *parse_command(t_token **tokens, t_minishell *mini,
 						  int i);
-t_ast_node *parse_pipeline(t_token **tokens, t_minishell *mini,
+t_ast_node *parse_pipeline(t_token *tokens, t_minishell *mini,
 						   int i);
 t_ast_node *parse_redirect(t_token **tokens,
 						   t_minishell *mini);

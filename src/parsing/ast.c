@@ -31,9 +31,9 @@ t_ast_node	*create_ast_node(t_ast_node_type type)
 	return (new_node);
 }
 
-static int handle_pipe_error(t_token **tokens, t_minishell *mini)
+static int handle_pipe_error(t_token *tokens, t_minishell *mini)
 {
-    if ((*tokens)->next == NULL)
+    if (tokens && (tokens->type == PIPE))
     {
         printf("Error: Syntax error near unexpected token '|'\n");
         mini->exit = 2;
@@ -51,23 +51,23 @@ static t_ast_node *create_pipeline_node(t_ast_node *left, t_ast_node *right)
     return (pipeline_node);
 }
 
-t_ast_node *parse_pipeline(t_token **tokens, t_minishell *mini, int i)
+t_ast_node *parse_pipeline(t_token *tokens, t_minishell *mini, int i)
 {
     t_ast_node *left;
     t_ast_node *right;
     t_ast_node *pipeline_node;
 
-    left = parse_command(tokens, mini, i);
+	if (!handle_pipe_error(tokens, mini))
+	{
+		// free_ast(left);
+		return (NULL);
+	}
+    left = parse_command(&tokens, mini, i);
     if (!left)
         return (NULL);
-    while (*tokens && (*tokens)->type == PIPE)
-    {
-        if (!handle_pipe_error(tokens, mini))
-        {
-            free_ast(left);
-            return (NULL);
-        }
-        *tokens = (*tokens)->next;
+    // while (*tokens && (*tokens)->type == PIPE)
+    // {
+        // *tokens = (*tokens)->next;
         // right = parse_command(tokens, mini, i);
         // if (!right)
         // {
@@ -75,8 +75,8 @@ t_ast_node *parse_pipeline(t_token **tokens, t_minishell *mini, int i)
         //     return (NULL);
         // }
         // pipeline_node = create_pipeline_node(left, right);
-		if ((*tokens) && (*tokens)->type == PIPE)
-        	right = parse_pipeline(tokens, mini, i);
+		if ((tokens) && tokens->type == PIPE)
+        	right = parse_pipeline(tokens->next, mini, i);
 		else
 			return (left);
         if (!right)
@@ -87,7 +87,7 @@ t_ast_node *parse_pipeline(t_token **tokens, t_minishell *mini, int i)
         pipeline_node = create_pipeline_node(left, right);
 
         left = pipeline_node;
-    }
+    // }
     return (left);
 }
 
