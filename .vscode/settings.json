@@ -39,5 +39,8 @@
 		"fcntl.h": "c",
 		"string.h": "c",
 		"msdata.h": "c"
+	},
+	"[c]": {
+		"editor.defaultFormatter": "ms-vscode.cpptools"
 	}
 }

@@ -53,7 +53,7 @@ int	handle_tilde(char **path, t_env *env_list)
 	return (SUCCESS);
 }
 
-int	handle_special_cd(char **arguments, t_env *env_list)
+int	handle_special_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
 	char	*directory_path;
 
@@ -65,7 +65,7 @@ int	handle_special_cd(char **arguments, t_env *env_list)
 			ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
 			return (ERROR);
 		}
-		return (navigate_to_special_dir(0, env_list));
+		return (navigate_to_special_dir(0, env_list, mini));
 	}
 	if (ft_strcmp(arguments[1], "-") == 0)
 	{
@@ -75,12 +75,12 @@ int	handle_special_cd(char **arguments, t_env *env_list)
 			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
 			return (ERROR);
 		}
-		return (navigate_to_special_dir(1, env_list));
+		return (navigate_to_special_dir(1, env_list, mini));
 	}
 	return (SUCCESS);
 }
 
-int	handle_regular_cd(char *path, t_env *env_list)
+int	handle_regular_cd(char *path, t_env *env_list, t_minishell *mini)
 {
 	char	*expanded_path;
 	int		cd_result;
@@ -100,7 +100,7 @@ int	handle_regular_cd(char *path, t_env *env_list)
 	}
 	cd_result = chdir(expanded_path);
 	if (cd_result != 0)
-		print_cd_error(expanded_path);
+		print_cd_error(expanded_path, mini);
 	free(expanded_path);
 	return (cd_result);
 }

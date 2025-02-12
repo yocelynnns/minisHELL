@@ -42,7 +42,7 @@ int	key_exists_in_env(const char *key, t_env *env)
 	return (0);
 }
 
-int	update_env(char *key, char *new_value, t_env **env)
+int	update_env(char *key, char *new_value, t_env **env, t_minishell *mini)
 {
 	t_env	*tmp;
 	size_t	key_len;
@@ -57,7 +57,7 @@ int	update_env(char *key, char *new_value, t_env **env)
 			free(tmp->value);
 			tmp->value = new_value;
 			if (!tmp->value)
-				return (print_export_error(-1, key));
+				return (print_export_error(-1, key, mini));
 			return (SUCCESS);
 		}
 		tmp = tmp->next;

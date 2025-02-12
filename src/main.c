@@ -32,21 +32,22 @@ void free_tokent(t_token *tokens, char *input)
 	free(input);
 }
 
-void init_loop(char *input, t_minishell *mini)
-{
-	init_signals();
-	input = readline("minishell$ ");
-	if(g_sig.sigint == 1)
-		mini->exit = 130;
-	stop_signals();
-	prompt(input, mini);
-}
+// void init_loop(char *input, t_minishell *mini)
+// {
+// 	init_signals();
+// 	input = readline("minishell$ ");
+// 	if(g_sig.sigint == 1)
+// 		mini->exit = 130;
+// 	stop_signals();
+// 	prompt(input, mini);
+// }
 
-void exec_free(t_minishell *mini, char **env, char *input)
-{
-	execute_command(mini->ast, env, mini);
-	free_minishell(mini, input);
-}
+// void exec_free(t_minishell *mini, char **env, char *input)
+// {
+// 	mini->exit = 0;
+// 	execute_command(mini->ast, env, mini);
+// 	free_minishell(mini, input);
+// }
 
 void run_shell_loop(t_minishell *mini, char **env)
 {
@@ -56,7 +57,13 @@ void run_shell_loop(t_minishell *mini, char **env)
 
 	while (1)
 	{
-		init_loop(input, mini);
+		// init_loop(input, mini);
+		init_signals();
+		input = readline("minishell$ ");
+		if(g_sig.sigint == 1)
+			mini->exit = 130;
+		stop_signals();
+		prompt(input, mini);
 		tokens = lexer(input, mini);
 		// print_tokens(tokens);
 		mini->token = tokens;
@@ -75,7 +82,10 @@ void run_shell_loop(t_minishell *mini, char **env)
 			free_tokent(tokens, input);
 			continue;
 		}
-		exec_free(mini, env, input);
+		mini->exit = 0;
+		execute_command(mini->ast, env, mini);
+		free_minishell(mini, input);
+		// exec_free(mini, env, input);
 	}
 }
 

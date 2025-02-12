@@ -63,14 +63,14 @@ int	ft_exit(char **av, t_minishell *mini)
 	exit(mini->exit % 256);
 }
 
-int	add_env_node(char *new_value, t_env **env)
+int	add_env_node(char *new_value, t_env **env, t_minishell *mini)
 {
 	t_env	*new_node;
 	t_env	*last;
 
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
-		return (print_export_error(-1, ft_strdup(new_value)));
+		return (print_export_error(-1, ft_strdup(new_value), mini));
 	new_node->value = new_value;
 	new_node->next = NULL;
 	if (!*env)
