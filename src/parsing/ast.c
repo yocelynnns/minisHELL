@@ -33,7 +33,6 @@ t_ast_node	*create_ast_node(t_ast_node_type type)
 
 static int handle_pipe_error(t_token **tokens, t_minishell *mini)
 {
-    (void)mini;
     if ((*tokens)->next == NULL)
     {
         printf("Error: Syntax error near unexpected token '|'\n");
@@ -69,13 +68,24 @@ t_ast_node *parse_pipeline(t_token **tokens, t_minishell *mini, int i)
             return (NULL);
         }
         *tokens = (*tokens)->next;
-        right = parse_command(tokens, mini, i);
+        // right = parse_command(tokens, mini, i);
+        // if (!right)
+        // {
+        //     free_ast(left);
+        //     return (NULL);
+        // }
+        // pipeline_node = create_pipeline_node(left, right);
+		if ((*tokens) && (*tokens)->type == PIPE)
+        	right = parse_pipeline(tokens, mini, i);
+		else
+			return (left);
         if (!right)
         {
             free_ast(left);
             return (NULL);
         }
         pipeline_node = create_pipeline_node(left, right);
+
         left = pipeline_node;
     }
     return (left);
@@ -128,9 +138,11 @@ t_ast_node *parse_command(t_token **tokens, t_minishell *mini, int i)
     cmd = create_ast_node(AST_COMMAND);
     init_cmd(cmd, i);
     arg_count = 0;
-    if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, &arg_count))
+    if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, \
+	&arg_count))
         return (NULL);
-    if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, &arg_count))
+    if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, \
+	&arg_count))
         return (NULL);
     cmd->command->args[arg_count] = NULL;
     return (cmd);

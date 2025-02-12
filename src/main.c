@@ -49,7 +49,7 @@ void free_tokent(t_token *tokens, char *input)
 // 	free_minishell(mini, input);
 // }
 
-void run_shell_loop(t_minishell *mini, char **env)
+void run_shell_loop(t_minishell *mini)
 {
 	char *input; 
 	t_token *tokens;
@@ -83,7 +83,7 @@ void run_shell_loop(t_minishell *mini, char **env)
 			continue;
 		}
 		mini->exit = 0;
-		execute_command(mini->ast, env, mini);
+		execute_command(mini->ast, mini);
 		free_minishell(mini, input);
 		// exec_free(mini, env, input);
 	}
@@ -134,9 +134,8 @@ int main(int ac, char **av, char **env)
 	mini = init_minishell(env);
 	if (!mini)
 		return (EXIT_FAILURE);
-
 	print_welcome_message();
-	run_shell_loop(mini, env);
+	run_shell_loop(mini);
 	free_env(mini->env);
 	free(mini);
 	init_signals();

@@ -93,8 +93,7 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	return (NULL);
 }
 
-int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
-		t_cmd *m)
+int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	pid_t	pid;
 	int		signal;
@@ -107,18 +106,13 @@ int	fork_and_execute(t_ast_node *ast, char **env, t_minishell *mini,
 		init_signals();
 		close(m->org_fd[0]);
 		close(m->org_fd[1]);
-		execute_in_child(ast, env, mini, m);
-		// if (execute_in_child(ast, env, mini, m) == -1)
-		// 	return (-1);
+		execute_in_child(ast, mini, m);
 	}
 	else if (pid < 0)
 	{
 		perror("fork");
 		return (-1);
 	}
-	// g_sig.pid = pid;
-	// waitpid(g_sig.pid, &m->status, 0);
-	// g_sig.pid = 0;
 	waitpid(pid, &m->status, 0);
 	if (WIFSIGNALED(m->status))
 	{

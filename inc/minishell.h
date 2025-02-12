@@ -139,6 +139,7 @@ typedef struct s_minishell
 	int flag;
 	int here;
 	int exit;
+	char **env2;
 } t_minishell;
 
 typedef struct s_heredoc
@@ -172,7 +173,7 @@ extern t_signal g_sig;
 
 char *ft_strcjoin(char *str, char c);
 void stop_signals(void);
-void cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd);
+void cmdchecks(t_ast_node *ast, t_minishell *mini);
 t_token *create_token(t_token_type type, const char *value);
 void add_token(t_token **head, t_token *new_token);
 t_token *lexer(const char *input, t_minishell *mini);
@@ -199,29 +200,26 @@ void attach_redirect(t_ast_node *cmd,
 int handle_redirect(t_ast_node *cmd, t_token **tokens,
 					t_minishell *mini);
 
-void execute_command(t_ast_node *ast, char **env,
-					 t_minishell *mini);
+void execute_command(t_ast_node *ast, t_minishell *mini);
 char *find_executable(char *cmd, t_minishell *mini);
 char *concat_path(char *dir, char *cmd);
 char *read_heredoc(const char *delim, t_minishell *mini);
 
 int handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m);
-void handle_redirection(t_ast_node *ast,
-						t_minishell *mini);
+void handle_redirection(t_ast_node *ast);
 void handle_heredoc(t_ast_node *ast);
 t_heredoc *init_heredoc(const char *delimiter);
 char *check_directory(char *dir, char *cmd);
 char *get_executable_path(t_ast_node *ast,
 						  t_minishell *mini);
-int fork_and_execute(t_ast_node *ast, char **env,
-					 t_minishell *mini, t_cmd *m);
-void execute_in_child(t_ast_node *ast, char **env,
-					  t_minishell *mini, t_cmd *m);
+int fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m);
+void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 int execute_left_command(t_cmd *m, int pipefd[2],
-						 char **env, t_minishell *mini);
-int execute_right_command(t_cmd *m,
-						  int pipefd[2], char **env, t_minishell *mini);
-int execute_pipeline(char **env, t_minishell *mini, t_cmd *m);
+						 t_ast_node *ast, t_minishell *mini);
+int execute_right_command(t_cmd *m, int pipefd[2], t_ast_node *ast, t_minishell *mini);
+int execute_pipeline(t_minishell *mini, t_cmd *m, t_ast_node *ast);
+void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini);
+int	pipe_execute(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m);
 char *resize_buffer(char *content, size_t total_length,
 					size_t *current_size);
 ssize_t read_line(char *content, size_t total_length,
@@ -232,8 +230,7 @@ int is_delimiter(const char *content,
 int read_until_delimiter(t_heredoc *hd,
 						 t_minishell *mini);
 void free_dirs(char **dirs);
-void handle_all_redirections(t_ast_node *ast,
-							 t_minishell *mini);
+void handle_all_redirections(t_ast_node *ast);
 
 int ft_strcmp(const char *s1, const char *s2);
 int number_of_args(char **args);

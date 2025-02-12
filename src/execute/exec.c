@@ -21,7 +21,7 @@ int	is_directory(const char *path)
 	return (0);
 }
 
-void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
+void	execute_command(t_ast_node *ast, t_minishell *mini)
 {
 	t_cmd	m;
 
@@ -29,39 +29,52 @@ void	execute_command(t_ast_node *ast, char **env, t_minishell *mini)
 	m.org_fd[1] = dup(STDOUT_FILENO);
 	if (ast->type == AST_COMMAND)
 	{
-		cmdchecks(ast, mini, m.org_fd);
-		if (fork_and_execute(ast, env, mini, &m) < 0)
+		cmdchecks(ast, mini);
+		if (fork_and_execute(ast, mini, &m) < 0)
 		{
-			// to fix
 			close(m.org_fd[0]);
 			close(m.org_fd[1]);
 			return ;
 		}
 	}
 	else if (ast->type == AST_PIPELINE)
-		execute_pipeline(env, mini, &m);
+		execute_pipeline(mini, &m, ast);
 	dup2(m.org_fd[0], STDIN_FILENO);
 	dup2(m.org_fd[1], STDOUT_FILENO);
 	close(m.org_fd[0]);
 	close(m.org_fd[1]);
 }
 
-void	cmdchecks(t_ast_node *ast, t_minishell *mini, int *org_fd)
+void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 {
-	(void)org_fd;
+	t_cmd	m;
+
+	m.org_fd[0] = dup(STDIN_FILENO);
+	m.org_fd[1] = dup(STDOUT_FILENO);
+
+	cmdchecks(ast, mini);
+	if (handle_builtin_commands(ast, mini, &m) == 0)
+		return ;
+	init_signals();
+	execute_in_child(ast, mini, &m);
+	close(m.org_fd[0]);
+	close(m.org_fd[1]);
+}
+
+void	cmdchecks(t_ast_node *ast, t_minishell *mini)
+{
 	if (ast->command->redirect)
-		handle_all_redirections(ast, mini);
+		handle_all_redirections(ast);
 	if (ast->command->heredoc)
 		handle_heredoc(ast);
-	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) || (ast->command->args[0][0] == '\0'))
+	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) \
+	|| (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
-	{
-		// cleanup(mini);
 		return ;
-	}
 }
 void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 {
+	dprintf(2, "hello\n");
 	mini->exit = returnval;
 	close(m->org_fd[0]);
 	close(m->org_fd[1]);
@@ -69,9 +82,12 @@ void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 	exit(returnval);
 }
 
-void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m)
+void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
+//fix this
+	char **envp;
+	envp = NULL;
 
 	if (ast->command->args[0] == NULL)
 		fkoff(mini, m, EXIT_SUCCESS);
@@ -81,15 +97,11 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m)
 		fkoff(mini, m, 126);
 	}
 	executable_path = get_executable_path(ast, mini);
-	// close(m->org_fd[0]);
-	// close(m->org_fd[1]);
-	if ((executable_path) && (execve(executable_path, ast->command->args, env) == -1))
+	if ((executable_path) && (execve(executable_path, ast->command->args, envp) \
+	== -1))
 	{
-		// if (execve(executable_path, ast->command->args, env) == -1)
-		// {
 			perror("execve");
 			fkoff(mini, m, EXIT_FAILURE);
-		// }
 	}
 	else
 	{
@@ -98,7 +110,6 @@ void	execute_in_child(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m)
 		write(2, "\n", 1);
 		fkoff(mini, m, 127);
 	}
-	// return (0);
 }
 
 // void	expand_variables_in_args(char **args, t_env *env)

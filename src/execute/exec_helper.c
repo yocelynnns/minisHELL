@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-int	execute_left_command(t_cmd *m, int pipefd[2], char **env,
+int	execute_left_command(t_cmd *m, int pipefd[2], t_ast_node *ast,
 		t_minishell *mini)
 {
 	pid_t	pid1;
@@ -21,17 +21,15 @@ int	execute_left_command(t_cmd *m, int pipefd[2], char **env,
 	pid1 = fork();
 	if (pid1 == 0)
 	{
-		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
-		if (ft_strcmp(mini->ast->pipeline->left->command->args[0], "exit") == 0)
+		if (ft_strcmp(ast->command->args[0], "exit") == 0)
 		{
 			close(m->org_fd[0]);
 			close(m->org_fd[1]);
 		}
-		execute_command(mini->ast->pipeline->left, env, mini);
-		// printf("-----------------dfadsf\n");
-		// cleanup(mini);
+		pipe_exec_cmd(ast, mini);
 		// exit(0);
 	}
 	else if (pid1 < 0)
@@ -42,7 +40,7 @@ int	execute_left_command(t_cmd *m, int pipefd[2], char **env,
 	return (pid1);
 }
 
-int	execute_right_command(t_cmd *m, int pipefd[2], char **env,
+int	execute_right_command(t_cmd *m, int pipefd[2], t_ast_node *ast,
 		t_minishell *mini)
 {
 	pid_t	pid2;
@@ -51,12 +49,12 @@ int	execute_right_command(t_cmd *m, int pipefd[2], char **env,
 	pid2 = fork();
 	if (pid2 == 0)
 	{
-		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
 		close(m->org_fd[0]);
 		close(m->org_fd[1]);
-		execute_command(mini->ast->pipeline->right, env, mini);
+		execute_command(ast, mini);
 		cleanup(mini);
 		exit(0);
 	}
@@ -68,11 +66,11 @@ int	execute_right_command(t_cmd *m, int pipefd[2], char **env,
 	return (pid2);
 }
 
-int	execute_pipeline(char **env, t_minishell *mini, t_cmd *m)
+int	execute_pipeline(t_minishell *mini, t_cmd *m, t_ast_node *ast)
 {
 	int		pipefd[2];
 	pid_t	pid1;
-	pid_t	pid2;
+	// pid_t	pid2;
 	int		status;
 
 	if (pipe(pipefd) == -1)
@@ -80,23 +78,24 @@ int	execute_pipeline(char **env, t_minishell *mini, t_cmd *m)
 		perror("pipe");
 		return (-1);
 	}
-	pid1 = execute_left_command(m, pipefd, env, mini);
-	pid2 = execute_right_command(m, pipefd, env, mini);
+	pid1 = execute_left_command(m, pipefd, ast->pipeline->left, mini);
+	execute_pipeline(mini, m, ast->pipeline->right);
+	// pid2 = execute_right_command(m, pipefd, ast->pipeline->right, mini);
 	if (pid1 > 0)
 	{
+		close(pipefd[0]);
+		close(pipefd[1]);
 		waitpid(pid1, &status, 0);
 		if (WIFEXITED(status))
 			mini->exit = WEXITSTATUS(status);
-		close(pipefd[0]);
-		close(pipefd[1]);
 	}
-	if (pid2 > 0)
-	{
-		waitpid(pid2, &status, 0);
-		if (WIFEXITED(status))
-			mini->exit = WEXITSTATUS(status);
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
+	// if (pid2 > 0)
+	// {
+	// 	close(pipefd[0]);
+	// 	close(pipefd[1]);
+	// 	waitpid(pid2, &status, 0);
+	// 	if (WIFEXITED(status))
+	// 		mini->exit = WEXITSTATUS(status);
+	// }
 	return (0);
 }
