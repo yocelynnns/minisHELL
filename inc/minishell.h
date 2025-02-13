@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/13 16:53:29 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:28:44 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ int fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 int execute_left_command(int pipefd[2],
 						 t_ast_node *ast, t_minishell *mini);
-int execute_right_command(t_cmd *m, int pipefd[2], t_ast_node *ast, t_minishell *mini);
+int execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini);
 int execute_pipeline(t_minishell *mini, t_ast_node *ast);
 void fkoff(t_minishell *mini, t_cmd *m, int returnval);
 void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini);

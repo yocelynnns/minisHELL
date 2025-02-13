@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/13 16:56:58 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:02:06 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,6 @@ void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
-//fix this
-	// char **envp;
-	// envp = NULL;
 
 	if (ast->command->args[0] == NULL)
 		fkoff(mini, m, EXIT_SUCCESS);
