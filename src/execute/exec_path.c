@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/13 16:36:05 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 18:41:54 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	int		signal;
 
 	if (handle_builtin_commands(ast, mini, m) == 0)
-		return (close(m->org_fd[0]), close(m->org_fd[1]), mini->exit);
+		return (mini->exit);
 	pid = fork();
 	if (pid == 0)
 	{
