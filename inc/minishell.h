@@ -255,6 +255,7 @@ int count_env_vars(t_env *env);
 int ft_pwd(void);
 
 void free_env(t_env *env);
+void free_env_array(char **env_array);
 void free_node(t_minishell *mini, t_env *env);
 
 int check_is_number(char *str);

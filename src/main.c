@@ -137,7 +137,8 @@ int main(int ac, char **av, char **env)
 	print_welcome_message();
 	run_shell_loop(mini);
 	free_env(mini->env);
-	// free(mini);
+	free_env_array(mini->env2);
+	free(mini);
 	init_signals();
 
 	return (mini->exit);

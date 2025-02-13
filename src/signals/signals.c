@@ -86,6 +86,7 @@ void	handle_eof(char *line, t_minishell *mini)
 		i = 0;
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
 		free_env(mini->env);
+		free_env_array(mini->env2);
 		free(mini);
 		exit(i);
 	}

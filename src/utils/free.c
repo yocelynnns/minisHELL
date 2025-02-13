@@ -12,9 +12,9 @@
 
 #include "../inc/minishell.h"
 
-void	free_env(t_env *env)
+void free_env(t_env *env)
 {
-	t_env	*tmp;
+	t_env *tmp;
 
 	while (env)
 	{
@@ -25,9 +25,9 @@ void	free_env(t_env *env)
 	}
 }
 
-void	free_dirs(char **dirs)
+void free_dirs(char **dirs)
 {
-	int	j;
+	int j;
 
 	j = 0;
 	while (dirs[j] != NULL)
@@ -38,9 +38,9 @@ void	free_dirs(char **dirs)
 	free(dirs);
 }
 
-void	free_tokens(t_token *tokens)
+void free_tokens(t_token *tokens)
 {
-	t_token	*temp;
+	t_token *temp;
 
 	while (tokens)
 	{
@@ -56,12 +56,12 @@ void	free_tokens(t_token *tokens)
 	}
 }
 
-static void	free_command(t_ast_node *node)
+static void free_command(t_ast_node *node)
 {
-	int	i;
+	int i;
 
 	if (!node->command)
-		return ;
+		return;
 	if (node->command->args)
 	{
 		i = 0;
@@ -82,19 +82,19 @@ static void	free_command(t_ast_node *node)
 	node->command = NULL;
 }
 
-static void	free_pipeline(t_ast_node *node)
+static void free_pipeline(t_ast_node *node)
 {
 	if (!node->pipeline)
-		return ;
+		return;
 	free_ast(node->pipeline->left);
 	free_ast(node->pipeline->right);
 	free(node->pipeline);
 }
 
-static void	free_redirect(t_ast_node *node)
+static void free_redirect(t_ast_node *node)
 {
 	if (!node->redirect)
-		return ;
+		return;
 	free(node->redirect->file);
 	node->redirect->file = NULL;
 	free_ast(node->redirect->next);
@@ -102,10 +102,10 @@ static void	free_redirect(t_ast_node *node)
 	node->redirect = NULL;
 }
 
-void	free_ast(t_ast_node *node)
+void free_ast(t_ast_node *node)
 {
 	if (!node)
-		return ;
+		return;
 	if (node->type == AST_COMMAND)
 		free_command(node);
 	else if (node->type == AST_PIPELINE)
@@ -117,29 +117,47 @@ void	free_ast(t_ast_node *node)
 	free(node);
 }
 
-void	free_node(t_minishell *mini, t_env *env)
+void free_node(t_minishell *mini, t_env *env)
 {
 	if (mini->env == env && env->next == NULL)
 	{
 		free(mini->env->value);
 		mini->env->value = NULL;
 		mini->env->next = NULL;
-		return ;
+		return;
 	}
 	free(env->value);
 	free(env);
 }
 
-void	cleanup(t_minishell *mini)
+void cleanup(t_minishell *mini)
 {
 	if (mini->token)
 		free_tokens(mini->token);
 	if (mini->ast)
 		free_ast(mini->ast);
 	if (mini->env)
+	{
 		free_env(mini->env);
+		free_env_array(mini->env2);
+	}
 	if (mini)
 		free(mini);
+}
+
+void free_env_array(char **env_array)
+{
+	int i;
+
+	if (!env_array)
+		return;
+	i = 0;
+	while (env_array[i])
+	{
+		free(env_array[i]);
+		i++;
+	}
+	free(env_array);
 }
 
 // void	free_ast(t_ast_node *node)
