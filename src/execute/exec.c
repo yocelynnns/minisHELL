@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/13 18:02:06 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:30:11 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ void	execute_command(t_ast_node *ast, t_minishell *mini)
 	{
 		m.org_fd[0] = dup(STDIN_FILENO);
 		m.org_fd[1] = dup(STDOUT_FILENO);
-		cmdchecks(ast, mini);
+		if (cmdchecks(ast, mini) < 0)
+		{
+			close(m.org_fd[0]);
+			close(m.org_fd[1]);
+			return ;
+		}
 		if (fork_and_execute(ast, mini, &m) < 0)
 		{
 			close(m.org_fd[0]);
@@ -65,16 +70,23 @@ void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 	close(m.org_fd[1]);
 }
 
-void	cmdchecks(t_ast_node *ast, t_minishell *mini)
+int	cmdchecks(t_ast_node *ast, t_minishell *mini)
 {
 	if (ast->command->redirect)
-		handle_all_redirections(ast);
+	{
+		if (handle_all_redirections(ast) < 0)
+			return (-1);	
+	}
 	if (ast->command->heredoc)
+	{
 		handle_heredoc(ast);
+		return (0);
+	}
 	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) \
 	|| (ast->command->args[0][0] == '\0'))
 		&& (mini->flag == 1))
-		return ;
+		return (0);
+	return (0);
 }
 void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 {

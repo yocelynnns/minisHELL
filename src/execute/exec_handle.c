@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/10 20:35:38 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/13 21:30:25 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	return (1);
 }
 
-void	handle_redirection(t_ast_node *redirect)
+int	handle_redirection(t_ast_node *redirect)
 {
 	int	fd;
 
@@ -50,31 +50,34 @@ void	handle_redirection(t_ast_node *redirect)
 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_APPEND,
 				0644);
 	else
-		return ;
+		return (0);
 	if (fd < 0)
 	{
 		perror("open");
-		return ;
+		return (-1);
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
 		dup2(fd, STDIN_FILENO);
 	else
 		dup2(fd, STDOUT_FILENO);
 	close(fd);
+	return (0);
 }
 
-void	handle_all_redirections(t_ast_node *ast)
+int	handle_all_redirections(t_ast_node *ast)
 {
 	t_ast_node	*redirect;
 
 	redirect = ast->command->redirect;
 	while (redirect)
 	{
-		handle_redirection(redirect);
+		if (handle_redirection(redirect) < 0)
+			return (-1);
 		if (!redirect->redirect)
 			break;
 		redirect = redirect->redirect->next;
 	}
+	return (0);
 }
 
 void	handle_heredoc(t_ast_node *ast)

@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/13 18:28:44 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:31:03 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,10 +171,9 @@ typedef struct s_var_process
 
 extern t_signal g_sig;
 
-void exec_ast(t_ast_node *ast, t_minishell *mini);
 char *ft_strcjoin(char *str, char c);
 void stop_signals(void);
-void cmdchecks(t_ast_node *ast, t_minishell *mini);
+int cmdchecks(t_ast_node *ast, t_minishell *mini);
 t_token *create_token(t_token_type type, const char *value);
 void add_token(t_token **head, t_token *new_token);
 t_token *lexer(const char *input, t_minishell *mini);
@@ -207,7 +206,7 @@ char *concat_path(char *dir, char *cmd);
 char *read_heredoc(const char *delim, t_minishell *mini);
 
 int handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m);
-void handle_redirection(t_ast_node *ast);
+int handle_redirection(t_ast_node *ast);
 void handle_heredoc(t_ast_node *ast);
 t_heredoc *init_heredoc(const char *delimiter);
 char *check_directory(char *dir, char *cmd);
@@ -232,7 +231,7 @@ int is_delimiter(const char *content,
 int read_until_delimiter(t_heredoc *hd,
 						 t_minishell *mini);
 void free_dirs(char **dirs);
-void handle_all_redirections(t_ast_node *ast);
+int handle_all_redirections(t_ast_node *ast);
 
 int ft_strcmp(const char *s1, const char *s2);
 int number_of_args(char **args);
@@ -255,7 +254,6 @@ int count_env_vars(t_env *env);
 int ft_pwd(void);
 
 void free_env(t_env *env);
-void free_env_array(char **env_array);
 void free_node(t_minishell *mini, t_env *env);
 
 int check_is_number(char *str);

@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/13 18:27:43 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 21:30:19 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 {
 	pid_t	pid2;
 
-	// (void) m;
 	pid2 = fork();
 	if (pid2 == 0)
 	{
