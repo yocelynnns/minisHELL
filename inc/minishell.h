@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/04 21:11:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:53:29 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ typedef struct s_var_process
 
 extern t_signal g_sig;
 
+void exec_ast(t_ast_node *ast, t_minishell *mini);
 char *ft_strcjoin(char *str, char c);
 void stop_signals(void);
 void cmdchecks(t_ast_node *ast, t_minishell *mini);
@@ -214,10 +215,11 @@ char *get_executable_path(t_ast_node *ast,
 						  t_minishell *mini);
 int fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m);
-int execute_left_command(t_cmd *m, int pipefd[2],
+int execute_left_command(int pipefd[2],
 						 t_ast_node *ast, t_minishell *mini);
 int execute_right_command(t_cmd *m, int pipefd[2], t_ast_node *ast, t_minishell *mini);
-int execute_pipeline(t_minishell *mini, t_cmd *m, t_ast_node *ast);
+int execute_pipeline(t_minishell *mini, t_ast_node *ast);
+void fkoff(t_minishell *mini, t_cmd *m, int returnval);
 void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini);
 int	pipe_execute(t_ast_node *ast, char **env, t_minishell *mini, t_cmd *m);
 char *resize_buffer(char *content, size_t total_length,
