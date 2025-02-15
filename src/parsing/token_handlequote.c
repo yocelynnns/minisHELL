@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlequote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/13 21:30:02 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/16 01:38:43 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,63 +66,76 @@ char *handle_single_quote(t_process *proc)
 
 char *expand_variable(t_process *proc)
 {
-	int it;
-	char *start;
-	char *env_value;
-	char *temp;
+    int it;
+    char *start;
+    char *env_value;
+    char *temp;
 
-	proc->mini->flag = 1;
-	it = 0;
-	if (proc->str[proc->i + 1] == '?')
-	{
-		it = 1;
-		env_value = ft_itoa(proc->mini->exit);
-		proc->i += 2;
-	}
-	else
-	{
-		start = ++proc->i + proc->str;
-		char *var = ft_strchr("@#$%^&*()", proc->str[proc->i + 1]);
-		// char unders = (char)proc->str[proc->i + 1];
-		// printf("unsers is %c\n",unders);
-		// write(1, &unders, 1);
-		// write(1, "\n", 1);
-		// printf("var is %s\n", var);
-		if (var == NULL)
-		{
-			printf("HIIII var is not NULL here\n");
-			proc->result = ft_strcjoin(proc->result, '$');
-			return proc->result;
-		}
-		printf("-----------------------------------------------------------\n");
-		while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
-			proc->i++;
-		start = ft_strndup(start, proc->str + proc->i - start);
-		if (!*start)
-		{
-			proc->result = ft_strcjoin(proc->result, '$');
-			free(start);
-			return proc->result;
-		}
-		env_value = get_env_value(start, proc->mini->env);
-		free(start);
-	}
-	if (!proc->result)
-		proc->result = ft_strdup("");
-	if (env_value)
-	{
-		temp = proc->result;
-		proc->result = ft_strjoin(proc->result, env_value);
-		free(temp);
-		if (it)
-		{
-			free(env_value);
-			it = 0;
-		}
-	}
-	else
-		proc->result = ft_strcjoin(proc->result, '\0');
-	return proc->result;
+    proc->mini->flag = 1;
+    it = 0;
+
+    if (proc->str[proc->i + 1] == '?')
+    {
+        it = 1;
+        env_value = ft_itoa(proc->mini->exit);
+        proc->i += 2;
+    }
+    else if (proc->str[proc->i] == '$')
+    {
+        proc->i++;
+        if (ft_isalnum(proc->str[proc->i]) || proc->str[proc->i] == '_')
+        {
+            start = proc->str + proc->i;
+            while (proc->str[proc->i] && (ft_isalnum(proc->str[proc->i]) || proc->str[proc->i] == '_'))
+                proc->i++;
+            start = ft_strndup(start, proc->str + proc->i - start);
+            if (!*start)
+            {
+                proc->result = ft_strcjoin(proc->result, '$');
+                free(start);
+                return proc->result;
+            }
+            env_value = get_env_value(start, proc->mini->env);
+            free(start);
+        }
+        else
+        {
+            proc->result = ft_strcjoin(proc->result, '$');
+            return proc->result;
+        }
+    }
+    else
+    {
+        start = ++proc->i + proc->str;
+        while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
+            proc->i++;
+        start = ft_strndup(start, proc->str + proc->i - start);
+        if (!*start)
+        {
+            proc->result = ft_strcjoin(proc->result, '$');
+            free(start);
+            return proc->result;
+        }
+        env_value = get_env_value(start, proc->mini->env);
+        free(start);
+    }
+    if (!proc->result)
+        proc->result = ft_strdup("");
+    if (env_value)
+    {
+        temp = proc->result;
+        proc->result = ft_strjoin(proc->result, env_value);
+        free(temp);
+        if (it)
+        {
+            free(env_value);
+            it = 0;
+        }
+    }
+    else
+        proc->result = ft_strcjoin(proc->result, '\0');
+
+    return proc->result;
 }
 
 char *handle_double_quote(t_process *proc)
@@ -177,6 +190,67 @@ char *first_processing(char *str, t_minishell *mini)
 
 	return proc.result;
 }
+
+// char *expand_variable(t_process *proc)
+// {
+// 	int it;
+// 	char *start;
+// 	char *env_value;
+// 	char *temp;
+
+// 	proc->mini->flag = 1;
+// 	it = 0;
+// 	if (proc->str[proc->i + 1] == '?')
+// 	{
+// 		it = 1;
+// 		env_value = ft_itoa(proc->mini->exit);
+// 		proc->i += 2;
+// 	}
+// 	else
+// 	{
+// 		start = ++proc->i + proc->str;
+// 		// char *var = ft_strchr("@#$%^&*()", proc->str[proc->i + 1]);
+// 		// // char unders = (char)proc->str[proc->i + 1];
+// 		// // printf("unsers is %c\n",unders);
+// 		// // write(1, &unders, 1);
+// 		// // write(1, "\n", 1);
+// 		// // printf("var is %s\n", var);
+// 		// if (var == NULL)
+// 		// {
+// 		// 	printf("HIIII var is not NULL here\n");
+// 		// 	proc->result = ft_strcjoin(proc->result, '$');
+// 		// 	return proc->result;
+// 		// }
+// 		// printf("-----------------------------------------------------------\n");
+// 		while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
+// 			proc->i++;
+// 		start = ft_strndup(start, proc->str + proc->i - start);
+// 		if (!*start)
+// 		{
+// 			proc->result = ft_strcjoin(proc->result, '$');
+// 			free(start);
+// 			return proc->result;
+// 		}
+// 		env_value = get_env_value(start, proc->mini->env);
+// 		free(start);
+// 	}
+// 	if (!proc->result)
+// 		proc->result = ft_strdup("");
+// 	if (env_value)
+// 	{
+// 		temp = proc->result;
+// 		proc->result = ft_strjoin(proc->result, env_value);
+// 		free(temp);
+// 		if (it)
+// 		{
+// 			free(env_value);
+// 			it = 0;
+// 		}
+// 	}
+// 	else
+// 		proc->result = ft_strcjoin(proc->result, '\0');
+// 	return proc->result;
+// }/
 
 // char *expand_variable(t_process *proc)
 // {

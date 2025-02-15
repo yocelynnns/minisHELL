@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/13 21:31:03 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/16 01:19:08 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ typedef struct s_var_process
 
 extern t_signal g_sig;
 
+void free_env_array(char **env_array);
 char *ft_strcjoin(char *str, char c);
 void stop_signals(void);
 int cmdchecks(t_ast_node *ast, t_minishell *mini);
