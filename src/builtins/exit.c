@@ -6,16 +6,16 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:54:12 by messs             #+#    #+#             */
-/*   Updated: 2025/02/04 20:13:01 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/17 15:19:29 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 #include <limits.h>
 
-int check_is_number(char *str)
+int	check_is_number(char *str)
 {
-	int i;
+	int	i;
 
 	if (str == NULL || *str == '\0')
 		return (0);
@@ -37,9 +37,11 @@ int check_is_number(char *str)
 	return (str[i] == '\0');
 }
 
-int ft_exit(char **av, t_minishell *mini)
+int	ft_exit(char **av, t_minishell *mini)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (av[1] && check_is_number(av[1]) == 0)
 	{
 		ft_putstr_fd("exit a\n", STDERR);
@@ -60,19 +62,14 @@ int ft_exit(char **av, t_minishell *mini)
 		exit(mini->exit % 256);
 	}
 	i = mini->exit;
-	// if (mini->have_exit == 0)
-	// {
-	// free_env_array(mini->env2);
-	// free_env(mini->env);
 	cleanup(mini);
-	// }
 	exit(i % 256);
 }
 
-int add_env_node(char *new_value, t_env **env, t_minishell *mini)
+int	add_env_node(char *new_value, t_env **env, t_minishell *mini)
 {
-	t_env *new_node;
-	t_env *last;
+	t_env	*new_node;
+	t_env	*last;
 
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)

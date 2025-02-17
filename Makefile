@@ -25,7 +25,8 @@ BUILTINS_DIR	= $(SRC_DIR)builtins/echo.c \
 				  $(SRC_DIR)builtins/cd.c \
 				  $(SRC_DIR)builtins/unset.c
 
-SIGNALS_DIR		= $(SRC_DIR)signals/signals.c
+SIGNALS_DIR		= $(SRC_DIR)signals/signals.c \
+				  $(SRC_DIR)signals/signals_helper.c
 
 ENV_DIR			= $(SRC_DIR)env/env_init.c \
 				  $(SRC_DIR)env/env_sort.c\
