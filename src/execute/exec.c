@@ -74,7 +74,7 @@ int	cmdchecks(t_ast_node *ast, t_minishell *mini)
 {
 	if (ast->command->redirect)
 	{
-		if (handle_all_redirections(ast) < 0)
+		if (handle_all_redirections(ast, mini) < 0)
 			return (-1);	
 	}
 	if (ast->command->heredoc)

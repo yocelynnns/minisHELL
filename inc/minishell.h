@@ -207,7 +207,7 @@ char *concat_path(char *dir, char *cmd);
 char *read_heredoc(const char *delim, t_minishell *mini);
 
 int handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m);
-int handle_redirection(t_ast_node *ast);
+int handle_redirection(t_ast_node *ast , t_minishell *mini);
 void handle_heredoc(t_ast_node *ast);
 t_heredoc *init_heredoc(const char *delimiter);
 char *check_directory(char *dir, char *cmd);
@@ -232,7 +232,7 @@ int is_delimiter(const char *content,
 int read_until_delimiter(t_heredoc *hd,
 						 t_minishell *mini);
 void free_dirs(char **dirs);
-int handle_all_redirections(t_ast_node *ast);
+int handle_all_redirections(t_ast_node *ast, t_minishell  *mini);
 
 int ft_strcmp(const char *s1, const char *s2);
 int number_of_args(char **args);

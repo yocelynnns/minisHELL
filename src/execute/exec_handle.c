@@ -38,7 +38,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	return (1);
 }
 
-int	handle_redirection(t_ast_node *redirect)
+int	handle_redirection(t_ast_node *redirect , t_minishell *mini)
 {
 	int	fd;
 
@@ -54,6 +54,7 @@ int	handle_redirection(t_ast_node *redirect)
 	if (fd < 0)
 	{
 		perror("open");
+		mini->exit = 1;
 		return (-1);
 	}
 	if (redirect->redirect->type == REDIRECT_IN)
@@ -64,14 +65,14 @@ int	handle_redirection(t_ast_node *redirect)
 	return (0);
 }
 
-int	handle_all_redirections(t_ast_node *ast)
+int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 {
 	t_ast_node	*redirect;
 
 	redirect = ast->command->redirect;
 	while (redirect)
 	{
-		if (handle_redirection(redirect) < 0)
+		if (handle_redirection(redirect, mini) < 0)
 			return (-1);
 		if (!redirect->redirect)
 			break;

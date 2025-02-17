@@ -58,7 +58,6 @@ int	ft_exit(char **av, t_minishell *mini)
 		mini->exit = ft_atol(av[1], mini);
 		exit(mini->exit % 256);
 	}
-	printf("exit\n");
 	cleanup(mini);
 	free_env(mini->env);
 	free_env_array(mini->env2);
