@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/13 21:30:25 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 23:34:50 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	return (1);
 }
 
-int	handle_redirection(t_ast_node *redirect , t_minishell *mini)
+int	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 {
 	int	fd;
 
@@ -75,7 +75,7 @@ int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 		if (handle_redirection(redirect, mini) < 0)
 			return (-1);
 		if (!redirect->redirect)
-			break;
+			break ;
 		redirect = redirect->redirect->next;
 	}
 	return (0);

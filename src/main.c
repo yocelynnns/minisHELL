@@ -3,100 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/17 15:59:42 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/18 00:24:18 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void free_minishell(t_minishell *mini, char *input)
+void	free_minishell(t_minishell *mini, char *input)
 {
 	free_tokens(mini->token);
 	free_ast(mini->ast);
 	free(input);
 }
 
-void prompt(char *input, t_minishell *mini)
-{
-	handle_eof(input, mini);
-	if (*input)
-		add_history(input);
-}
-
-void free_tokent(t_token *tokens, char *input)
+void	free_tokent(t_token *tokens, char *input)
 {
 	free_tokens(tokens);
 	free(input);
 }
 
-char	*handle_input(t_minishell *mini)
-{
-	char	*input;
-
-	init_signals();
-	input = readline("minishell$ ");
-	if (g_sig.sigint == 1)
-		mini->exit = 130;
-	stop_signals();
-	prompt(input, mini);
-	return (input);
-}
-
-t_token	*process_tokens(char *input, t_minishell *mini)
-{
-	t_token	*tokens;
-
-	tokens = lexer(input, mini);
-	mini->token = tokens;
-	if (!tokens)
-	{
-		free_tokens(tokens);
-		free(input);
-		return (NULL);
-	}
-	return (tokens);
-}
-
-t_ast_node	*process_ast(t_token *tokens, char *input, t_minishell *mini)
-{
-	t_ast_node	*ast;
-
-	ast = build_ast(tokens, mini);
-	mini->ast = ast;
-	if (!ast)
-	{
-		free_ast(ast);
-		free_tokent(tokens, input);
-		return (NULL);
-	}
-	return (ast);
-}
-
-void	run_shell_loop(t_minishell *mini)
-{
-	char		*input;
-	t_token		*tokens;
-	t_ast_node	*ast;
-
-	while (1)
-	{
-		input = handle_input(mini);
-		tokens = process_tokens(input, mini);
-		if (!tokens)
-			continue;
-		ast = process_ast(tokens, input, mini);
-		if (!ast)
-			continue;
-		mini->exit = 0;
-		execute_command(mini->ast, mini);
-		free_minishell(mini, input);
-	}
-}
-
-void print_welcome_message(void)
+void	print_welcome_message(void)
 {
 	printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___ ");
 	printf("     ___     \n");
@@ -114,9 +43,9 @@ void print_welcome_message(void)
 	printf("___||_______|\n");
 }
 
-t_minishell *init_minishell(char **env)
+t_minishell	*init_minishell(char **env)
 {
-	t_minishell *mini;
+	t_minishell	*mini;
 
 	mini = malloc(sizeof(t_minishell));
 	if (!mini)
@@ -125,17 +54,20 @@ t_minishell *init_minishell(char **env)
 	mini->here = 0;
 	if (env_init(mini, env) == ERROR)
 	{
-		ft_putstr_fd("Error: Failed to initialize environment variables\n",STDERR);
+		ft_putstr_fd("Error: Failed to initialize environment variables\n", \
+			STDERR);
 		free(mini);
 		return (NULL);
 	}
 	return (mini);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
-	t_minishell *mini;
+	t_minishell	*mini;
+	int			exit;
 
+	exit = 0;
 	(void)ac;
 	(void)av;
 	mini = init_minishell(env);
@@ -145,10 +77,10 @@ int main(int ac, char **av, char **env)
 	run_shell_loop(mini);
 	free_env(mini->env);
 	free_env_array(mini->env2);
+	exit = mini->exit;
 	free(mini);
 	init_signals();
-
-	return (mini->exit);
+	return (exit);
 }
 
 // void init_loop(char *input, t_minishell *mini)
@@ -230,7 +162,6 @@ int main(int ac, char **av, char **env)
 // 		return (EXIT_FAILURE);
 // 	}
 // 	{
-// 		printf(" __   __  ___   __    _  ___   _______  __   __  _______  ___      ___     \n|  |_|  ||   | |  |  | ||   | |       ||  | |  ||       ||   |    |   |    \n|       ||   | |   |_| ||   | |  _____||  |_|  ||    ___||   |    |   |    \n|       ||   | |       ||   | | |_____ |       ||   |___ |   |    |   |    \n|       ||   | |  _    ||   | |_____  ||       ||    ___||   |___ |   |___ \n| ||_|| ||   | | | |   ||   |  _____| ||   _   ||   |___ |       ||       |\n|_|   |_||___| |_|  |__||___| |_______||__| |__||_______||_______||_______|\n");
 // 	}
 // 	init_signals();
 // 	// print_sorted_env(mini.env);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/13 21:30:11 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 23:41:29 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,9 @@ void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 
 	m.org_fd[0] = dup(STDIN_FILENO);
 	m.org_fd[1] = dup(STDOUT_FILENO);
-
 	cmdchecks(ast, mini);
 	if (handle_builtin_commands(ast, mini, &m) == 0)
-	{
 		fkoff(mini, &m, EXIT_SUCCESS);
-	}
 	init_signals();
 	execute_in_child(ast, mini, &m);
 	dup2(m.org_fd[0], STDIN_FILENO);
@@ -70,25 +67,7 @@ void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 	close(m.org_fd[1]);
 }
 
-int	cmdchecks(t_ast_node *ast, t_minishell *mini)
-{
-	if (ast->command->redirect)
-	{
-		if (handle_all_redirections(ast, mini) < 0)
-			return (-1);	
-	}
-	if (ast->command->heredoc)
-	{
-		handle_heredoc(ast);
-		return (0);
-	}
-	if (((ast->command->args == NULL) || (ast->command->args[0] == NULL) \
-	|| (ast->command->args[0][0] == '\0'))
-		&& (mini->flag == 1))
-		return (0);
-	return (0);
-}
-void fkoff(t_minishell *mini, t_cmd *m, int returnval)
+void	fkoff(t_minishell *mini, t_cmd *m, int returnval)
 {
 	mini->exit = returnval;
 	close(m->org_fd[0]);
@@ -112,8 +91,8 @@ void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	if ((executable_path) && (execve(executable_path, ast->command->args, \
 	mini->env2) == -1))
 	{
-			perror("execve");
-			fkoff(mini, m, EXIT_FAILURE);
+		perror("execve");
+		fkoff(mini, m, EXIT_FAILURE);
 	}
 	else
 	{

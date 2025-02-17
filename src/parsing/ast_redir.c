@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ast_redir.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 00:48:44 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/17 15:52:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 23:47:04 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-// int	is_redirect(int type)
-// {
-// 	return (type == REDIRECT_IN || type == REDIRECT_OUT || type == APPEND
-// 		|| type == HEREDOC);
-// }
 
 void	attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node)
 {
@@ -49,6 +43,50 @@ int	handle_redirect(t_ast_node *cmd, t_token **tokens, t_minishell *mini)
 				mini);
 	return (1);
 }
+
+t_ast_node	*create_ast_node(t_ast_node_type type)
+{
+	t_ast_node	*new_node;
+
+	new_node = malloc(sizeof(t_ast_node));
+	if (!new_node)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	ft_memset(new_node, 0, sizeof(t_ast_node));
+	new_node->command = NULL;
+	new_node->pipeline = NULL;
+	new_node->redirect = NULL;
+	new_node->word = NULL;
+	new_node->type = type;
+	return (new_node);
+}
+
+void	init_cmd(t_ast_node *cmd, int i)
+{
+	cmd->command = malloc(sizeof(t_ast_command));
+	if (!cmd->command)
+		return ;
+	ft_memset(cmd->command, 0, sizeof(t_ast_command));
+	cmd->command->heredoc = NULL;
+	cmd->command->redirect = NULL;
+	cmd->command->args = NULL;
+	cmd->command->args = malloc(sizeof(char *) * (i + 1));
+	if (!cmd->command->args)
+	{
+		free(cmd->command);
+		cmd->command = NULL;
+		return ;
+	}
+	ft_memset(cmd->command->args, 0, sizeof(char *) * (i + 1));
+}
+
+// int	is_redirect(int type)
+// {
+// 	return (type == REDIRECT_IN || type == REDIRECT_OUT || type == APPEND
+// 		|| type == HEREDOC);
+// }
 
 // int	handle_redirect(t_ast_node *cmd, t_token **tokens, t_minishell *mini)
 // {

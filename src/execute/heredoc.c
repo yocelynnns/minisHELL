@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/17 15:52:17 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/18 00:42:09 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ ssize_t	read_line(char *content, size_t total_length, size_t current_size)
 			- 1));
 }
 
-int	is_delimiter(const char *content, const char *delimiter,
-		size_t total_length, size_t delimiter_length)
+int	is_delimiter(const char *content, const char *delimiter, \
+	size_t total_length, size_t delimiter_length)
 {
 	return (ft_strncmp(content + total_length, delimiter, delimiter_length) == 0
 		&& (content[total_length + delimiter_length] == '\n'
 			|| content[total_length + delimiter_length] == '\0'));
 }
 
-int bytes_check(ssize_t bytes_read, t_minishell *mini, t_heredoc *hd)
+int	bytes_check(ssize_t bytes_read, t_minishell *mini, t_heredoc *hd)
 {
 	if (g_sig.sigint)
 	{
@@ -72,7 +72,7 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 	ssize_t	bytes_read;
 
 	set_signals_heredoc();
-	signal(SIGQUIT,ignore_sigquit);
+	signal(SIGQUIT, ignore_sigquit);
 	while (1)
 	{
 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
@@ -92,35 +92,6 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 		}
 	}
 	return (0);
-}
-
-char	*read_heredoc(const char *delimiter, t_minishell *mini)
-{
-	t_heredoc	*hd;
-	char		*final_content;
-
-	hd = init_heredoc(delimiter);
-	if (!hd)
-		return (NULL);
-	if (read_until_delimiter(hd, mini) < 0)
-	{
-		free(hd->content);
-		free(hd);
-		return (NULL);
-	}
-	final_content = malloc(hd->total_length + 1);
-	if (!final_content)
-	{
-		perror("malloc");
-		free(hd->content);
-		free(hd);
-		return (NULL);
-	}
-	ft_memcpy(final_content, hd->content, hd->total_length);
-	final_content[hd->total_length] = '\0';
-	free(hd->content);
-	free(hd);
-	return (final_content);
 }
 
 // char *expand_variables(char *str, t_minishell *mini)
@@ -157,7 +128,8 @@ char	*read_heredoc(const char *delimiter, t_minishell *mini)
 //     signal(SIGQUIT, ignore_sigquit);
 //     while (1)
 //     {
-//         bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
+//         bytes_read = read_line(hd->content, hd->total_length, h
+//d->current_size);
 //         if (g_sig.sigint)
 //         {
 //             mini->exit = mini->exit;
@@ -175,10 +147,9 @@ char	*read_heredoc(const char *delimiter, t_minishell *mini)
 //             printf("EOF Handle\n");
 //             return (-1);
 //         }
-        
 //         hd->content[hd->total_length + bytes_read] = '\0';
-        
-//         if (is_delimiter(hd->content, hd->delimiter, hd->total_length, hd->delimiter_length))
+//         if (is_delimiter(hd->content, hd->delimiter, 
+//hd->total_length, hd->delimiter_length))
 //             break;
 
 //         expanded_line = expand_variables(hd->content, mini);
@@ -191,7 +162,8 @@ char	*read_heredoc(const char *delimiter, t_minishell *mini)
 //         size_t expanded_length = ft_strlen(expanded_line);
 //         if (hd->total_length + expanded_length + 1 >= hd->current_size)
 //         {
-//             hd->content = resize_buffer(hd->content, hd->total_length, &hd->current_size);
+//             hd->content = resize_buffer(hd->content, hd->total_length,
+// &hd->current_size);
 //             if (!hd->content)
 //             {
 //                 free(expanded_line);
@@ -199,7 +171,8 @@ char	*read_heredoc(const char *delimiter, t_minishell *mini)
 //             }
 //         }
 
-//         ft_memcpy(hd->content + hd->total_length, expanded_line, expanded_length);
+//         ft_memcpy(hd->content + hd->total_length, expanded_line, 
+//expanded_length);
 //         hd->total_length += expanded_length;
 //         hd->content[hd->total_length] = '\0'; // Null-terminate the content
 //         // free(expanded_line);

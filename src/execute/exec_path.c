@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/17 15:52:02 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 23:37:49 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,41 +113,6 @@ void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 		else
 			write(STDERR_FILENO, "Quit\n", 5);
 	}
-}
-
-void	handle_child_process(t_ast_node *ast, t_minishell *mini, t_cmd *m)
-{
-	init_signals();
-	close(m->org_fd[0]);
-	close(m->org_fd[1]);
-	execute_in_child(ast, mini, m);
-}
-
-int	handle_parent_process(pid_t pid, t_minishell *mini, t_cmd *m)
-{
-	waitpid(pid, &m->status, 0);
-	if (WIFSIGNALED(m->status))
-	{
-		handle_fork_signals(mini, m);
-		return (mini->exit);
-	}
-	if (WIFEXITED(m->status))
-		mini->exit = WEXITSTATUS(m->status);
-	return (mini->exit);
-}
-
-int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
-{
-	pid_t	pid;
-
-	if (handle_builtin_commands(ast, mini, m) == 0)
-		return (mini->exit);
-	pid = fork();
-	if (pid == 0)
-		handle_child_process(ast, mini, m);
-	else if (pid < 0)
-		return (perror("fork"), -1);
-	return (handle_parent_process(pid, mini, m));
 }
 
 // int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
