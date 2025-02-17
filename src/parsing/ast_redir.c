@@ -6,17 +6,17 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 00:48:44 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/01/22 13:15:17 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:52:39 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	is_redirect(int type)
-{
-	return (type == REDIRECT_IN || type == REDIRECT_OUT || type == APPEND
-		|| type == HEREDOC);
-}
+// int	is_redirect(int type)
+// {
+// 	return (type == REDIRECT_IN || type == REDIRECT_OUT || type == APPEND
+// 		|| type == HEREDOC);
+// }
 
 void	attach_redirect(t_ast_node *cmd, t_ast_node *redirect_node)
 {

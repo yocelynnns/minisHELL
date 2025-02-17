@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/12 03:00:48 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/17 15:53:33 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ void	handle_spaces(const char *input, t_lexer_state *state,
 	state->start = state->i + 1;
 }
 
-void	handle_redirect_in(t_lexer_state *state, const char *input, t_minishell *mini)
+void	handle_redirect_in(t_lexer_state *state, const char *input, \
+t_minishell *mini)
 {
 	if (input[state->i + 1] == '<')
 	{
@@ -169,41 +170,46 @@ void	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	state->start = state->i + 1;
 }
 
+void dollar_expan(char *processed_t, t_lexer_state *state)
+{
+	int i;
+	char	**split_tokens;
+
+	i = 0;
+	split_tokens = NULL;
+	split_tokens = ft_split(processed_t, ' ');
+	free(processed_t);
+	if (!split_tokens)
+		return;
+	i = 0;
+	while (split_tokens[i])
+	{
+		add_token(&state->token_list, create_token(WORD, split_tokens[i]));
+		free(split_tokens[i]);
+		i++;
+	}
+	free(split_tokens);
+}
+
 void	process_remaining_token(const char *input, t_lexer_state *state,
 		t_minishell *mini)
 {
 	char	*raw_token;
-	char	*processed_token;
-	char	**split_tokens;
-	int		i;
+	char	*processed_t;
 
 	raw_token = NULL;
-	processed_token = NULL;
-	split_tokens = NULL;
+	processed_t = NULL;
 	if (state->i > state->start)
 	{
 		raw_token = ft_strndup(input + state->start, state->i - state->start);
-		processed_token = first_processing(raw_token, mini);
+		processed_t = first_processing(raw_token, mini);
 		if (input[0] == '$')
-		{
-			split_tokens = ft_split(processed_token, ' ');
-			free(processed_token);
-			if (!split_tokens)
-				return;
-			i = 0;
-			while (split_tokens[i])
-			{
-				add_token(&state->token_list, create_token(WORD, split_tokens[i]));
-				free(split_tokens[i]);
-				i++;
-			}
-			free(split_tokens);
-		}
+			dollar_expan(processed_t, state);
 		else
-			if (processed_token)
+			if (processed_t)
 			{
-				add_token(&state->token_list, create_token(WORD, processed_token));
-				free(processed_token);
+				add_token(&state->token_list, create_token(WORD, processed_t));
+				free(processed_t);
 			}
 		free(raw_token);
 	}
@@ -219,7 +225,8 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 		return (1);
 	}
 	if (((input[state->i] == '"' && input[state->i + 1] == '"') ||
-	(input[state->i] == '\'' && input[state->i + 1] == '\'')) && (input[state->i + 2] == '\0'))
+	(input[state->i] == '\'' && input[state->i + 1] == '\'')) && \
+	(input[state->i + 2] == '\0'))
 	{
 		printf("Command not found: ''\n");
 		mini->exit = 127;
@@ -231,7 +238,8 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 
 void lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
 {
-	if ((input[state->i] == '\'' || input[state->i] == '"') && (state->i == 0 || input[state->i - 1] != '\\'))
+	if ((input[state->i] == '\'' || input[state->i] == '"') && \
+	(state->i == 0 || input[state->i - 1] != '\\'))
 		handle_quotes(input, state);
 	else if (isspace(input[state->i]) && !state->quote)
 		handle_spaces(input, state, mini);

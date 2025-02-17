@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/06 20:54:05 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:52:48 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,36 +58,21 @@ t_ast_node *parse_pipeline(t_token *tokens, t_minishell *mini, int i)
     t_ast_node *pipeline_node;
 
 	if (!handle_pipe_error(tokens, mini))
-	{
-		// free_ast(left);
 		return (NULL);
-	}
     left = parse_command(&tokens, mini, i);
     if (!left)
-        return (NULL);
-    // while (*tokens && (*tokens)->type == PIPE)
-    // {
-        // *tokens = (*tokens)->next;
-        // right = parse_command(tokens, mini, i);
-        // if (!right)
-        // {
-        //     free_ast(left);
-        //     return (NULL);
-        // }
-        // pipeline_node = create_pipeline_node(left, right);
-		if ((tokens) && tokens->type == PIPE)
-        	right = parse_pipeline(tokens->next, mini, i);
-		else
-			return (left);
-        if (!right)
-        {
-            free_ast(left);
-            return (NULL);
-        }
-        pipeline_node = create_pipeline_node(left, right);
-
-        left = pipeline_node;
-    // }
+		return (NULL);
+	if ((tokens) && tokens->type == PIPE)
+		right = parse_pipeline(tokens->next, mini, i);
+	else
+		return (left);
+	if (!right)
+	{
+		free_ast(left);
+		return (NULL);
+	}
+	pipeline_node = create_pipeline_node(left, right);
+	left = pipeline_node;
     return (left);
 }
 
@@ -112,7 +97,9 @@ void	init_cmd(t_ast_node *cmd, int i)
 
 static int parse_redirects(t_ast_node *cmd, t_token **tokens, t_minishell *mini)
 {
-    while (*tokens && is_redirect((*tokens)->type))
+    while (*tokens && ((*tokens)->type == REDIRECT_IN || (*tokens)->type \
+	== REDIRECT_OUT || (*tokens)->type == APPEND
+		|| (*tokens)->type == HEREDOC))
     {
         if (!handle_redirect(cmd, tokens, mini))
             return (0);
@@ -174,6 +161,46 @@ t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini)
 	}
 	return (redirect_node);
 }
+
+// t_ast_node *parse_pipeline(t_token *tokens, t_minishell *mini, int i)
+// {
+//     t_ast_node *left;
+//     t_ast_node *right;
+//     t_ast_node *pipeline_node;
+
+// 	if (!handle_pipe_error(tokens, mini))
+// 	{
+// 		// free_ast(left);
+// 		return (NULL);
+// 	}
+//     left = parse_command(&tokens, mini, i);
+//     if (!left)
+//         return (NULL);
+//     // while (*tokens && (*tokens)->type == PIPE)
+//     // {
+//         // *tokens = (*tokens)->next;
+//         // right = parse_command(tokens, mini, i);
+//         // if (!right)
+//         // {
+//         //     free_ast(left);
+//         //     return (NULL);
+//         // }
+//         // pipeline_node = create_pipeline_node(left, right);
+// 		if ((tokens) && tokens->type == PIPE)
+//         	right = parse_pipeline(tokens->next, mini, i);
+// 		else
+// 			return (left);
+//         if (!right)
+//         {
+//             free_ast(left);
+//             return (NULL);
+//         }
+//         pipeline_node = create_pipeline_node(left, right);
+
+//         left = pipeline_node;
+//     // }
+//     return (left);
+// }
 
 // t_ast_node	*parse_pipeline(t_token **tokens, t_minishell *mini, int i)
 // {

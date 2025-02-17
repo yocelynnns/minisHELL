@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/13 18:41:54 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:52:02 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,48 +93,105 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	return (NULL);
 }
 
+void	handle_fork_signals(t_minishell *mini, t_cmd *m)
+{
+	int	signal;
+
+	signal = WTERMSIG(m->status);
+	if (signal == SIGINT)
+	{
+		g_sig.sigint = 1;
+		mini->exit = 130;
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		rl_on_new_line();
+	}
+	else if (signal == SIGQUIT)
+	{
+		mini->exit = 131;
+		if (WCOREDUMP(m->status))
+			write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+		else
+			write(STDERR_FILENO, "Quit\n", 5);
+	}
+}
+
+void	handle_child_process(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+{
+	init_signals();
+	close(m->org_fd[0]);
+	close(m->org_fd[1]);
+	execute_in_child(ast, mini, m);
+}
+
+int	handle_parent_process(pid_t pid, t_minishell *mini, t_cmd *m)
+{
+	waitpid(pid, &m->status, 0);
+	if (WIFSIGNALED(m->status))
+	{
+		handle_fork_signals(mini, m);
+		return (mini->exit);
+	}
+	if (WIFEXITED(m->status))
+		mini->exit = WEXITSTATUS(m->status);
+	return (mini->exit);
+}
+
 int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	pid_t	pid;
-	int		signal;
 
 	if (handle_builtin_commands(ast, mini, m) == 0)
 		return (mini->exit);
 	pid = fork();
 	if (pid == 0)
-	{
-		init_signals();
-		close(m->org_fd[0]);
-		close(m->org_fd[1]);
-		execute_in_child(ast, mini, m);
-	}
+		handle_child_process(ast, mini, m);
 	else if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
-	waitpid(pid, &m->status, 0);
-	if (WIFSIGNALED(m->status))
-	{
-		signal = WTERMSIG(m->status);
-		if (signal == SIGINT)
-		{
-			g_sig.sigint = 1;
-			mini->exit = 130;
-			ft_putstr_fd("\n", STDOUT_FILENO);
-			rl_on_new_line();
-		}
-		else if (signal == SIGQUIT)
-		{
-			mini->exit = 131;
-			if (WCOREDUMP(m->status))
-				write(STDERR_FILENO, "Quit (core dumped)\n", 20);
-			else
-				write(STDERR_FILENO, "Quit\n", 5);
-			return (131);
-		}
-	}
-	else if (WIFEXITED(m->status))
-		mini->exit = WEXITSTATUS(m->status);
-	return (mini->exit);
+		return (perror("fork"), -1);
+	return (handle_parent_process(pid, mini, m));
 }
+
+// int	fork_and_execute(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+// {
+// 	pid_t	pid;
+// 	int		signal;
+
+// 	if (handle_builtin_commands(ast, mini, m) == 0)
+// 		return (mini->exit);
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		init_signals();
+// 		close(m->org_fd[0]);
+// 		close(m->org_fd[1]);
+// 		execute_in_child(ast, mini, m);
+// 	}
+// 	else if (pid < 0)
+// 	{
+// 		perror("fork");
+// 		return (-1);
+// 	}
+// 	waitpid(pid, &m->status, 0);
+// 	if (WIFSIGNALED(m->status))
+// 	{
+// 		signal = WTERMSIG(m->status);
+// 		if (signal == SIGINT)
+// 		{
+// 			g_sig.sigint = 1;
+// 			mini->exit = 130;
+// 			ft_putstr_fd("\n", STDOUT_FILENO);
+// 			rl_on_new_line();
+// 		}
+// 		else if (signal == SIGQUIT)
+// 		{
+// 			mini->exit = 131;
+// 			if (WCOREDUMP(m->status))
+// 				write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+// 			else
+// 				write(STDERR_FILENO, "Quit\n", 5);
+// 			return (131);
+// 		}
+// 	}
+// 	else if (WIFEXITED(m->status))
+// 		mini->exit = WEXITSTATUS(m->status);
+// 	return (mini->exit);
+// }
