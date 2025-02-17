@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/13 18:28:25 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:59:42 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,60 +32,67 @@ void free_tokent(t_token *tokens, char *input)
 	free(input);
 }
 
-// void init_loop(char *input, t_minishell *mini)
-// {
-// 	init_signals();
-// 	input = readline("minishell$ ");
-// 	if(g_sig.sigint == 1)
-// 		mini->exit = 130;
-// 	stop_signals();
-// 	prompt(input, mini);
-// }
-
-// void exec_free(t_minishell *mini, char **env, char *input)
-// {
-// 	mini->exit = 0;
-// 	execute_command(mini->ast, env, mini);
-// 	free_minishell(mini, input);
-// }
-
-void run_shell_loop(t_minishell *mini)
+char	*handle_input(t_minishell *mini)
 {
-	char *input; 
-	t_token *tokens;
-	t_ast_node *ast;
+	char	*input;
+
+	init_signals();
+	input = readline("minishell$ ");
+	if (g_sig.sigint == 1)
+		mini->exit = 130;
+	stop_signals();
+	prompt(input, mini);
+	return (input);
+}
+
+t_token	*process_tokens(char *input, t_minishell *mini)
+{
+	t_token	*tokens;
+
+	tokens = lexer(input, mini);
+	mini->token = tokens;
+	if (!tokens)
+	{
+		free_tokens(tokens);
+		free(input);
+		return (NULL);
+	}
+	return (tokens);
+}
+
+t_ast_node	*process_ast(t_token *tokens, char *input, t_minishell *mini)
+{
+	t_ast_node	*ast;
+
+	ast = build_ast(tokens, mini);
+	mini->ast = ast;
+	if (!ast)
+	{
+		free_ast(ast);
+		free_tokent(tokens, input);
+		return (NULL);
+	}
+	return (ast);
+}
+
+void	run_shell_loop(t_minishell *mini)
+{
+	char		*input;
+	t_token		*tokens;
+	t_ast_node	*ast;
 
 	while (1)
 	{
-		// init_loop(input, mini);
-		init_signals();
-		input = readline("minishell$ ");
-		if(g_sig.sigint == 1)
-			mini->exit = 130;
-		stop_signals();
-		prompt(input, mini);
-		tokens = lexer(input, mini);
-		// print_tokens(tokens);
-		mini->token = tokens;
+		input = handle_input(mini);
+		tokens = process_tokens(input, mini);
 		if (!tokens)
-		{
-			free_tokens(tokens);
-			free(input);
 			continue;
-		}
-		ast = build_ast(tokens, mini);
-		// print_ast(ast, 0);
-		mini->ast = ast;
+		ast = process_ast(tokens, input, mini);
 		if (!ast)
-		{
-			free_ast(ast);
-			free_tokent(tokens, input);
 			continue;
-		}
 		mini->exit = 0;
 		execute_command(mini->ast, mini);
 		free_minishell(mini, input);
-		// exec_free(mini, env, input);
 	}
 }
 
@@ -143,6 +150,63 @@ int main(int ac, char **av, char **env)
 
 	return (mini->exit);
 }
+
+// void init_loop(char *input, t_minishell *mini)
+// {
+// 	init_signals();
+// 	input = readline("minishell$ ");
+// 	if(g_sig.sigint == 1)
+// 		mini->exit = 130;
+// 	stop_signals();
+// 	prompt(input, mini);
+// }
+
+// void exec_free(t_minishell *mini, char **env, char *input)
+// {
+// 	mini->exit = 0;
+// 	execute_command(mini->ast, env, mini);
+// 	free_minishell(mini, input);
+// }
+
+// void run_shell_loop(t_minishell *mini)
+// {
+// 	char *input; 
+// 	t_token *tokens;
+// 	t_ast_node *ast;
+
+// 	while (1)
+// 	{
+// 		// init_loop(input, mini);
+// 		init_signals();
+// 		input = readline("minishell$ ");
+// 		if(g_sig.sigint == 1)
+// 			mini->exit = 130;
+// 		stop_signals();
+// 		prompt(input, mini);
+// 		tokens = lexer(input, mini);
+// 		// print_tokens(tokens);
+// 		mini->token = tokens;
+// 		if (!tokens)
+// 		{
+// 			free_tokens(tokens);
+// 			free(input);
+// 			continue;
+// 		}
+// 		ast = build_ast(tokens, mini);
+// 		// print_ast(ast, 0);
+// 		mini->ast = ast;
+// 		if (!ast)
+// 		{
+// 			free_ast(ast);
+// 			free_tokent(tokens, input);
+// 			continue;
+// 		}
+// 		mini->exit = 0;
+// 		execute_command(mini->ast, mini);
+// 		free_minishell(mini, input);
+// 		// exec_free(mini, env, input);
+// 	}
+// }
 
 // int main(int ac, char **av, char **env)
 // {
