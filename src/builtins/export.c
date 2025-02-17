@@ -35,6 +35,7 @@ char *parse_key_value(char *arg, char **key)
 {
 	size_t key_len;
 
+	key_len = 0;
 	if (ft_strchr(arg, '='))
 		key_len = ft_strchr(arg, '=') - arg;
 	else
@@ -75,7 +76,8 @@ int add_or_update_env(char *arg, t_env **env, t_minishell *mini)
 		free(key);
 		return (SUCCESS);
 	}
-	return (add_env(new_value, env, mini));
+	int i = add_env(new_value, env, mini);
+	return (i);
 }
 
 int add_env(char *new_value, t_env **env, t_minishell *mini)

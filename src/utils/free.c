@@ -23,6 +23,7 @@ void free_env(t_env *env)
 		free(env);
 		env = tmp;
 	}
+	env = NULL;
 }
 
 void free_dirs(char **dirs)

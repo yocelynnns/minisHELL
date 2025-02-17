@@ -12,9 +12,9 @@
 
 #include "../inc/minishell.h"
 
-int	execute_left_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
+int execute_left_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 {
-	pid_t	pid1;
+	pid_t pid1;
 
 	pid1 = fork();
 	if (pid1 == 0)
@@ -32,9 +32,9 @@ int	execute_left_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 	return (pid1);
 }
 
-int	execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
+int execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 {
-	pid_t	pid2;
+	pid_t pid2;
 
 	pid2 = fork();
 	if (pid2 == 0)
@@ -54,13 +54,13 @@ int	execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 	return (pid2);
 }
 
-int	execute_pipeline(t_minishell *mini, t_ast_node *ast)
+int execute_pipeline(t_minishell *mini, t_ast_node *ast)
 {
-	int		pipefd[2];
-	pid_t	pid1;
-	pid_t	pid2;
-	int		status;
-
+	int pipefd[2];
+	pid_t pid1;
+	pid_t pid2;
+	int status;
+	
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
