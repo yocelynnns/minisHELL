@@ -3,47 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/18 15:21:10 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:42:51 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include "../libft/libft.h"
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <linux/limits.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <signal.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <termios.h>
+# include "../libft/libft.h"
+# include <ctype.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <limits.h>
+# include <linux/limits.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <termios.h>
 
-#define SUCCESS 0
-#define ERROR 1
+# define SUCCESS 0
+# define ERROR 1
 
-#define STDIN 0
-#define STDOUT 1
-#define STDERR 2
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
 
-#define BUFF_SIZE 4096
-#define INITIAL_SIZE 4096
+# define BUFF_SIZE 4096
+# define INITIAL_SIZE 4096
 
 typedef enum e_signal_mode
 {
 	INTERACTIVE,
 	HEREDOC_MODE,
 	CHILD_PROCESS_MODE,
-} t_signal_mode;
+}	t_signal_mode;
 
-typedef enum
+typedef enum s_token_type
 {
 	WORD,
 	PIPE,
@@ -51,112 +51,112 @@ typedef enum
 	REDIRECT_OUT,
 	HEREDOC,
 	APPEND
-} t_token_type;
+}	t_token_type;
 
-typedef struct s_minishell t_minishell;
+typedef struct s_minishell	t_minishell;
 
 typedef struct s_process
 {
-	char *str;
-	int i;
-	int in_quote;
-	char *result;
-	t_minishell *mini;
-} t_process;
+	char		*str;
+	int			i;
+	int			in_quote;
+	char		*result;
+	t_minishell	*mini;
+}	t_process;
 
 typedef struct s_token
 {
-	t_token_type type;
-	char *value;
-	struct s_token *next;
-} t_token;
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+}	t_token;
 
 typedef struct s_lexer_state
 {
-	int i;
-	int start;
-	char quote;
-	int last_token_was_pipe;
-	t_token *token_list;
-} t_lexer_state;
+	int		i;
+	int		start;
+	char	quote;
+	int		last_token_was_pipe;
+	t_token	*token_list;
+}	t_lexer_state;
 
-typedef enum
+typedef enum s_ast_node_type
 {
 	AST_PIPELINE,
 	AST_COMMAND,
 	AST_REDIRECT,
 	AST_WORD
-} t_ast_node_type;
+}	t_ast_node_type;
 
 typedef struct s_ast_node
 {
-	t_ast_node_type type;
-	struct s_ast_pipeline *pipeline;
-	struct s_ast_command *command;
-	struct s_ast_redirect *redirect;
-	char *word;
+	t_ast_node_type			type;
+	struct s_ast_pipeline	*pipeline;
+	struct s_ast_command	*command;
+	struct s_ast_redirect	*redirect;
+	char					*word;
 
-} t_ast_node;
+}	t_ast_node;
 
 typedef struct s_ast_command
 {
-	char **args;
-	t_ast_node *redirect;
-	char *heredoc;
-} t_ast_command;
+	char		**args;
+	t_ast_node	*redirect;
+	char		*heredoc;
+}	t_ast_command;
 
 typedef struct s_ast_pipeline
 {
-	t_ast_node *left;
-	t_ast_node *right;
-} t_ast_pipeline;
+	t_ast_node	*left;
+	t_ast_node	*right;
+}	t_ast_pipeline;
 
 typedef struct s_ast_redirect
 {
-	t_ast_node *next;
-	char *file;
-	int type;
-} t_ast_redirect;
+	t_ast_node	*next;
+	char		*file;
+	int			type;
+}	t_ast_redirect;
 
 typedef struct s_env
 {
-	char *value;
-	struct s_env *next;
-} t_env;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_cmd
 {
-	int status;
-	int org_fd[2];
-} t_cmd;
+	int	status;
+	int	org_fd[2];
+}	t_cmd;
 
 typedef struct s_minishell
 {
-	t_env *env;
-	t_token *token;
-	t_ast_node *ast;
-	t_process *proc;
-	int flag;
-	int here;
-	int exit;
-	char **env2;
-} t_minishell;
+	t_env		*env;
+	t_token		*token;
+	t_ast_node	*ast;
+	t_process	*proc;
+	int			flag;
+	int			here;
+	int			exit;
+	char		**env2;
+}	t_minishell;
 
 typedef struct s_heredoc
 {
-	char *content;
-	size_t total_length;
-	size_t current_size;
-	const char *delimiter;
-	size_t delimiter_length;
-} t_heredoc;
+	char		*content;
+	size_t		total_length;
+	size_t		current_size;
+	const char	*delimiter;
+	size_t		delimiter_length;
+}	t_heredoc;
 
 typedef struct s_signal
 {
-	int sigint;
-} t_signal;
+	int	sigint;
+}	t_signal;
 
-extern t_signal g_sig;
+extern t_signal	g_sig;
 
 int			main(int ac, char **av, char **env);
 t_minishell	*init_minishell(char **env);
@@ -293,7 +293,7 @@ t_cmd *m);
 
 t_env		*create_env_node(char *value);
 int			init_env_list(t_minishell *mini, char **env_array);
-char 		**env_list_to_array(t_env *env_list);
+char		**env_list_to_array(t_env *env_list);
 int			env_init(t_minishell *mini, char **env_array);
 int			count_env_vars(t_env *env);
 int			is_valid_env(char *arg);
@@ -326,21 +326,24 @@ int			add_env_node(char *new_value, t_env **env, t_minishell *mini);
 
 int			ft_env(t_env *env);
 int			key_exists_in_env(const char *key, t_env *env);
-int			update_env(char *key, char *new_value, t_env **env, t_minishell *mini);
-char		*get_env_variable(t_env *env_list, const char *variable, size_t len);
+int			update_env(char *key, char *new_value, t_env \
+	**env, t_minishell *mini);
+char		*get_env_variable(t_env *env_list, \
+	const char *variable, size_t len);
 char		*get_env_value(const char *key, t_env *env);
 
-int	ft_strcmp(const char *s1, const char *s2);
-int	number_of_args(char **args);
-char	*remove_quotes(const char *str);
-int	is_valid_n_flag(const char *arg);
-int	ft_echo(char **args, t_minishell *mini);
+int			ft_strcmp(const char *s1, const char *s2);
+int			number_of_args(char **args);
+char		*remove_quotes(const char *str);
+int			is_valid_n_flag(const char *arg);
+int			ft_echo(char **args, t_minishell *mini);
 
-void	print_cd_error(const char *path, t_minishell *mini);
-int	update_oldpwd(t_env *env_list);
-char	*get_special_directory_path(int option, t_env *env_list);
-int	navigate_to_special_dir(int option, t_env *env_list, t_minishell *mini);
-int	ft_cd(char **arguments, t_env *env_list, t_minishell *mini);
+void		print_cd_error(const char *path, t_minishell *mini);
+int			update_oldpwd(t_env *env_list);
+char		*get_special_directory_path(int option, t_env *env_list);
+int			navigate_to_special_dir(int option, t_env \
+	*env_list, t_minishell *mini);
+int			ft_cd(char **arguments, t_env *env_list, t_minishell *mini);
 
 #endif
 
