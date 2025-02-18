@@ -32,7 +32,9 @@ SIGNALS_DIR		= $(SRC_DIR)signals/signals.c \
 				  $(SRC_DIR)signals/signals_helper.c
 
 ENV_DIR			= $(SRC_DIR)env/env_init.c \
-				  $(SRC_DIR)env/env_sort.c\
+				  $(SRC_DIR)env/env_sort.c \
+				  $(SRC_DIR)env/env_helper.c \
+				  $(SRC_DIR)env/env_utils.c
 
 UTILS_DIR		= $(SRC_DIR)utils/free.c \
 				  $(SRC_DIR)utils/utils.c \
