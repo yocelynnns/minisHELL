@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 00:13:02 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/19 17:21:13 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 18:05:04 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ char	*handle_input(t_minishell *mini)
 	init_signals();
 	input = readline("minishell$ ");
 	if (g_sig.sigint == 1)
+	{
+		g_sig.sigint = 0;
 		mini->exit = 130;
+	}
 	stop_signals();
 	prompt(input, mini);
 	return (input);

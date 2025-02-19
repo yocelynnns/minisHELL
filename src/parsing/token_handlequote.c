@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlequote.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/17 23:59:50 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/19 17:46:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*handle_single_quote(t_process *proc)
 	return (proc->result);
 }
 
-char	*handle_double_quote(t_process *proc)
+char	*handle_double_quote(t_process *proc, t_minishell *mini)
 {
 	proc->in_quote = proc->str[proc->i++];
 	while (proc->str[proc->i] && proc->in_quote)
@@ -53,7 +53,7 @@ char	*handle_double_quote(t_process *proc)
 			proc->result = handle_backslash(proc);
 		else if (proc->str[proc->i] == '$' && proc->str[proc->i - 1] != '\\' \
 			&& !proc->mini->here)
-			proc->result = expand_variable(proc);
+			proc->result = expand_variable(proc, mini);
 		else if (proc->str[proc->i] == proc->in_quote)
 		{
 			proc->in_quote = 0;
@@ -66,16 +66,16 @@ char	*handle_double_quote(t_process *proc)
 	return (proc->result);
 }
 
-char	*process_character(t_process *proc)
+char	*process_character(t_process *proc, t_minishell *mini)
 {
 	if (proc->str[proc->i] == '\\' && !proc->in_quote)
 		proc->result = handle_backslash(proc);
 	else if (proc->str[proc->i] == '$' && !proc->mini->here)
-		proc->result = expand_variable(proc);
+		proc->result = expand_variable(proc, mini);
 	else if (proc->str[proc->i] == '\'')
 		proc->result = handle_single_quote(proc);
 	else if (proc->str[proc->i] == '\"')
-		proc->result = handle_double_quote(proc);
+		proc->result = handle_double_quote(proc, mini);
 	else
 		proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
 	return (proc->result);
@@ -92,7 +92,7 @@ char	*first_processing(char *str, t_minishell *mini)
 	proc.mini = mini;
 	mini->flag = 0;
 	while (proc.str[proc.i])
-		process_character(&proc);
+		process_character(&proc, mini);
 	return (proc.result);
 }
 

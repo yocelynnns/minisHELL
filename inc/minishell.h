@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/19 17:19:18 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 17:46:34 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,8 +213,8 @@ int			checkquote(t_lexer_state *state, t_minishell *mini);
 
 char		*handle_backslash(t_process *proc);
 char		*handle_single_quote(t_process *proc);
-char		*handle_double_quote(t_process *proc);
-char		*process_character(t_process *proc);
+char		*handle_double_quote(t_process *proc, t_minishell *mini);
+char		*process_character(t_process *proc, t_minishell *mini);
 char		*first_processing(char *str, t_minishell *mini);
 
 t_ast_node	*parse_pipeline(t_token *tokens, t_minishell *mini, int i);
@@ -242,7 +242,7 @@ char		*handle_exit_status(t_process *proc);
 char		*handle_dollar_sign(t_process *proc);
 char		*expand_env_variable(t_process *proc);
 void		append_env_value(t_process *proc, char *env_value, int free_value);
-char		*expand_variable(t_process *proc);
+char		*expand_variable(t_process *proc, t_minishell *mini);
 
 t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i);
 t_ast_node	*parse_redirect(t_token **tokens, t_minishell *mini);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/17 23:37:49 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/19 17:37:01 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 	if (signal == SIGINT)
 	{
 		g_sig.sigint = 1;
-		mini->exit = 130;
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
 	}

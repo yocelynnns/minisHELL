@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/17 23:41:29 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/19 18:09:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 	if (handle_builtin_commands(ast, mini, &m) == 0)
 		fkoff(mini, &m, EXIT_SUCCESS);
 	init_signals();
+	close(m.org_fd[0]);
+	close(m.org_fd[1]);
 	execute_in_child(ast, mini, &m);
 	dup2(m.org_fd[0], STDIN_FILENO);
 	dup2(m.org_fd[1], STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 23:54:52 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/19 16:29:56 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 18:06:48 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char *ft_first(t_process *proc, char **start, char **env_value);
 char *ft_second(t_process *proc, char **start, char **env_value);
 char * ft_third(t_process *proc, char **env_value, int *it);
 
-char *expand_variable(t_process *proc)
+char *expand_variable(t_process *proc, t_minishell *mini)
 {
 	int it;
 	char *start;
@@ -108,10 +108,11 @@ char *expand_variable(t_process *proc)
 	proc->mini->flag = 1;
 	it = 0;
 	env_value = NULL;
+
 	if (proc->str[proc->i + 1] == '?')
 	{
 		it = 1;
-		env_value = ft_itoa(proc->mini->exit);
+		env_value = ft_itoa(mini->exit);
 		proc->i += 2;
 	}
 	else if (proc->str[proc->i] == '$')

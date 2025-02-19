@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 19:44:08 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/17 15:46:03 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 18:10:21 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	add_or_update_env(char *arg, t_env **env, t_minishell *mini)
 	}
 	if (update_env(key, new_value, env, mini) == SUCCESS)
 		return (free(key), SUCCESS);
+	free(key);
 	return (add_env(new_value, env, mini));
 }
 
