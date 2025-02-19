@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/19 14:52:35 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 15:02:59 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ void		print_sorted_env(t_env *env);
 
 int			ft_unset(char **args, t_minishell *mini);
 int			unset_env_var(t_minishell *mini, char *arg);
-size_t		env_size(char *env);
+size_t		env_len(char *env);
 
 int			ft_pwd(void);
 int			handle_tilde(char **path, t_env *env_list);

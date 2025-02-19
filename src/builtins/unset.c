@@ -6,13 +6,13 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:23:36 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/17 15:44:17 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 15:03:02 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-size_t	env_size(char *env)
+size_t	env_len(char *env)
 {
 	size_t	i;
 
@@ -33,7 +33,8 @@ int	unset_env_var(t_minishell *mini, char *arg)
 	prev = NULL;
 	while (env)
 	{
-		if (ft_strncmp(arg, env->value, env_size(env->value)) == 0)
+		if (ft_strncmp(arg, env->value, env_len(env->value)) == 0
+			&& env_len(env->value) == ft_strlen(arg))
 		{
 			if (prev == NULL)
 				mini->env = env->next;
@@ -46,6 +47,7 @@ int	unset_env_var(t_minishell *mini, char *arg)
 	}
 	return (SUCCESS);
 }
+
 
 int	ft_unset(char **args, t_minishell *mini)
 {
