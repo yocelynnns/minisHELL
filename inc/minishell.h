@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/19 15:02:59 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 17:19:18 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,7 @@ int			unset_env_var(t_minishell *mini, char *arg);
 size_t		env_len(char *env);
 
 int			ft_pwd(void);
-int			handle_tilde(char **path, t_env *env_list);
+int			handle_tilde(char **path, t_env *env_list, t_minishell *mini);
 int			handle_special_cd(char **arguments, t_env *env_list, \
 t_minishell *mini);
 int			handle_regular_cd(char *path, t_env *env_list, t_minishell *mini);
@@ -341,8 +341,8 @@ int			ft_echo(char **args, t_minishell *mini);
 void		print_cd_error(const char *path, t_minishell *mini);
 int			update_oldpwd(t_env *env_list);
 char		*get_special_directory_path(int option, t_env *env_list);
-int			navigate_to_special_dir(t_env \
-	*env_list, t_minishell *mini);
+// int			navigate_to_special_dir(t_env
+// 	*env_list, t_minishell *mini);
 int			ft_cd(char **arguments, t_env *env_list, t_minishell *mini);
 
 #endif

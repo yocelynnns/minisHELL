@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2025/02/19 14:52:31 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 17:19:14 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_pwd(void)
 	}
 }
 
-int	handle_tilde(char **path, t_env *env_list)
+int	handle_tilde(char **path, t_env *env_list, t_minishell *mini)
 {
 	char	*home;
 	char	*expanded_path;
@@ -40,6 +40,7 @@ int	handle_tilde(char **path, t_env *env_list)
 	if (!home)
 	{
 		ft_putendl_fd("minishell: cd: HOME not set", STDERR_FILENO);
+		mini->exit = 1;
 		return (ERROR);
 	}
 	expanded_path = ft_strjoin(home, (*path) + 1);
@@ -58,7 +59,7 @@ int	handle_special_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
 	char	*directory_path;
 	int		result;
-
+	
 	if (ft_strcmp(arguments[1], "-") == 0)
 	{
 		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
@@ -84,7 +85,7 @@ int	handle_regular_cd(char *path, t_env *env_list, t_minishell *mini)
 	expanded_path = ft_strdup(path);
 	if (!expanded_path)
 		return (ERROR);
-	if (handle_tilde(&expanded_path, env_list) != SUCCESS)
+	if (handle_tilde(&expanded_path, env_list, mini) != SUCCESS)
 	{
 		free(expanded_path);
 		return (ERROR);
