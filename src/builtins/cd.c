@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/02/17 15:42:49 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/19 14:52:37 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,27 +54,15 @@ int	update_oldpwd(t_env *env_list)
 	return (SUCCESS);
 }
 
-char	*get_special_directory_path(int option, t_env *env_list)
-{
-	if (option == 0)
-		return (get_env_variable(env_list, "HOME=", 5));
-	else if (option == 1)
-		return (get_env_variable(env_list, "OLDPWD=", 7));
-	return (NULL);
-}
-
-int	navigate_to_special_dir(int option, t_env *env_list, t_minishell *mini)
+int	navigate_to_special_dir(t_env *env_list, t_minishell *mini)
 {
 	char	*directory_path;
 	int		result;
 
-	directory_path = get_special_directory_path(option, env_list);
+	directory_path = get_env_variable(env_list, "HOME=", 5);
 	if (!directory_path)
 	{
-		if (option == 0)
-			ft_putendl_fd("minishell: cd: HOME not set", STDERR);
-		else if (option == 1)
-			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR);
+		ft_putendl_fd("minishell: cd: HOME not set", STDERR);
 		return (ERROR);
 	}
 	result = chdir(directory_path);
@@ -86,8 +74,7 @@ int	navigate_to_special_dir(int option, t_env *env_list, t_minishell *mini)
 
 int	ft_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
-	if (!arguments[1] || ft_strcmp(arguments[1], "~") == 0
-		|| ft_strcmp(arguments[1], "-") == 0)
+	if (!arguments[1] || ft_strcmp(arguments[1], "-") == 0)
 		return (handle_special_cd(arguments, env_list, mini));
 	if (arguments[1] && ft_strcmp(arguments[1], "") == 0)
 		return (SUCCESS);

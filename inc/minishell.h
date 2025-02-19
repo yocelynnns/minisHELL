@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/18 22:42:51 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/19 14:52:35 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,7 @@ int			ft_echo(char **args, t_minishell *mini);
 void		print_cd_error(const char *path, t_minishell *mini);
 int			update_oldpwd(t_env *env_list);
 char		*get_special_directory_path(int option, t_env *env_list);
-int			navigate_to_special_dir(int option, t_env \
+int			navigate_to_special_dir(t_env \
 	*env_list, t_minishell *mini);
 int			ft_cd(char **arguments, t_env *env_list, t_minishell *mini);
 
