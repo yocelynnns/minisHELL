@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 00:02:48 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/21 01:47:19 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/21 03:01:14 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,20 +68,26 @@ int	checkpipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	return (0);
 }
 
-void	lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
+int	lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
 {
 	if ((input[state->i] == '\'' || input[state->i] == '"') && \
 	(state->i == 0 || input[state->i - 1] != '\\'))
-		handle_quotes(input, state);
+		return (handle_quotes(input, state), 0);
 	else if (isspace(input[state->i]) && !state->quote)
-		handle_spaces(input, state, mini);
+		return(handle_spaces(input, state, mini), 0);
 	else if ((input[state->i] == '<' || input[state->i] == '>')
 		&& !state->quote)
-		handle_redir(input, state, input[state->i], mini);
+		return (handle_redir(input, state, input[state->i], mini), 0);
 	else if (input[state->i] == '|' && !state->quote)
-		handle_pipe(input, state, mini);
+	{
+		if (handle_pipe(input, state, mini) == 1)
+			return (1);
+		else
+			return (0);
+	}
 	else
 		state->last_token_was_pipe = 0;
+	return (0);
 }
 
 t_token	*lexer(const char *input, t_minishell *mini)
@@ -93,11 +99,14 @@ t_token	*lexer(const char *input, t_minishell *mini)
 		return (NULL);
 	while (input[state.i])
 	{
-		lexer_checks(input, &state, mini);
-		state.i++;
+		if (lexer_checks(input, &state, mini) == 1)
+			return(free_tokens(state.token_list), NULL);
+		else
+			state.i++;
 	}
 	if (mini->exit == 217)
 	{
+		free_tokens(state.token_list);
 		mini->exit = 2;
 		return (NULL);
 	}

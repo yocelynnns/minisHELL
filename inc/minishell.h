@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/20 19:51:16 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/21 02:54:53 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void		handle_eof(char *line, t_minishell *mini);
 void		stop_signals(void);
 
 void		dollar_expan(char *processed_t, t_lexer_state *state);
-void		handle_pipe(const char *input, t_lexer_state *state, \
+int		handle_pipe(const char *input, t_lexer_state *state, \
 t_minishell *mini);
 void		handle_spaces(const char *input, t_lexer_state *state, \
 	t_minishell *mini);
@@ -234,7 +234,7 @@ void		process_remaining_token(const char *input, t_lexer_state *state, \
 void		init_lexstate(t_lexer_state *state);
 int			checkpipe(const char *input, t_lexer_state *state, \
 t_minishell *mini);
-void		lexer_checks(const char *input, t_lexer_state *state, \
+int		lexer_checks(const char *input, t_lexer_state *state, \
 	t_minishell *mini);
 t_token		*lexer(const char *input, t_minishell *mini);
 
