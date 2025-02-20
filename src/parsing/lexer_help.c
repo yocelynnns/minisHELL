@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_help.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 00:02:48 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/19 16:28:30 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/21 01:47:19 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,10 @@ void	lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
 t_token	*lexer(const char *input, t_minishell *mini)
 {
 	t_lexer_state	state;
-	int				j;
-	int				i;
 
-	j = 0;
-	i = 0;
 	init_lexstate(&state);
-	i = checkpipe(input, &state, mini);
+	if (checkpipe(input, &state, mini) == 1)
+		return (NULL);
 	while (input[state.i])
 	{
 		lexer_checks(input, &state, mini);
@@ -104,8 +101,7 @@ t_token	*lexer(const char *input, t_minishell *mini)
 		mini->exit = 2;
 		return (NULL);
 	}
-	j = checkquote(&state, mini);
-	if (j || i)
+	if (checkquote(&state, mini) == 1)
 		return (NULL);
 	process_remaining_token(input, &state, mini);
 	mini->here = 0;
