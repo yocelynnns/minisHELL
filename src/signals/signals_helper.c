@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 15:10:03 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/17 15:11:40 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	handle_eof(char *line, t_minishell *mini)
 	{
 		i = 0;
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		i = mini->exit;
 		free_env(mini->env);
 		free_env_array(mini->env2);
 		free(mini);
@@ -41,6 +42,6 @@ void	handle_eof(char *line, t_minishell *mini)
 
 void	stop_signals(void)
 {
-	signal(SIGINT, SIG_IGN);
+	signal(g_sigint, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

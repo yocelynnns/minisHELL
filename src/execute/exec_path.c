@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/19 17:37:01 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 	int	signal;
 
 	signal = WTERMSIG(m->status);
-	if (signal == SIGINT)
+	if (signal == g_sigint)
 	{
-		g_sig.sigint = 1;
+		g_sigint = 1;
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
 	}
@@ -138,9 +138,9 @@ void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 // 	if (WIFSIGNALED(m->status))
 // 	{
 // 		signal = WTERMSIG(m->status);
-// 		if (signal == SIGINT)
+// 		if (signal == g_sigint)
 // 		{
-// 			g_sig.sigint = 1;
+// 			g_sigint = 1;
 // 			mini->exit = 130;
 // 			ft_putstr_fd("\n", STDOUT_FILENO);
 // 			rl_on_new_line();

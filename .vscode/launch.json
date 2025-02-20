@@ -24,12 +24,12 @@
           "ignoreFailures": true
         },
         {
-          "description": "Pass SIGINT to program",
-          "text": "handle SIGINT nostop print pass",
+          "description": "Pass g_sigint to program",
+          "text": "handle g_sigint nostop print pass",
           "ignoreFailures": false
         },
         {
-          "description": "Don't stop on SIGINT in child processes",
+          "description": "Don't stop on g_sigint in child processes",
           "text": "set follow-fork-mode child",
           "ignoreFailures": false
         },

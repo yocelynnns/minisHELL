@@ -6,13 +6,13 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/02/19 17:18:25 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 18:20:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void print_cd_error(const char *path, t_minishell *mini)
+void	print_cd_error(const char *path, t_minishell *mini)
 {
 	if (access(path, 0) != 0)
 		ft_putstr_fd("cd: no such file or directory: ", STDERR);
@@ -25,11 +25,11 @@ void print_cd_error(const char *path, t_minishell *mini)
 	mini->exit = 1;
 }
 
-int update_oldpwd(t_env *env_list)
+int	update_oldpwd(t_env *env_list)
 {
-	char current_directory[PATH_MAX];
-	char *new_value;
-	t_env *oldpwd_node;
+	char	current_directory[PATH_MAX];
+	char	*new_value;
+	t_env	*oldpwd_node;
 
 	if (!getcwd(current_directory, sizeof(current_directory)))
 		return (ERROR);
@@ -39,12 +39,13 @@ int update_oldpwd(t_env *env_list)
 		if (ft_strncmp(oldpwd_node->value, "OLDPWD=", 7) == 0)
 		{
 			free(oldpwd_node->value);
-			new_value = malloc(ft_strlen("OLDPWD=") + ft_strlen(current_directory) + 1);
+			new_value = malloc(ft_strlen("OLDPWD=") + \
+			ft_strlen(current_directory) + 1);
 			if (!new_value)
 				return (ERROR);
 			ft_memcpy(new_value, "OLDPWD=", 7);
 			ft_memcpy(new_value + 7, current_directory,
-					  ft_strlen(current_directory) + 1);
+				ft_strlen(current_directory) + 1);
 			oldpwd_node->value = new_value;
 			return (SUCCESS);
 		}
@@ -53,10 +54,10 @@ int update_oldpwd(t_env *env_list)
 	return (SUCCESS);
 }
 
-int handle_normal_cd(t_env *env_list, t_minishell *mini)
+int	handle_normal_cd(t_env *env_list, t_minishell *mini)
 {
-	char *home;
-	int result;
+	char	*home;
+	int		result;
 
 	home = get_env_variable(env_list, "HOME=", 5);
 	if (!home)
@@ -69,13 +70,13 @@ int handle_normal_cd(t_env *env_list, t_minishell *mini)
 	free(home);
 	if (result != 0)
 	{
-		print_cd_error(home,mini);
+		print_cd_error(home, mini);
 		return (ERROR);
 	}
 	return (SUCCESS);
 }
 
-int ft_cd(char **arguments, t_env *env_list, t_minishell *mini)
+int	ft_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
 	if (!arguments[1] || ft_strcmp(arguments[1], "") == 0)
 		return (handle_normal_cd(env_list, mini));

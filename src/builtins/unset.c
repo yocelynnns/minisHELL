@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:23:36 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/19 15:03:02 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 19:37:51 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	unset_env_var(t_minishell *mini, char *arg)
 	}
 	return (SUCCESS);
 }
-
 
 int	ft_unset(char **args, t_minishell *mini)
 {

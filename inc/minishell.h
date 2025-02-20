@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/19 17:46:34 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 17:15:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,12 +151,12 @@ typedef struct s_heredoc
 	size_t		delimiter_length;
 }	t_heredoc;
 
-typedef struct s_signal
-{
-	int	sigint;
-}	t_signal;
+// typedef struct s_signal
+// {
+// 	int	g_sigint;
+// }	t_signal;
 
-extern t_signal	g_sig;
+extern int					g_sigint;
 
 int			main(int ac, char **av, char **env);
 t_minishell	*init_minishell(char **env);

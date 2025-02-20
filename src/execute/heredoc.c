@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 16:51:22 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/18 00:42:09 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ int	is_delimiter(const char *content, const char *delimiter, \
 
 int	bytes_check(ssize_t bytes_read, t_minishell *mini, t_heredoc *hd)
 {
-	if (g_sig.sigint)
+	if (g_sigint)
 	{
 		mini->exit = mini->exit;
-		g_sig.sigint = 0;
+		g_sigint = 0;
 		return (-1);
 	}
 	if (bytes_read < 0)
@@ -130,10 +130,10 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 //     {
 //         bytes_read = read_line(hd->content, hd->total_length, h
 //d->current_size);
-//         if (g_sig.sigint)
+//         if (g_sigint)
 //         {
 //             mini->exit = mini->exit;
-//             g_sig.sigint = 0;
+//             g_sigint = 0;
 //             return (-1);
 //         }
 //         if (bytes_read < 0)
@@ -188,9 +188,9 @@ int	read_until_delimiter(t_heredoc *hd, t_minishell *mini)
 // 	while (1)
 // 	{
 // 		bytes_read = read_line(hd->content, hd->total_length, hd->current_size);
-// 		if (g_sig.sigint)
+// 		if (g_sigint)
 // 		{
-// 			g_sig.sigint = 0;
+// 			g_sigint = 0;
 // 			mini->exit = mini->exit;
 // 			return (-1);
 // 		}

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2025/02/19 17:19:14 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 19:37:38 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	handle_special_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
 	char	*directory_path;
 	int		result;
-	
+
 	if (ft_strcmp(arguments[1], "-") == 0)
 	{
 		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
