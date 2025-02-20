@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/21 02:51:29 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/21 03:11:08 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 	{
 		fprintf(stderr,
 			"Error: Invalid sequence of consecutive '|' operators\n");
-		mini->exit = 217;
+		mini->exit = 2;
 		return (1);
 	}
 	state->last_token_was_pipe = 1;
