@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/20 17:15:53 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 19:51:16 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int			checkquote(t_lexer_state *state, t_minishell *mini);
 char		*handle_backslash(t_process *proc);
 char		*handle_single_quote(t_process *proc);
 char		*handle_double_quote(t_process *proc, t_minishell *mini);
-char		*process_character(t_process *proc, t_minishell *mini);
+void		process_character(t_process *proc, t_minishell *mini);
 char		*first_processing(char *str, t_minishell *mini);
 
 t_ast_node	*parse_pipeline(t_token *tokens, t_minishell *mini, int i);

@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 15:10:03 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 19:58:17 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,6 @@ void	handle_eof(char *line, t_minishell *mini)
 
 void	stop_signals(void)
 {
-	signal(g_sigint, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

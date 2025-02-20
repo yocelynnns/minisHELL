@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 19:47:30 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/19 17:46:54 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 20:09:10 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*handle_double_quote(t_process *proc, t_minishell *mini)
 	return (proc->result);
 }
 
-char	*process_character(t_process *proc, t_minishell *mini)
+void	process_character(t_process *proc, t_minishell *mini)
 {
 	if (proc->str[proc->i] == '\\' && !proc->in_quote)
 		proc->result = handle_backslash(proc);
@@ -78,7 +78,6 @@ char	*process_character(t_process *proc, t_minishell *mini)
 		proc->result = handle_double_quote(proc, mini);
 	else
 		proc->result = ft_strcjoin(proc->result, proc->str[proc->i++]);
-	return (proc->result);
 }
 
 char	*first_processing(char *str, t_minishell *mini)

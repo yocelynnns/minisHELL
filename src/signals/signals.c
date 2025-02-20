@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:23 by messs             #+#    #+#             */
-/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/20 20:06:42 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	set_signals_interactive(void)
 	g_sigint = 0;
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &signal_reset_prompt;
-	sigaction(g_sigint, &act, NULL);
+	sigaction(SIGINT, &act, NULL);
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &handle_sigquit;
 	sigaction(SIGQUIT, &act, NULL);
@@ -59,7 +59,7 @@ void	set_signals_heredoc(void)
 
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &signal_print_newline;
-	sigaction(g_sigint, &act, NULL);
+	sigaction(SIGINT, &act, NULL);
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &act, NULL);
