@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/18 00:36:05 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/20 20:35:53 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 		processed_token = first_processing(raw_token, mini);
 		add_token(&state->token_list, create_token(WORD, processed_token));
 		free(raw_token);
+		free(processed_token);
 	}
 	add_token(&state->token_list, create_token(PIPE, "|"));
 	state->start = state->i + 1;
