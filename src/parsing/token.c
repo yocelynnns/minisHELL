@@ -6,7 +6,7 @@
 /*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/21 03:11:08 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/22 00:54:11 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 		add_token(&state->token_list, create_token(WORD, processed_token));
 		free(raw_token);
 		free(processed_token);
-		return(0);
 	}
 	add_token(&state->token_list, create_token(PIPE, "|"));
 	state->start = state->i + 1;
