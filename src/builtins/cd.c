@@ -78,6 +78,11 @@ int	handle_normal_cd(t_env *env_list, t_minishell *mini)
 
 int	ft_cd(char **arguments, t_env *env_list, t_minishell *mini)
 {
+	if (arguments[1] && arguments[2])
+	{
+		ft_putstr_fd("cd: too many arguments", STDERR);
+		mini->exit = 1;
+	}
 	if (!arguments[1] || ft_strcmp(arguments[1], "") == 0)
 		return (handle_normal_cd(env_list, mini));
 	if (arguments[1] && ft_strcmp(arguments[1], "-") == 0)

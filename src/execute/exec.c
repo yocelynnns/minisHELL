@@ -80,20 +80,24 @@ void	fkoff(t_minishell *mini, t_cmd *m, int returnval)
 
 void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
-	char	*executable_path;
+	char	*args[number_of_args(ast->command->args)];
 
+	args[0] = ft_strdup(ast->command->args[0]);
+	
 	if (ast->command->args[0] == NULL)
-		fkoff(mini, m, EXIT_SUCCESS);
+	fkoff(mini, m, EXIT_SUCCESS);
 	if (is_directory(ast->command->args[0]))
 	{
 		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
 		fkoff(mini, m, 126);
 	}
-	executable_path = get_executable_path(ast, mini);
-	if (!executable_path)
+	if ((ast->command->args[0][0] != '.' && ast->command->args[0][1] != '/')
+		&& ft_strcmp(ft_substr(ast->command->args[0], 0, 5), "/bin/"))
+			args[0] = ft_strjoin("/bin/", ast->command->args[0]);
+	if (!args[0])
 		printf("Executable path not found.........................\n");
 	mini->env2 = env_list_to_array(mini->env);
-	if ((executable_path) && (execve(executable_path, ast->command->args, \
+	if ((args[0]) && (execve(args[0], ast->command->args, \
 	mini->env2) == -1))
 	{
 		perror("execve");

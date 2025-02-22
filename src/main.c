@@ -73,7 +73,7 @@ int	main(int ac, char **av, char **env)
 	mini = init_minishell(env);
 	if (!mini)
 		return (EXIT_FAILURE);
-	print_welcome_message();
+	// print_welcome_message();
 	run_shell_loop(mini);
 	free_env(mini->env);
 	free_env_array(mini->env2);
