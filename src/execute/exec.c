@@ -93,6 +93,11 @@ void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	}
 	if ((ast->command->args[0][0] != '.' && ast->command->args[0][1] != '/') && ft_strcmp(ft_substr(ast->command->args[0], 0, 5), "/bin/"))
 		args[0] = ft_strjoin("/bin/", ast->command->args[0]);
+
+		// check it is ./ if ./check the directory
+
+		// separate that into two directory and commmand ??? better ????
+
 	if (!args[0])
 		printf("Executable path not found.........................\n");
 	mini->env2 = env_list_to_array(mini->env);
