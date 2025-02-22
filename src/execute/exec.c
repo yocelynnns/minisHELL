@@ -90,6 +90,9 @@ void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 		fkoff(mini, m, 126);
 	}
 	executable_path = get_executable_path(ast, mini);
+	if (!executable_path)
+		printf("Executable path not found.........................\n");
+	mini->env2 = env_list_to_array(mini->env);
 	if ((executable_path) && (execve(executable_path, ast->command->args, \
 	mini->env2) == -1))
 	{
