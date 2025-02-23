@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/19 18:09:37 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/23 22:07:48 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 
 	m.org_fd[0] = dup(STDIN_FILENO);
 	m.org_fd[1] = dup(STDOUT_FILENO);
-	cmdchecks(ast, mini);
+	if (cmdchecks(ast, mini) < 0)
+		fkoff(mini, &m, EXIT_FAILURE);
 	if (handle_builtin_commands(ast, mini, &m) == 0)
 		fkoff(mini, &m, EXIT_SUCCESS);
 	init_signals();
@@ -83,13 +84,13 @@ void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	char *args[number_of_args(ast->command->args)];
 	char *dir_exe = NULL;
 
-
 	args[0] = ft_strdup(ast->command->args[0]);
 
 	if (ast->command->args[0] == NULL)
 		fkoff(mini, m, EXIT_SUCCESS);
 
-	if ((ast->command->args[0][0] != '.' && ast->command->args[0][1] != '/') && ft_strcmp(ft_substr(ast->command->args[0], 0, 5), "/bin/"))
+	if ((ast->command->args[0][0] != '.' && ast->command->args[0][1] != '/') \
+	&& ft_strcmp(ft_substr(ast->command->args[0], 0, 5), "/bin/"))
 		args[0] = ft_strjoin("/bin/", ast->command->args[0]);
 
 	if (is_directory(ast->command->args[0]))
