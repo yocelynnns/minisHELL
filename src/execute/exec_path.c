@@ -42,7 +42,7 @@ char	*check_directory(char *dir, char *cmd, t_minishell *mini) // We need to use
 	i = access(full_path, X_OK);
 	if (i != 0)
 	{
-		ft_putstr_fd("path: no such file or directory: ", STDERR);
+		// ft_putstr_fd("path: no such file or directory: ", STDERR);
 		mini->exit = 126;
 	}
 	if (i == 0)
@@ -92,7 +92,6 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 			return (command);
 		else
 		{
-			ft_putendl_fd(command,STDERR);
 			ft_putstr_fd(": no such file or directory. ", STDERR);
 			mini->exit = 126;
 		}

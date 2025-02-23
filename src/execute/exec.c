@@ -81,40 +81,37 @@ void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char *args[number_of_args(ast->command->args)];
+	char *dir_exe = NULL;
+
 
 	args[0] = ft_strdup(ast->command->args[0]);
 
 	if (ast->command->args[0] == NULL)
 		fkoff(mini, m, EXIT_SUCCESS);
-	if (is_directory(ast->command->args[0]))
-	{
-		printf("minishell: %s: Is a directory\n", ast->command->args[0]);
-		fkoff(mini, m, 126);
-	}
+
 	if ((ast->command->args[0][0] != '.' && ast->command->args[0][1] != '/') && ft_strcmp(ft_substr(ast->command->args[0], 0, 5), "/bin/"))
 		args[0] = ft_strjoin("/bin/", ast->command->args[0]);
 
-		// check it is ./ if ./check the directory
-
-		// separate that into two directory and commmand ??? better ????
-
-	if (!args[0])
-		printf("Executable path not found.........................\n");
+	if (is_directory(ast->command->args[0]))
+	{
+		dir_exe = get_executable_path(ast,mini);
+		if (!dir_exe)
+			fkoff(mini, m, 127);
+		fkoff(mini, m, 126);
+	}
 	mini->env2 = env_list_to_array(mini->env);
 	if ((args[0]) && (execve(args[0], ast->command->args,
 							 mini->env2) == -1))
 	{
-		write(2, "Command not found: ", 19);
-		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
-		write(2, "\n", 1);
-		fkoff(mini, m, 127);
+		perror("execv");
+		fkoff(mini,m,127);
 	}
 	else
 	{
 		write(2, "Command not found: ", 19);
 		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
 		write(2, "\n", 1);
-		fkoff(mini, m, 127);
+		fkoff(mini, m, 126);
 	}
 }
 
