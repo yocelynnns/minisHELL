@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_helper.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/17 23:42:28 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/24 18:25:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	execute_left_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 int	execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 {
 	pid_t	pid2;
+	int		i;
 
 	pid2 = fork();
 	if (pid2 == 0)
@@ -43,8 +44,9 @@ int	execute_right_command(int pipefd[2], t_ast_node *ast, t_minishell *mini)
 		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
 		execute_command(ast, mini);
+		i = mini->exit;
 		cleanup(mini);
-		exit(0);
+		exit(i);
 	}
 	else if (pid2 < 0)
 	{
