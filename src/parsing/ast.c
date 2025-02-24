@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/17 23:50:47 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/24 16:35:38 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
 	cmd = create_ast_node(AST_COMMAND);
 	init_cmd(cmd, i);
 	arg_count = 0;
-	if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, \
-	&arg_count))
-		return (NULL);
-	if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, \
-	&arg_count))
-		return (NULL);
+	while (*tokens && (*tokens)->type != PIPE)
+	{
+		if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, 
+			&arg_count))
+				return (NULL);
+	}
 	cmd->command->args[arg_count] = NULL;
 	return (cmd);
 }
