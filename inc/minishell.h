@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/23 23:36:21 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/24 13:18:04 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ t_minishell *mini);
 t_heredoc	*init_heredoc(const char *delimiter);
 void		handle_heredoc(t_ast_node *ast);
 int			handle_all_redirections(t_ast_node *ast, t_minishell *mini);
-int			handle_redirection(t_ast_node *redirect, t_minishell *mini, int *flag);
+int			handle_redirection(t_ast_node *redirect, t_minishell *mini);
 int			handle_builtin_commands(t_ast_node *ast, t_minishell *mini, \
 t_cmd *m);
 

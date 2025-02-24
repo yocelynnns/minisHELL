@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/23 23:41:19 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/24 13:17:34 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,50 +38,30 @@ int	handle_builtin_commands(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	return (1);
 }
 
-int	handle_redirection(t_ast_node *redirect, t_minishell *mini, int *flag)
+int	handle_redirection(t_ast_node *redirect, t_minishell *mini)
 {
 	int	fd;
 
 	if (redirect->redirect->type == REDIRECT_IN)
-	{
 		fd = open(redirect->redirect->file, O_RDONLY);
-		if (fd < 0)
-		{
-			perror("open");
-			*flag = 1;
-			mini->exit = 1;
-			return (*flag);
-		}
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-	}
 	else if (redirect->redirect->type == REDIRECT_OUT)
-	{
 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-		{
-			perror("open");
-			*flag = 2;
-			mini->exit = 1;
-			return (*flag);
-		}
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-	}
 	else if (redirect->redirect->type == APPEND)
-	{
 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_APPEND,
 				0644);
-		if (fd < 0)
-		{
-			perror("open");
-			*flag = 2;
-			mini->exit = 1;
-			return (*flag);
-		}
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
+	else
+		return (0);
+	if (fd < 0)
+	{
+		perror("open");
+		mini->exit = 1;
+		return (-1);
 	}
+	if (redirect->redirect->type == REDIRECT_IN)
+		dup2(fd, STDIN_FILENO);
+	else
+		dup2(fd, STDOUT_FILENO);
+	close(fd);
 	return (0);
 }
 
@@ -90,26 +70,18 @@ int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 	t_ast_node	*redirect;
 	int			save_stdin;
 	int			save_stdout;
-	int flag = 0;
 
 	save_stdin = dup(STDIN_FILENO);
 	save_stdout = dup(STDOUT_FILENO);
 	redirect = ast->command->redirect;
 	while (redirect)
 	{
-		int i = handle_redirection(redirect, mini, &flag);
-		if (i == 1)
+		if (handle_redirection(redirect, mini) < 0)
 		{
 			dup2(save_stdin, STDIN_FILENO);
-			close(save_stdin);
-			close(save_stdout);
-			return (-1);
-		}
-		else if (i == 2)
-		{
 			dup2(save_stdout, STDOUT_FILENO);
-			close(save_stdout);
 			close(save_stdin);
+			close(save_stdout);
 			return (-1);
 		}
 		if (!redirect->redirect)
@@ -120,6 +92,7 @@ int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 	close(save_stdout);
 	return (0);
 }
+
 
 void	handle_heredoc(t_ast_node *ast)
 {
@@ -156,30 +129,50 @@ t_heredoc	*init_heredoc(const char *delimiter)
 	return (hd);
 }
 
-// int	handle_redirection(t_ast_node *redirect, t_minishell *mini)
+// int	handle_redirection(t_ast_node *redirect, t_minishell *mini, int *flag)
 // {
 // 	int	fd;
 
 // 	if (redirect->redirect->type == REDIRECT_IN)
+// 	{
 // 		fd = open(redirect->redirect->file, O_RDONLY);
+// 		if (fd < 0)
+// 		{
+// 			perror("open");
+// 			*flag = 1;
+// 			mini->exit = 1;
+// 			return (*flag);
+// 		}
+// 		dup2(fd, STDIN_FILENO);
+// 		close(fd);
+// 	}
 // 	else if (redirect->redirect->type == REDIRECT_OUT)
+// 	{
 // 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 		if (fd < 0)
+// 		{
+// 			perror("open");
+// 			*flag = 2;
+// 			mini->exit = 1;
+// 			return (*flag);
+// 		}
+// 		dup2(fd, STDOUT_FILENO);
+// 		close(fd);
+// 	}
 // 	else if (redirect->redirect->type == APPEND)
+// 	{
 // 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_APPEND,
 // 				0644);
-// 	else
-// 		return (0);
-// 	if (fd < 0)
-// 	{
-// 		perror("open");
-// 		mini->exit = 1;
-// 		return (-1);
-// 	}
-// 	if (redirect->redirect->type == REDIRECT_IN)
-// 		dup2(fd, STDIN_FILENO);
-// 	else
+// 		if (fd < 0)
+// 		{
+// 			perror("open");
+// 			*flag = 2;
+// 			mini->exit = 1;
+// 			return (*flag);
+// 		}
 // 		dup2(fd, STDOUT_FILENO);
-// 	close(fd);
+// 		close(fd);
+// 	}
 // 	return (0);
 // }
 
