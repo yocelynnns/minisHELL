@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/24 18:26:00 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/24 19:28:23 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void fkoff(t_minishell *mini, t_cmd *m, int returnval)
 	cleanup(mini);
 	exit(returnval);
 }
-
 int check_dir_permission(char *args)
 {
 	struct stat path_stat;
@@ -93,8 +92,10 @@ int check_dir_permission(char *args)
 	}
 	if (access(args, X_OK) == -1)
 	{
-		perror(args);
-		return (126);
+		perror("access");
+		if (errno == EACCES)
+			return (126);
+		return (127);
 	}
 	return (0);
 }
@@ -105,19 +106,15 @@ void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 
 	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
 		fkoff(mini, m, EXIT_SUCCESS);
-	if(is_directory(ast->command->args[0]))
+	if (is_directory(ast->command->args[0]))
 	{
 		int dir_status = check_dir_permission(ast->command->args[0]);
-	if (dir_status == 126)
-		fkoff(mini, m, 126);
-
-	int perm_status = check_dir_permission(ast->command->args[0]);
-	if (perm_status)
-		fkoff(mini, m, perm_status);
+		if (dir_status)
+			fkoff(mini, m, dir_status);
 	}
-	executable_path = get_executable_path(ast, mini);
-	if ((executable_path) && (execve(executable_path, ast->command->args,
-									 mini->env2) == -1))
+	else 
+		executable_path = get_executable_path(ast, mini);
+	if ((executable_path) && (execve(executable_path, ast->command->args, mini->env2) == -1))
 	{
 		perror("execve");
 		fkoff(mini, m, EXIT_FAILURE);
