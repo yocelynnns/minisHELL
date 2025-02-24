@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:00 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/24 13:17:34 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:17:11 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
 	return (0);
 }
 
-
 void	handle_heredoc(t_ast_node *ast)
 {
 	int	pipefd[2];
@@ -128,66 +127,3 @@ t_heredoc	*init_heredoc(const char *delimiter)
 	hd->delimiter_length = ft_strlen(delimiter);
 	return (hd);
 }
-
-// int	handle_redirection(t_ast_node *redirect, t_minishell *mini, int *flag)
-// {
-// 	int	fd;
-
-// 	if (redirect->redirect->type == REDIRECT_IN)
-// 	{
-// 		fd = open(redirect->redirect->file, O_RDONLY);
-// 		if (fd < 0)
-// 		{
-// 			perror("open");
-// 			*flag = 1;
-// 			mini->exit = 1;
-// 			return (*flag);
-// 		}
-// 		dup2(fd, STDIN_FILENO);
-// 		close(fd);
-// 	}
-// 	else if (redirect->redirect->type == REDIRECT_OUT)
-// 	{
-// 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-// 		if (fd < 0)
-// 		{
-// 			perror("open");
-// 			*flag = 2;
-// 			mini->exit = 1;
-// 			return (*flag);
-// 		}
-// 		dup2(fd, STDOUT_FILENO);
-// 		close(fd);
-// 	}
-// 	else if (redirect->redirect->type == APPEND)
-// 	{
-// 		fd = open(redirect->redirect->file, O_WRONLY | O_CREAT | O_APPEND,
-// 				0644);
-// 		if (fd < 0)
-// 		{
-// 			perror("open");
-// 			*flag = 2;
-// 			mini->exit = 1;
-// 			return (*flag);
-// 		}
-// 		dup2(fd, STDOUT_FILENO);
-// 		close(fd);
-// 	}
-// 	return (0);
-// }
-
-// int	handle_all_redirections(t_ast_node *ast, t_minishell *mini)
-// {
-// 	t_ast_node	*redirect;
-
-// 	redirect = ast->command->redirect;
-// 	while (redirect)
-// 	{
-// 		if (handle_redirection(redirect, mini) < 0)
-// 			return (-1);
-// 		if (!redirect->redirect)
-// 			break ;
-// 		redirect = redirect->redirect->next;
-// 	}
-// 	return (0);
-// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/24 13:18:04 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/21 02:54:53 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ void		handle_child_process(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 void		handle_fork_signals(t_minishell *mini, t_cmd *m);
 char		*get_executable_path(t_ast_node *ast, t_minishell *mini);
 char		*find_executable(char *cmd, t_minishell *mini);
-char		*check_directory(char *dir, char *cmd, t_minishell *mini);
+char		*check_directory(char *dir, char *cmd);
 char		*concat_path(char *dir, char *cmd);
 
 int			execute_pipeline(t_minishell *mini, t_ast_node *ast);

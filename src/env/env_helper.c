@@ -29,13 +29,12 @@ int	env_init(t_minishell *mini, char **env_array)
 		put_env_i(env_array);
 	if (init_env_list(mini, env_array) != 0)
 		return (1);
-	// mini->env2 = env_list_to_array(mini->env);
-	// printf("The mini->env2 is %s\n",mini->env2[0]);
-	// 	if (!mini->env2)
-	// {
-	// 	ft_putstr_fd("Error: Failed to convert env_var to array\n", STDERR);
-	// 	return (1);
-	// }
+	mini->env2 = env_list_to_array(mini->env);
+	if (!mini->env2)
+	{
+		ft_putstr_fd("Error: Failed to convert env_var to array\n", STDERR);
+		return (1);
+	}
 	return (0);
 }
 

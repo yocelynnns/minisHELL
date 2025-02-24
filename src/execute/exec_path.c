@@ -31,21 +31,14 @@ char	*concat_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char	*check_directory(char *dir, char *cmd, t_minishell *mini) // We need to use this function to check the permission of the direcory
+char	*check_directory(char *dir, char *cmd)
 {
 	char	*full_path;
-	int		i;
 
 	full_path = concat_path(dir, cmd);
 	if (!full_path)
 		return (NULL);
-	i = access(full_path, X_OK);
-	if (i != 0)
-	{
-		// ft_putstr_fd("path: no such file or directory: ", STDERR);
-		mini->exit = 126;
-	}
-	if (i == 0)
+	if (access(full_path, X_OK) == 0)
 		return (full_path);
 	free(full_path);
 	return (NULL);
@@ -68,7 +61,7 @@ char	*find_executable(char *cmd, t_minishell *mini)
 	i = 0;
 	while (dirs[i] != NULL)
 	{
-		full_path = check_directory(dirs[i], cmd, mini);
+		full_path = check_directory(dirs[i], cmd);
 		if (full_path)
 		{
 			free_dirs(dirs);
@@ -90,11 +83,6 @@ char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 	{
 		if (access(command, X_OK) == 0)
 			return (command);
-		else
-		{
-			ft_putstr_fd(": no such file or directory. ", STDERR);
-			mini->exit = 126;
-		}
 	}
 	else
 	{
