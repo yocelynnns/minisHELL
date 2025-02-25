@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/24 19:28:23 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 15:28:45 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,11 @@ int check_dir_permission(char *args)
 	struct stat path_stat;
 
 	if (stat(args, &path_stat) == -1)
-		return (127);
+	{
+		write(2, args, ft_strlen(args));
+		write(2, ": No such file or directory\n", 28);
+		return (127);		
+	}
 	if (S_ISDIR(path_stat.st_mode))
 	{
 		write(2, args, ft_strlen(args));
@@ -92,10 +96,8 @@ int check_dir_permission(char *args)
 	}
 	if (access(args, X_OK) == -1)
 	{
-		perror("access");
-		if (errno == EACCES)
-			return (126);
-		return (127);
+		perror(args);
+		return (126);
 	}
 	return (0);
 }
@@ -106,7 +108,8 @@ void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 
 	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
 		fkoff(mini, m, EXIT_SUCCESS);
-	if (is_directory(ast->command->args[0]))
+	if ((ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.') 
+	|| is_directory(ast->command->args[0]))
 	{
 		int dir_status = check_dir_permission(ast->command->args[0]);
 		if (dir_status)
@@ -121,10 +124,19 @@ void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 	}
 	else
 	{
-		write(2, "Command not found: ", 19);
-		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
-		write(2, "\n", 1);
-		fkoff(mini, m, 127);
+		if (errno == EACCES)
+		{
+			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+			write(2, ": Permission denied\n", 20);
+			fkoff(mini, m, 126);
+		}
+		else
+		{
+			write(2, "Command not found: ", 19);
+			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+			write(2, "\n", 1);
+			fkoff(mini, m, 127);
+		}
 	}
 }
 

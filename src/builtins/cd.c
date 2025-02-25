@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:44:24 by messs             #+#    #+#             */
-/*   Updated: 2025/02/24 16:14:39 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:26:37 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	handle_normal_cd(t_env *env_list, t_minishell *mini)
 		return (ERROR);
 	}
 	result = chdir(home);
-	free(home);
+	// free(home);
 	if (result != 0)
 	{
 		print_cd_error(home, mini);
