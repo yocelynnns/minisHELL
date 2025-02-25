@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/25 15:56:27 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:18:56 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,15 @@ char	*check_directory(char *dir, char *cmd, t_minishell *mini)
 		if (errno == EACCES)
 		{
 			mini->exit = 126;
+			free(full_path);
 			return (NULL);
 		}
 		mini->exit = 127;
+		free(full_path);
 		return (NULL);
 	}
 	else
 		return (full_path);
-	free(full_path);
 	return (NULL);
 }
 
