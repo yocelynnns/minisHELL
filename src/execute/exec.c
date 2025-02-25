@@ -6,24 +6,15 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/25 15:28:45 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:50:34 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int is_directory(const char *path)
+void	execute_command(t_ast_node *ast, t_minishell *mini)
 {
-	struct stat statbuf;
-
-	if (stat(path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-		return (1);
-	return (0);
-}
-
-void execute_command(t_ast_node *ast, t_minishell *mini)
-{
-	t_cmd m;
+	t_cmd	m;
 
 	if (ast->type == AST_COMMAND)
 	{
@@ -33,13 +24,13 @@ void execute_command(t_ast_node *ast, t_minishell *mini)
 		{
 			close(m.org_fd[0]);
 			close(m.org_fd[1]);
-			return;
+			return ;
 		}
 		if (fork_and_execute(ast, mini, &m) < 0)
 		{
 			close(m.org_fd[0]);
 			close(m.org_fd[1]);
-			return;
+			return ;
 		}
 		dup2(m.org_fd[0], STDIN_FILENO);
 		dup2(m.org_fd[1], STDOUT_FILENO);
@@ -50,9 +41,9 @@ void execute_command(t_ast_node *ast, t_minishell *mini)
 		execute_pipeline(mini, ast);
 }
 
-void pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
+void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 {
-	t_cmd m;
+	t_cmd	m;
 
 	m.org_fd[0] = dup(STDIN_FILENO);
 	m.org_fd[1] = dup(STDOUT_FILENO);
@@ -70,23 +61,15 @@ void pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
 	close(m.org_fd[1]);
 }
 
-void fkoff(t_minishell *mini, t_cmd *m, int returnval)
+int	check_dir_permission(char *args)
 {
-	mini->exit = returnval;
-	close(m->org_fd[0]);
-	close(m->org_fd[1]);
-	cleanup(mini);
-	exit(returnval);
-}
-int check_dir_permission(char *args)
-{
-	struct stat path_stat;
+	struct stat	path_stat;
 
 	if (stat(args, &path_stat) == -1)
 	{
 		write(2, args, ft_strlen(args));
 		write(2, ": No such file or directory\n", 28);
-		return (127);		
+		return (127);
 	}
 	if (S_ISDIR(path_stat.st_mode))
 	{
@@ -102,43 +85,79 @@ int check_dir_permission(char *args)
 	return (0);
 }
 
-void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+void	exec_cmd(t_ast_node *ast, t_minishell *mini, t_cmd *m, char *path)
 {
-	char *executable_path;
-
-	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
-		fkoff(mini, m, EXIT_SUCCESS);
-	if ((ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.') 
-	|| is_directory(ast->command->args[0]))
-	{
-		int dir_status = check_dir_permission(ast->command->args[0]);
-		if (dir_status)
-			fkoff(mini, m, dir_status);
-	}
-	else 
-		executable_path = get_executable_path(ast, mini);
-	if ((executable_path) && (execve(executable_path, ast->command->args, mini->env2) == -1))
+	if (path && execve(path, ast->command->args, mini->env2) == -1)
 	{
 		perror("execve");
 		fkoff(mini, m, EXIT_FAILURE);
 	}
-	else
+	if (errno == EACCES)
 	{
-		if (errno == EACCES)
-		{
-			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
-			write(2, ": Permission denied\n", 20);
-			fkoff(mini, m, 126);
-		}
-		else
-		{
-			write(2, "Command not found: ", 19);
-			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
-			write(2, "\n", 1);
-			fkoff(mini, m, 127);
-		}
+		write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+		write(2, ": Permission denied\n", 20);
+		fkoff(mini, m, 126);
 	}
+	write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+	write(2, ": command not found\n", 21);
+	fkoff(mini, m, 127);
 }
+
+void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+{
+	char	*executable_path;
+	int		dir_status;
+
+	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
+		fkoff(mini, m, EXIT_SUCCESS);
+	if (ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.')
+	{
+		dir_status = check_dir_permission(ast->command->args[0]);
+		if (dir_status == 126 || dir_status == 127)
+			fkoff(mini, m, dir_status);
+	}
+	executable_path = get_executable_path(ast, mini);
+	exec_cmd(ast, mini, m, executable_path);
+}
+
+// void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+// {
+// 	char	*executable_path;
+// 	int		dir_status;
+
+// 	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
+// 		fkoff(mini, m, EXIT_SUCCESS);
+// 	if ((ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.')) 
+// 	{
+// 		dir_status = check_dir_permission(ast->command->args[0]);
+// 		if (dir_status == 126)
+// 			fkoff(mini, m, 126);
+// 		if (dir_status == 127)
+// 			fkoff(mini, m, 127);
+// 	}
+// 	executable_path = get_executable_path(ast, mini);
+// 	if ((executable_path) && (execve(executable_path, ast->command->args, 
+// 	mini->env2) == -1))
+// 	{
+// 		perror("execve");
+// 		fkoff(mini, m, EXIT_FAILURE);
+// 	}
+// 	else
+// 	{
+// 		if (errno == EACCES)
+// 		{
+// 			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+// 			write(2, ": Permission denied\n", 20);
+// 			fkoff(mini, m, 126);
+// 		}
+// 		else
+// 		{
+// 			write(2, ast->command->args[0], ft_strlen(ast->command->args[0]));
+// 			write(2, ": command not found\n", 21);
+// 			fkoff(mini, m, 127);
+// 		}
+// 	}
+// }
 
 // void execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 // {

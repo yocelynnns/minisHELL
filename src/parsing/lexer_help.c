@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_help.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 00:02:48 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/24 18:33:18 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 15:54:44 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	lexer_checks(const char *input, t_lexer_state *state, t_minishell *mini)
 	(state->i == 0 || input[state->i - 1] != '\\'))
 		return (handle_quotes(input, state), 0);
 	else if (isspace(input[state->i]) && !state->quote)
-		return(handle_spaces(input, state, mini), 0);
+		return (handle_spaces(input, state, mini), 0);
 	else if ((input[state->i] == '<' || input[state->i] == '>')
 		&& !state->quote)
 		return (handle_redir(input, state, input[state->i], mini), 0);
@@ -99,7 +99,7 @@ t_token	*lexer(const char *input, t_minishell *mini)
 	while (input[state.i])
 	{
 		if (lexer_checks(input, &state, mini) == 1)
-			return(free_tokens(state.token_list), NULL);
+			return (free_tokens(state.token_list), NULL);
 		state.i++;
 	}
 	if (checkquote(&state, mini) == 1)

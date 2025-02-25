@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_helper.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:35:01 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/24 18:25:06 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 15:50:50 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,15 @@ int	execute_pipeline(t_minishell *mini, t_ast_node *ast)
 	if (WIFEXITED(status))
 		mini->exit = WEXITSTATUS(status);
 	return (0);
+}
+
+void	fkoff(t_minishell *mini, t_cmd *m, int returnval)
+{
+	mini->exit = returnval;
+	close(m->org_fd[0]);
+	close(m->org_fd[1]);
+	cleanup(mini);
+	exit(returnval);
 }
 
 // int	execute_pipeline(t_minishell *mini, t_cmd *m, t_ast_node *ast)

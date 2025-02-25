@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:09:35 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/24 16:11:50 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:54:17 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i)
 	arg_count = 0;
 	while (*tokens && (*tokens)->type != PIPE)
 	{
-		if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, 
-			&arg_count))
-				return (NULL);
+		if (!parse_redirects(cmd, tokens, mini) || !parse_args(cmd, tokens, \
+		&arg_count))
+			return (NULL);
 	}
 	cmd->command->args[arg_count] = NULL;
 	return (cmd);

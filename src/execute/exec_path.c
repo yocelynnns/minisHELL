@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   exec_path.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:22:59 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/24 19:27:36 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 15:56:27 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char *concat_path(char *dir, char *cmd)
+char	*concat_path(char *dir, char *cmd)
 {
-	size_t dir_len;
-	size_t cmd_len;
-	size_t total_len;
-	char *full_path;
+	size_t	dir_len;
+	size_t	cmd_len;
+	size_t	total_len;
+	char	*full_path;
 
 	dir_len = ft_strlen(dir);
 	cmd_len = ft_strlen(cmd);
@@ -31,16 +31,15 @@ char *concat_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char *check_directory(char *dir, char *cmd, t_minishell *mini)
+char	*check_directory(char *dir, char *cmd, t_minishell *mini)
 {
-	char *full_path;
+	char	*full_path;
 
 	full_path = concat_path(dir, cmd);
 	if (!full_path)
 		return (NULL);
 	if (access(full_path, X_OK) == -1)
 	{
-		// perror("access");
 		if (errno == EACCES)
 		{
 			mini->exit = 126;
@@ -55,12 +54,12 @@ char *check_directory(char *dir, char *cmd, t_minishell *mini)
 	return (NULL);
 }
 
-char *find_executable(char *cmd, t_minishell *mini)
+char	*find_executable(char *cmd, t_minishell *mini)
 {
-	char *path_env;
-	char **dirs;
-	char *full_path;
-	int i;
+	char	*path_env;
+	char	**dirs;
+	char	*full_path;
+	int		i;
 
 	path_env = get_env_value("PATH", mini->env);
 	if (!path_env)
@@ -84,10 +83,10 @@ char *find_executable(char *cmd, t_minishell *mini)
 	return (NULL);
 }
 
-char *get_executable_path(t_ast_node *ast, t_minishell *mini)
+char	*get_executable_path(t_ast_node *ast, t_minishell *mini)
 {
-	char *command;
-	char *executable_path;
+	char	*command;
+	char	*executable_path;
 
 	command = ast->command->args[0];
 	if (command && (command[0] == '/' || command[0] == '.'))
@@ -96,12 +95,8 @@ char *get_executable_path(t_ast_node *ast, t_minishell *mini)
 		{
 			perror("access");
 			if (errno == EACCES)
-			{
-				mini->exit = 126;
-				return (NULL);
-			}
-			mini->exit = 127;
-			return (NULL);
+				return (mini->exit = 126, NULL);
+			return (mini->exit = 127, NULL);
 		}
 		else
 			return (command);
@@ -115,9 +110,9 @@ char *get_executable_path(t_ast_node *ast, t_minishell *mini)
 	return (NULL);
 }
 
-void handle_fork_signals(t_minishell *mini, t_cmd *m)
+void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 {
-	int signal;
+	int	signal;
 
 	signal = WTERMSIG(m->status);
 	if (signal == SIGINT)

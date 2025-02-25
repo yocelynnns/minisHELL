@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 15:51:40 by hthant            #+#    #+#             */
-/*   Updated: 2025/02/24 19:27:04 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 15:59:05 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,6 @@ typedef struct s_heredoc
 	size_t		delimiter_length;
 }	t_heredoc;
 
-// typedef struct s_signal
-// {
-// 	int	g_sigint;
-// }	t_signal;
-
 extern int					g_sigint;
 
 int			main(int ac, char **av, char **env);
@@ -204,7 +199,7 @@ void		handle_eof(char *line, t_minishell *mini);
 void		stop_signals(void);
 
 void		dollar_expan(char *processed_t, t_lexer_state *state);
-int		handle_pipe(const char *input, t_lexer_state *state, \
+int			handle_pipe(const char *input, t_lexer_state *state, \
 t_minishell *mini);
 void		handle_spaces(const char *input, t_lexer_state *state, \
 	t_minishell *mini);
@@ -234,14 +229,10 @@ void		process_remaining_token(const char *input, t_lexer_state *state, \
 void		init_lexstate(t_lexer_state *state);
 int			checkpipe(const char *input, t_lexer_state *state, \
 t_minishell *mini);
-int		lexer_checks(const char *input, t_lexer_state *state, \
+int			lexer_checks(const char *input, t_lexer_state *state, \
 	t_minishell *mini);
 t_token		*lexer(const char *input, t_minishell *mini);
 
-char		*handle_exit_status(t_process *proc);
-char		*handle_dollar_sign(t_process *proc);
-char		*expand_env_variable(t_process *proc);
-void		append_env_value(t_process *proc, char *env_value, int free_value);
 char		*expand_variable(t_process *proc, t_minishell *mini);
 
 t_ast_node	*parse_command(t_token **tokens, t_minishell *mini, int i);
@@ -264,7 +255,6 @@ void		execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m);
 void		fkoff(t_minishell *mini, t_cmd *m, int returnval);
 void		pipe_exec_cmd(t_ast_node *ast, t_minishell *mini);
 void		execute_command(t_ast_node *ast, t_minishell *mini);
-int			is_directory(const char *path);
 
 char		*read_heredoc(const char *delimiter, t_minishell *mini);
 int			cmdchecks(t_ast_node *ast, t_minishell *mini);
@@ -340,9 +330,6 @@ int			ft_echo(char **args, t_minishell *mini);
 
 void		print_cd_error(const char *path, t_minishell *mini);
 int			update_oldpwd(t_env *env_list);
-char		*get_special_directory_path(int option, t_env *env_list);
-// int			navigate_to_special_dir(t_env
-// 	*env_list, t_minishell *mini);
 int			ft_cd(char **arguments, t_env *env_list, t_minishell *mini);
 
 #endif

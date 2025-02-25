@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:43:56 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/21 01:59:22 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/25 15:53:43 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static int	handle_pipe_error(t_token *tokens, t_minishell *mini)
 {
-	if (tokens && tokens->next && tokens->type == WORD && tokens->next->type == PIPE)
+	if (tokens && tokens->next && tokens->type == WORD && \
+	tokens->next->type == PIPE)
 	{
 		if (tokens->next->next == NULL || tokens->next->next->type == PIPE)
 		{
