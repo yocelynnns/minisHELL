@@ -16,6 +16,7 @@ void	execute_command(t_ast_node *ast, t_minishell *mini)
 {
 	t_cmd	m;
 
+	printf("ast->command->args[0] is %s\n",ast->command->args[0]);
 	if (ast->type == AST_COMMAND)
 	{
 		m.org_fd[0] = dup(STDIN_FILENO);

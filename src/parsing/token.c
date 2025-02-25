@@ -84,11 +84,13 @@ void	dollar_expan(char *processed_t, t_lexer_state *state)
 	split_tokens = NULL;
 	split_tokens = ft_split(processed_t, ' ');
 	free(processed_t);
+	// printf("splited token[0] is %s\n",split_tokens[0]);
 	if (!split_tokens)
 		return ;
 	i = 0;
 	while (split_tokens[i])
 	{
+		// printf("it add\n");
 		add_token(&state->token_list, create_token(WORD, split_tokens[i]));
 		free(split_tokens[i]);
 		i++;

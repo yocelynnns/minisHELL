@@ -56,6 +56,7 @@ t_ast_node	*process_ast(t_token *tokens, char *input, t_minishell *mini)
 
 	ast = build_ast(tokens, mini);
 	mini->ast = ast;
+	// need to know what is inside ast
 	if (!ast)
 	{
 		free_ast(ast);
