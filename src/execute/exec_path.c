@@ -121,6 +121,7 @@ void	handle_fork_signals(t_minishell *mini, t_cmd *m)
 		g_sigint = 1;
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		rl_on_new_line();
+		mini->exit = 130;
 	}
 	else if (signal == SIGQUIT)
 	{
