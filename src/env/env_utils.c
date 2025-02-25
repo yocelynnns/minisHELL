@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 14:59:06 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/18 15:09:22 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/25 17:20:00 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	fill_env_array(t_env *env_list, char **env_array, int count)
 	j = 0;
 	while (i < count)
 	{
-		env_array[i] = strdup(env_list->value);
+		env_array[i] = ft_strdup(env_list->value);
 		if (!env_array[i])
 		{
 			while (j < i)
