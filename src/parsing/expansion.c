@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 23:54:52 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/20 19:41:58 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/25 16:44:15 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ char	*ft_third(t_process *proc, char **env_value, int *it)
 char	*ft_second(t_process *proc, char **start, char **env_value)
 {
 	*start = ++proc->i + proc->str;
-	while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ",
-			proc->str[proc->i]))
+	while (proc->str[proc->i] && !ft_strchr("\\\"\'$ ", proc->str[proc->i]))
 		proc->i++;
 	*start = ft_strndup(*start, proc->str + proc->i - *start);
 	if (!*start)
@@ -78,7 +77,9 @@ char	*ft_second(t_process *proc, char **start, char **env_value)
 		free(*start);
 	}
 	*env_value = get_env_value(*start, proc->mini->env);
-	free (start);
+	free(*start);
+	if (!*env_value)
+		*env_value = ft_strdup("");
 	return (proc->result);
 }
 
@@ -98,6 +99,8 @@ char	*ft_first(t_process *proc, char **start, char **env_value)
 		}
 		*env_value = get_env_value(*start, proc->mini->env);
 		free(*start);
+		if (!*env_value)
+			*env_value = ft_strdup("");
 	}
 	else
 		proc->result = ft_strcjoin(proc->result, '$');
