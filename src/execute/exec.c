@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/25 15:50:34 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/26 02:43:30 by yocelynnns       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,17 @@ void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
 	int		dir_status;
+	int		i;
 
+	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
+	{
+		i = 0;
+		while (ast->command->args[i])
+		{
+			ast->command->args[i] = ast->command->args[i + 1];
+			i++;
+		}
+	}
 	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
 		fkoff(mini, m, EXIT_SUCCESS);
 	if (ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.')
