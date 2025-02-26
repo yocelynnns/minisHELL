@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/26 02:43:30 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/26 14:41:29 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	execute_command(t_ast_node *ast, t_minishell *mini)
 {
 	t_cmd	m;
 
-	printf("ast->command->args[0] is %s\n",ast->command->args[0]);
 	if (ast->type == AST_COMMAND)
 	{
 		m.org_fd[0] = dup(STDIN_FILENO);

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 23:54:52 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/25 16:44:15 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/26 14:43:04 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*ft_first(t_process *proc, char **start, char **env_value);
+char	*ft_first(t_process *proc, char **start, char **env_value, int *it);
 char	*ft_second(t_process *proc, char **start, char **env_value);
 char	*ft_third(t_process *proc, char **env_value, int *it);
 
@@ -34,7 +34,7 @@ char	*expand_variable(t_process *proc, t_minishell *mini)
 	else if (proc->str[proc->i] == '$')
 	{
 		proc->i++;
-		proc->result = ft_first(proc, &start, &env_value);
+		proc->result = ft_first(proc, &start, &env_value, &it);
 	}
 	else
 		proc->result = ft_second(proc, &start, &env_value);
@@ -83,7 +83,7 @@ char	*ft_second(t_process *proc, char **start, char **env_value)
 	return (proc->result);
 }
 
-char	*ft_first(t_process *proc, char **start, char **env_value)
+char	*ft_first(t_process *proc, char **start, char **env_value, int *it)
 {
 	if (ft_isalnum(proc->str[proc->i]) || proc->str[proc->i] == '_')
 	{
@@ -100,7 +100,10 @@ char	*ft_first(t_process *proc, char **start, char **env_value)
 		*env_value = get_env_value(*start, proc->mini->env);
 		free(*start);
 		if (!*env_value)
+		{
+			*it = 1;
 			*env_value = ft_strdup("");
+		}
 	}
 	else
 		proc->result = ft_strcjoin(proc->result, '$');
