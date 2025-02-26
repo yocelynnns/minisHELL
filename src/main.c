@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 17:51:00 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/24 16:13:24 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:43:38 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(int ac, char **av, char **env)
 	mini = init_minishell(env);
 	if (!mini)
 		return (EXIT_FAILURE);
-	// print_welcome_message();
+	print_welcome_message();
 	run_shell_loop(mini);
 	free_env(mini->env);
 	free_env_array(mini->env2);

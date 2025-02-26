@@ -6,7 +6,7 @@
 /*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 06:57:56 by messs             #+#    #+#             */
-/*   Updated: 2025/02/26 14:54:03 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/26 15:42:54 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,14 @@ int	handle_special_cd(char **arguments, t_env *env_list, t_minishell *mini)
 	{
 		directory_path = get_env_variable(env_list, "OLDPWD=", 7);
 		if (ft_strlen(directory_path) != 0)
-			ft_putendl_fd(directory_path,2);
+			ft_putendl_fd(directory_path, 2);
 		if (!directory_path)
 		{
 			ft_putendl_fd("minishell: cd: OLDPWD not set", STDERR_FILENO);
 			return (ERROR);
 		}
 		result = chdir(directory_path);
-		if (result != 0)	
+		if (result != 0)
 			print_cd_error(directory_path, mini);
 		free(directory_path);
 	}

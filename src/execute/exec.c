@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/26 15:40:07 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:43:06 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
 	int		dir_status;
-	
+
 	empty_cmd(ast, mini, m);
 	if (ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.')
 	{

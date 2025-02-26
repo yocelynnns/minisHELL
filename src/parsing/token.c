@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yocelynnns <yocelynnns@student.42.fr>      +#+  +:+       +#+        */
+/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/22 00:54:11 by yocelynnns       ###   ########.fr       */
+/*   Updated: 2025/02/26 15:43:23 by hthant           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,11 @@ void	dollar_expan(char *processed_t, t_lexer_state *state)
 	split_tokens = NULL;
 	split_tokens = ft_split(processed_t, ' ');
 	free(processed_t);
-	// printf("splited token[0] is %s\n",split_tokens[0]);
 	if (!split_tokens)
 		return ;
 	i = 0;
 	while (split_tokens[i])
 	{
-		// printf("it add\n");
 		add_token(&state->token_list, create_token(WORD, split_tokens[i]));
 		free(split_tokens[i]);
 		i++;
