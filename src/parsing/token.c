@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:19:25 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/26 15:43:23 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/26 15:53:25 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ int	handle_pipe(const char *input, t_lexer_state *state, t_minishell *mini)
 
 	if (state->last_token_was_pipe)
 	{
-		fprintf(stderr,
-			"Error: Invalid sequence of consecutive '|' operators\n");
+		ft_putendl_fd("Error: Invalid sequence of consecutive '|' operator", 2);
 		mini->exit = 2;
 		return (1);
 	}
