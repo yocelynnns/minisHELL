@@ -6,7 +6,7 @@
 /*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:08:26 by ysetiawa          #+#    #+#             */
-/*   Updated: 2025/02/26 14:41:29 by ysetiawa         ###   ########.fr       */
+/*   Updated: 2025/02/26 15:40:07 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,6 @@ void	execute_command(t_ast_node *ast, t_minishell *mini)
 	}
 	else if (ast->type == AST_PIPELINE)
 		execute_pipeline(mini, ast);
-}
-
-void	pipe_exec_cmd(t_ast_node *ast, t_minishell *mini)
-{
-	t_cmd	m;
-
-	m.org_fd[0] = dup(STDIN_FILENO);
-	m.org_fd[1] = dup(STDOUT_FILENO);
-	if (cmdchecks(ast, mini) < 0)
-		fkoff(mini, &m, EXIT_FAILURE);
-	if (handle_builtin_commands(ast, mini, &m) == 0)
-		fkoff(mini, &m, EXIT_SUCCESS);
-	init_signals();
-	close(m.org_fd[0]);
-	close(m.org_fd[1]);
-	execute_in_child(ast, mini, &m);
-	dup2(m.org_fd[0], STDIN_FILENO);
-	dup2(m.org_fd[1], STDOUT_FILENO);
-	close(m.org_fd[0]);
-	close(m.org_fd[1]);
 }
 
 int	check_dir_permission(char *args)
@@ -103,23 +83,39 @@ void	exec_cmd(t_ast_node *ast, t_minishell *mini, t_cmd *m, char *path)
 	fkoff(mini, m, 127);
 }
 
+void	empty_cmd(t_ast_node *ast, t_minishell *mini, t_cmd *m)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while (ast->command->args[i] != NULL)
+	{
+		if (ft_strlen(ast->command->args[i]) == 0)
+		{
+			free(ast->command->args[i]);
+			ast->command->args[i] = NULL;
+		}
+		else
+		{
+			if (j != i)
+				ast->command->args[j] = ast->command->args[i];
+			j++;
+		}
+		i++;
+	}
+	ast->command->args[j] = NULL;
+	if (j == 0 || !ast->command->args[0])
+		fkoff(mini, m, EXIT_SUCCESS);
+}
+
 void	execute_in_child(t_ast_node *ast, t_minishell *mini, t_cmd *m)
 {
 	char	*executable_path;
 	int		dir_status;
-	int		i;
-
-	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
-	{
-		i = 0;
-		while (ast->command->args[i])
-		{
-			ast->command->args[i] = ast->command->args[i + 1];
-			i++;
-		}
-	}
-	if (!ast->command->args[0] || ft_strlen(ast->command->args[0]) == 0)
-		fkoff(mini, m, EXIT_SUCCESS);
+	
+	empty_cmd(ast, mini, m);
 	if (ast->command->args[0][0] == '/' || ast->command->args[0][0] == '.')
 	{
 		dir_status = check_dir_permission(ast->command->args[0]);

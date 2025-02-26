@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hthant <hthant@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ysetiawa <ysetiawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 00:13:02 by yocelynnns        #+#    #+#             */
-/*   Updated: 2025/02/20 17:15:09 by hthant           ###   ########.fr       */
+/*   Updated: 2025/02/26 15:40:58 by ysetiawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ t_ast_node	*process_ast(t_token *tokens, char *input, t_minishell *mini)
 
 	ast = build_ast(tokens, mini);
 	mini->ast = ast;
-	// need to know what is inside ast
 	if (!ast)
 	{
 		free_ast(ast);
